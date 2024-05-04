@@ -37,6 +37,7 @@ import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
 import ru.alex0d.investapp.data.remote.models.PortfolioStockInfoDto
 import ru.alex0d.investapp.screens.previewproviders.FakePortfolioStockInfoDto
+import kotlin.math.absoluteValue
 
 @Composable
 fun PortfolioScreen(
@@ -62,7 +63,7 @@ fun PortfolioScreen(
     }
 
     Column(modifier = modifier) {
-        OverviewCards(
+        TotalBalanceCard(
             portfolioState.totalValue,
             portfolioState.totalProfit,
             portfolioState.totalProfitPercent
@@ -75,8 +76,9 @@ fun PortfolioScreen(
     }
 }
 
+@Preview
 @Composable
-fun OverviewCards(totalValue: Double, totalProfit: Double, totalProfitPercent: Double) {
+fun TotalBalanceCard(totalValue: Double = 0.0, totalProfit: Double = 0.0, totalProfitPercent: Double = 0.0) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -91,7 +93,7 @@ fun OverviewCards(totalValue: Double, totalProfit: Double, totalProfitPercent: D
             Text("$totalValue ₽", style = MaterialTheme.typography.headlineMedium)
             Spacer(Modifier.height(4.dp))
             Text(
-                "$totalProfit ₽ ($totalProfitPercent%)", color = when {
+                "${totalProfit.absoluteValue} ₽ ($totalProfitPercent%)", color = when {
                     totalProfit > 0 -> Color.Green
                     totalProfit < 0 -> Color.Red
                     else -> Color.Unspecified
@@ -152,7 +154,7 @@ fun StockItem(@PreviewParameter(FakePortfolioStockInfoDto::class) stock: Portfol
                         style = MaterialTheme.typography.bodyMedium
                     )
                     Text(
-                        "${stock.profit} ₽ (${stock.profitPercent}%)",
+                        "${stock.profit} ₽ (${stock.profitPercent.absoluteValue}%)",
                         color = when {
                             stock.profit > 0 -> Color.Green
                             stock.profit < 0 -> Color.Red
