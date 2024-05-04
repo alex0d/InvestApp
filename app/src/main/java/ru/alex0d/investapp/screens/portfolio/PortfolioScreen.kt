@@ -1,6 +1,5 @@
 package ru.alex0d.investapp.screens.portfolio
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,30 +13,49 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import org.koin.androidx.compose.koinViewModel
 import ru.alex0d.investapp.data.remote.models.PortfolioStockInfoDto
 
 @Composable
 fun PortfolioScreen(
     modifier: Modifier = Modifier,
+    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
     viewModel: PortfolioViewModel = koinViewModel()
 ) {
     val portfolioState by viewModel.portfolioState.collectAsState()
-    Log.d("PortfolioScreen", "portfolioState: $portfolioState")
-    LazyColumn(modifier = modifier) {
-        item { OverviewCards(
-            totalValue = portfolioState.totalValue,
-            totalProfit = portfolioState.totalProfit,
-            totalProfitPercent = portfolioState.totalProfitPercent
-        ) }
-        items(portfolioState.stocks) { stock ->
-            StockItem(stock)
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_START -> viewModel.startUpdating()
+                Lifecycle.Event.ON_STOP -> viewModel.stopUpdating()
+                else -> Unit
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+    Column(modifier = modifier) {
+        OverviewCards(portfolioState.totalValue, portfolioState.totalProfit, portfolioState.totalProfitPercent)
+        LazyColumn {
+            items(portfolioState.stocks) { stock ->
+                StockItem(stock)
+            }
         }
     }
 }
