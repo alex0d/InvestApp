@@ -10,14 +10,14 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import ru.alex0d.investapp.data.PortfolioRepository
-import ru.alex0d.investapp.data.remote.models.PortfolioInfoDto
+import ru.alex0d.investapp.domain.models.PortfolioInfo
 
 class PortfolioViewModel(
     private val portfolioRepository: PortfolioRepository
 ) : ViewModel() {
     private val _portfolioState =
-        MutableStateFlow<PortfolioInfoDto>(PortfolioInfoDto(0.0, 0.0, 0.0, emptyList()))
-    val portfolioState: StateFlow<PortfolioInfoDto> = _portfolioState.asStateFlow()
+        MutableStateFlow<PortfolioInfo>(PortfolioInfo(0.0, 0.0, 0.0, emptyList()))
+    val portfolioState: StateFlow<PortfolioInfo> = _portfolioState.asStateFlow()
 
     private var updateJob: Job? = null
 
@@ -25,7 +25,7 @@ class PortfolioViewModel(
         updateJob = viewModelScope.launch {
             while (isActive) {
                 updatePortfolioState()
-                delay(5000)
+                delay(50000)
             }
         }
     }

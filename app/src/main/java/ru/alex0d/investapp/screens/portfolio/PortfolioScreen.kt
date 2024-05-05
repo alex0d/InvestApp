@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -35,8 +36,9 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import coil.compose.AsyncImage
 import org.koin.androidx.compose.koinViewModel
-import ru.alex0d.investapp.data.remote.models.PortfolioStockInfoDto
-import ru.alex0d.investapp.screens.previewproviders.FakePortfolioStockInfoDto
+import ru.alex0d.investapp.R
+import ru.alex0d.investapp.domain.models.PortfolioStockInfo
+import ru.alex0d.investapp.screens.previewproviders.FakePortfolioStockInfo
 import kotlin.math.absoluteValue
 
 @Composable
@@ -78,18 +80,23 @@ fun PortfolioScreen(
 
 @Preview
 @Composable
-fun TotalBalanceCard(totalValue: Double = 0.0, totalProfit: Double = 0.0, totalProfitPercent: Double = 0.0) {
+fun TotalBalanceCard(
+    totalValue: Double = 0.0,
+    totalProfit: Double = 0.0,
+    totalProfitPercent: Double = 0.0
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF00504c),
-        ),
         elevation = CardDefaults.cardElevation(8.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text("Портфель", style = MaterialTheme.typography.titleLarge)
+            Text(
+                stringResource(R.string.portfolio_text),
+                style = MaterialTheme.typography.titleLarge
+            )
+            Spacer(Modifier.height(4.dp))
             Text("$totalValue ₽", style = MaterialTheme.typography.headlineMedium)
             Spacer(Modifier.height(4.dp))
             Text(
@@ -101,15 +108,16 @@ fun TotalBalanceCard(totalValue: Double = 0.0, totalProfit: Double = 0.0, totalP
             )
         }
     }
+    Spacer(Modifier.height(8.dp))
 }
 
 @Preview
 @Composable
-fun StockItem(@PreviewParameter(FakePortfolioStockInfoDto::class) stock: PortfolioStockInfoDto) {
+fun StockItem(@PreviewParameter(FakePortfolioStockInfo::class) stock: PortfolioStockInfo) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(horizontal = 16.dp, vertical = 8.dp),
         elevation = CardDefaults.cardElevation(4.dp),
         shape = RoundedCornerShape(8.dp)
     ) {
@@ -124,7 +132,7 @@ fun StockItem(@PreviewParameter(FakePortfolioStockInfoDto::class) stock: Portfol
                 model = "https://invest-brands.cdn-tinkoff.ru/${stock.logoUrl}x160.png",
                 contentDescription = "${stock.name} logo"
             )
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -138,7 +146,7 @@ fun StockItem(@PreviewParameter(FakePortfolioStockInfoDto::class) stock: Portfol
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(1f)
                     )
-                    Spacer(modifier = Modifier.width(2.dp))
+                    Spacer(Modifier.width(2.dp))
                     Text(
                         "${stock.totalValue} ₽",
                         style = MaterialTheme.typography.titleMedium
@@ -150,7 +158,7 @@ fun StockItem(@PreviewParameter(FakePortfolioStockInfoDto::class) stock: Portfol
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        "${stock.amount} шт · ${stock.price} ₽",
+                        "${stock.amount} ${stringResource(R.string.pieces_short)} · ${stock.price} ₽",
                         style = MaterialTheme.typography.bodyMedium
                     )
                     Text(

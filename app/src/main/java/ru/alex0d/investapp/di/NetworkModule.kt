@@ -14,18 +14,18 @@ import ru.alex0d.investapp.utils.InvestApiTokenInterceptor
 const val investApiBaseUrl = BuildConfig.INVEST_API_BASE_URL
 const val investApiToken = BuildConfig.INVEST_API_TOKEN
 
-fun provideHttpClient(): OkHttpClient {
+private fun provideHttpClient(): OkHttpClient {
     return OkHttpClient.Builder()
         .addInterceptor(
             HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.HEADERS
+                level = HttpLoggingInterceptor.Level.BASIC
             }
         )
         .addInterceptor(InvestApiTokenInterceptor(investApiToken))
         .build()
 }
 
-fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+private fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder()
         .baseUrl(investApiBaseUrl)
         .client(okHttpClient)
@@ -33,7 +33,7 @@ fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         .build()
 }
 
-fun providePortfolioService(retrofit: Retrofit): PortfolioApi {
+private fun providePortfolioService(retrofit: Retrofit): PortfolioApi {
     return retrofit.create(PortfolioApi::class.java)
 }
 

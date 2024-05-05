@@ -1,12 +1,12 @@
 package ru.alex0d.investapp.screens.previewproviders
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import ru.alex0d.investapp.data.remote.models.PortfolioStockInfoDto
+import ru.alex0d.investapp.domain.models.PortfolioStockInfo
 
-internal class FakePortfolioStockInfoDto : PreviewParameterProvider<PortfolioStockInfoDto> {
-    override val values: Sequence<PortfolioStockInfoDto>
+internal class FakePortfolioStockInfo : PreviewParameterProvider<PortfolioStockInfo> {
+    override val values: Sequence<PortfolioStockInfo>
         get() = sequenceOf(
-            PortfolioStockInfoDto(
+            PortfolioStockInfo(
                 uid = "64c0da45-4c90-41d4-b053-0c66c7a8ddcd",
                 ticker = "SBERP",
                 classCode = "SPEQ",
@@ -20,7 +20,7 @@ internal class FakePortfolioStockInfoDto : PreviewParameterProvider<PortfolioSto
                 backgroundColor = "#309c0b",
                 textColor = "#ffffff"
             ),
-            PortfolioStockInfoDto(
+            PortfolioStockInfo(
                 uid = "de08affe-4fbd-454e-9fd1-46a81b23f870",
                 ticker = "POSI",
                 classCode = "PSSU",

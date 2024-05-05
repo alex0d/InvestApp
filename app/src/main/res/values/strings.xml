@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">InvestApp</string>
+    <string name="portfolio_text">Portfolio</string>
+    <string name="pieces_short">pcs</string>
 </resources>

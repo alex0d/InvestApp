@@ -4,20 +4,21 @@ import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ru.alex0d.investapp.data.remote.PortfolioApi
-import ru.alex0d.investapp.data.remote.models.PortfolioInfoDto
+import ru.alex0d.investapp.domain.models.PortfolioInfo
 
 class PortfolioRepository(private val portfolioApi: PortfolioApi) {
-    suspend fun getPortfolio(): PortfolioInfoDto {
+    private val tag = PortfolioRepository::class.java.simpleName
+
+    suspend fun getPortfolio(): PortfolioInfo {
         return withContext(Dispatchers.IO) {
             try {
-                Log.d("PortfolioRepository", "Getting portfolio")
                 val portfolio = portfolioApi.getPortfolio()
-                Log.d("PortfolioRepository", "Got portfolio: $portfolio")
-                portfolio
+                Log.d(tag, "Got portfolio")
+                portfolio.toPortfolioInfo()
             } catch (e: Exception) {
                 // TODO: handle error
-                Log.e("PortfolioRepository", "Error getting portfolio", e)
-                PortfolioInfoDto(0.0, 0.0, 0.0, emptyList())
+                Log.e(tag, "Error getting portfolio", e)
+                PortfolioInfo(0.0, 0.0, 0.0, emptyList())
             }
         }
     }
