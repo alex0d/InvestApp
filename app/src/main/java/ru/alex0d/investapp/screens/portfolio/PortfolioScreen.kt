@@ -25,7 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,16 +33,19 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import coil.compose.AsyncImage
+import com.ramcosta.composedestinations.annotation.Destination
 import org.koin.androidx.compose.koinViewModel
 import ru.alex0d.investapp.R
 import ru.alex0d.investapp.domain.models.PortfolioStockInfo
 import ru.alex0d.investapp.screens.previewproviders.FakePortfolioStockInfo
+import ru.alex0d.investapp.utils.MainGraph
 import kotlin.math.absoluteValue
 
+@Destination<MainGraph>(start = true)
 @Composable
 fun PortfolioScreen(
-    modifier: Modifier = Modifier,
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
     viewModel: PortfolioViewModel = koinViewModel()
 ) {
@@ -64,7 +66,7 @@ fun PortfolioScreen(
         }
     }
 
-    Column(modifier = modifier) {
+    Column {
         TotalBalanceCard(
             portfolioState.totalValue,
             portfolioState.totalProfit,
@@ -80,7 +82,7 @@ fun PortfolioScreen(
 
 @Preview
 @Composable
-fun TotalBalanceCard(
+private fun TotalBalanceCard(
     totalValue: Double = 0.0,
     totalProfit: Double = 0.0,
     totalProfitPercent: Double = 0.0
@@ -88,19 +90,19 @@ fun TotalBalanceCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp),
         elevation = CardDefaults.cardElevation(8.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                stringResource(R.string.portfolio_text),
+                stringResource(R.string.portfolio),
                 style = MaterialTheme.typography.titleLarge
             )
             Spacer(Modifier.height(4.dp))
             Text("$totalValue ₽", style = MaterialTheme.typography.headlineMedium)
             Spacer(Modifier.height(4.dp))
             Text(
-                "${totalProfit.absoluteValue} ₽ ($totalProfitPercent%)", color = when {
+                "$totalProfit ₽ (${totalProfitPercent.absoluteValue}%)", color = when {
                     totalProfit > 0 -> Color.Green
                     totalProfit < 0 -> Color.Red
                     else -> Color.Unspecified
@@ -113,7 +115,9 @@ fun TotalBalanceCard(
 
 @Preview
 @Composable
-fun StockItem(@PreviewParameter(FakePortfolioStockInfo::class) stock: PortfolioStockInfo) {
+private fun StockItem(
+    @PreviewParameter(FakePortfolioStockInfo::class) stock: PortfolioStockInfo
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()

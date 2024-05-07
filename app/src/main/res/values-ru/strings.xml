@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">InvestApp</string>
-    <string name="portfolio_text">Портфель</string>
+    <string name="portfolio">Портфель</string>
     <string name="pieces_short">шт</string>
+    <string name="profile">Профиль</string>
 </resources>
