@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -42,6 +44,8 @@ import ru.alex0d.investapp.R
 import ru.alex0d.investapp.domain.models.PortfolioStockInfo
 import ru.alex0d.investapp.screens.previewproviders.FakePortfolioStockInfo
 import ru.alex0d.investapp.utils.MainGraph
+import ru.alex0d.investapp.utils.toCurrencyFormat
+import ru.alex0d.investapp.utils.toDecimalFormat
 import kotlin.math.absoluteValue
 
 @Destination<MainGraph>(start = true)
@@ -98,18 +102,18 @@ private fun TotalBalanceCard(
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                stringResource(R.string.portfolio),
+                text = stringResource(R.string.portfolio),
                 style = MaterialTheme.typography.titleLarge
             )
             Spacer(Modifier.height(4.dp))
-            Text("$totalValue ₽", style = MaterialTheme.typography.headlineMedium)
-            Spacer(Modifier.height(4.dp))
             Text(
-                "$totalProfit ₽ (${totalProfitPercent.absoluteValue}%)", color = when {
-                    totalProfit > 0 -> Color.Green
-                    totalProfit < 0 -> Color.Red
-                    else -> Color.Unspecified
-                }
+                text = totalValue.toCurrencyFormat("RUB"),
+                style = MaterialTheme.typography.headlineMedium
+            )
+            Spacer(Modifier.height(4.dp))
+            ProfitText(
+                profit = totalProfit,
+                profitPercent = totalProfitPercent
             )
         }
     }
@@ -147,7 +151,7 @@ private fun StockItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        stock.name,
+                        text = stock.name,
                         style = MaterialTheme.typography.titleMedium,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -155,7 +159,7 @@ private fun StockItem(
                     )
                     Spacer(Modifier.width(2.dp))
                     Text(
-                        "${stock.totalValue} ₽",
+                        text = stock.totalValue.toCurrencyFormat("RUB"),
                         style = MaterialTheme.typography.titleMedium
                     )
                 }
@@ -165,20 +169,45 @@ private fun StockItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        "${stock.amount} ${stringResource(R.string.pieces_short)} · ${stock.price} ₽",
+                        text = "${stock.amount} ${stringResource(R.string.pieces_short)} · ${stock.price} ₽",
                         style = MaterialTheme.typography.bodyMedium
                     )
-                    Text(
-                        "${stock.profit} ₽ (${stock.profitPercent.absoluteValue}%)",
-                        color = when {
-                            stock.profit > 0 -> Color.Green
-                            stock.profit < 0 -> Color.Red
-                            else -> Color.Unspecified
-                        },
+                    ProfitText(
+                        profit = stock.profit,
+                        profitPercent = stock.profitPercent,
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun ProfitText(profit: Double, profitPercent: Double, style: TextStyle = LocalTextStyle.current) {
+    val formattedProfit = profit.toCurrencyFormat("RUB")
+    val formattedProfitPercent = profitPercent.absoluteValue.toDecimalFormat()
+
+    return when {
+        profit > 0 -> {
+            Text(
+                text = "+$formattedProfit ($formattedProfitPercent%)",
+                color = Color.Green,
+                style = style
+            )
+        }
+        profit < 0 -> {
+            Text(
+                text = "$formattedProfit ($formattedProfitPercent%)",
+                color = Color.Red,
+                style = style
+            )
+        }
+        else -> {
+            Text(
+                text = "$formattedProfit ($formattedProfitPercent%)",
+                style = style
+            )
         }
     }
 }
