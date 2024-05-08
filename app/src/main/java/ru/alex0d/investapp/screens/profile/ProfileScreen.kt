@@ -1,7 +1,9 @@
 package ru.alex0d.investapp.screens.profile
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,7 +15,9 @@ import ru.alex0d.investapp.utils.MainGraph
 @Composable
 fun ProfileScreen() {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.surface)
+            .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         Text(text = "Profile")

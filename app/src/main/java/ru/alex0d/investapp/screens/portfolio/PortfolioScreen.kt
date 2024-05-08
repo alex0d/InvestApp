@@ -1,5 +1,6 @@
 package ru.alex0d.investapp.screens.portfolio
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -66,7 +67,9 @@ fun PortfolioScreen(
         }
     }
 
-    Column {
+    Column(
+        modifier = Modifier.background(MaterialTheme.colorScheme.surface),
+    ) {
         TotalBalanceCard(
             portfolioState.totalValue,
             portfolioState.totalProfit,
