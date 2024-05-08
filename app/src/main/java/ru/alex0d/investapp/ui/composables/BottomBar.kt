@@ -28,9 +28,7 @@ fun BottomBar(
     navController: NavHostController
 ) {
     val navigator = navController.rememberDestinationsNavigator()
-    NavigationBar(
-        modifier = Modifier.height(65.dp)
-    ) {
+    NavigationBar {
         val backStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = backStackEntry?.destination
 
