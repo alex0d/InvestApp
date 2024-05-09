@@ -5,6 +5,7 @@ import org.koin.dsl.module
 import ru.alex0d.investapp.screens.login.AuthViewModel
 import ru.alex0d.investapp.screens.portfolio.PortfolioViewModel
 import ru.alex0d.investapp.screens.profile.ProfileViewModel
+import ru.alex0d.investapp.screens.stock.StockDetailsViewModel
 
 val viewModelModule = module {
     viewModel { PortfolioViewModel(portfolioRepository = get()) }
@@ -14,4 +15,12 @@ val viewModelModule = module {
     }
 
     viewModel { ProfileViewModel(jwtDataStore = get()) }
+
+    viewModel { parameters ->
+        StockDetailsViewModel(
+            stockRepository = get(),
+            portfolioRepository = get(),
+            stockUid = parameters.get()
+        )
+    }
 }

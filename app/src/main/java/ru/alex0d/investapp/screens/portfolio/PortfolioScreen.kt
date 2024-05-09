@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -16,7 +17,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,9 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -39,18 +37,20 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import coil.compose.AsyncImage
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.generated.destinations.StockDetailsScreenDestination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import org.koin.androidx.compose.koinViewModel
 import ru.alex0d.investapp.R
 import ru.alex0d.investapp.domain.models.PortfolioStockInfo
 import ru.alex0d.investapp.screens.previewproviders.FakePortfolioStockInfo
+import ru.alex0d.investapp.ui.composables.ProfitText
 import ru.alex0d.investapp.utils.MainGraph
 import ru.alex0d.investapp.utils.toCurrencyFormat
-import ru.alex0d.investapp.utils.toDecimalFormat
-import kotlin.math.absoluteValue
 
 @Destination<MainGraph>(start = true)
 @Composable
 fun PortfolioScreen(
+    navigator: DestinationsNavigator,
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
     viewModel: PortfolioViewModel = koinViewModel()
 ) {
@@ -72,7 +72,7 @@ fun PortfolioScreen(
     }
 
     Column(
-        modifier = Modifier.background(MaterialTheme.colorScheme.surface),
+        modifier = Modifier.background(MaterialTheme.colorScheme.surface).statusBarsPadding(),
     ) {
         TotalBalanceCard(
             portfolioState.totalValue,
@@ -81,7 +81,9 @@ fun PortfolioScreen(
         )
         LazyColumn {
             items(portfolioState.stocks) { stock ->
-                StockItem(stock)
+                StockItem(stock, onClick = {
+                    navigator.navigate(StockDetailsScreenDestination(stockUid = stock.uid))
+                })
             }
         }
     }
@@ -98,7 +100,11 @@ private fun TotalBalanceCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp),
-        elevation = CardDefaults.cardElevation(8.dp)
+        elevation = CardDefaults.cardElevation(8.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+        ),
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
@@ -123,14 +129,19 @@ private fun TotalBalanceCard(
 @Preview
 @Composable
 private fun StockItem(
-    @PreviewParameter(FakePortfolioStockInfo::class) stock: PortfolioStockInfo
+    @PreviewParameter(FakePortfolioStockInfo::class) stock: PortfolioStockInfo,
+    onClick: () -> Unit = {}
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
         elevation = CardDefaults.cardElevation(4.dp),
-        shape = RoundedCornerShape(8.dp)
+        shape = RoundedCornerShape(8.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer
+        ),
+        onClick = onClick
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
@@ -169,13 +180,13 @@ private fun StockItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "${stock.amount} ${stringResource(R.string.pieces_short)} · ${stock.price} ₽",
-                        style = MaterialTheme.typography.bodyMedium
+                        text = "${stock.amount} ${stringResource(R.string.pieces_short)} · ${stock.lastPrice.toCurrencyFormat("RUB")}",
+                        style = MaterialTheme.typography.bodySmall
                     )
                     ProfitText(
                         profit = stock.profit,
                         profitPercent = stock.profitPercent,
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodySmall
                     )
                 }
             }
@@ -183,31 +194,3 @@ private fun StockItem(
     }
 }
 
-@Composable
-private fun ProfitText(profit: Double, profitPercent: Double, style: TextStyle = LocalTextStyle.current) {
-    val formattedProfit = profit.toCurrencyFormat("RUB")
-    val formattedProfitPercent = profitPercent.absoluteValue.toDecimalFormat()
-
-    return when {
-        profit > 0 -> {
-            Text(
-                text = "+$formattedProfit ($formattedProfitPercent%)",
-                color = Color.Green,
-                style = style
-            )
-        }
-        profit < 0 -> {
-            Text(
-                text = "$formattedProfit ($formattedProfitPercent%)",
-                color = Color.Red,
-                style = style
-            )
-        }
-        else -> {
-            Text(
-                text = "$formattedProfit ($formattedProfitPercent%)",
-                style = style
-            )
-        }
-    }
-}

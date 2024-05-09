@@ -10,7 +10,6 @@ import kotlinx.coroutines.launch
 import ru.alex0d.investapp.data.repositories.AuthRepository
 import ru.alex0d.investapp.data.JwtDataStore
 import ru.alex0d.investapp.data.remote.models.AuthRequest
-import ru.alex0d.investapp.data.remote.models.RefreshRequest
 import ru.alex0d.investapp.data.remote.models.RegisterRequest
 
 class AuthViewModel(

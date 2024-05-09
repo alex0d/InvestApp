@@ -17,7 +17,8 @@ data class PortfolioStockInfoDto(
     var name: String,
 
     var amount: Int,
-    var price: Double,
+    var averagePrice: Double,
+    var lastPrice: Double,
 
     var totalValue: Double,
     var profit: Double,

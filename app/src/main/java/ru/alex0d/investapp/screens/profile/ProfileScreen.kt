@@ -3,6 +3,7 @@ package ru.alex0d.investapp.screens.profile
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -19,18 +20,19 @@ import ru.alex0d.investapp.utils.MainGraph
 @Destination<MainGraph>
 @Composable
 fun ProfileScreen(
-    navigator: DestinationsNavigator,
+    rootNavigator: DestinationsNavigator,
     viewModel: ProfileViewModel = koinViewModel()
 ) {
     Box(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.surface)
-            .fillMaxSize(),
+            .fillMaxSize()
+            .statusBarsPadding(),
         contentAlignment = Alignment.Center
     ) {
         Button(onClick = {
             viewModel.logout()
-            navigator.navigate(RootNavGraph) {
+            rootNavigator.navigate(RootNavGraph) {
                 popUpTo(MainScreenDestination) {
                     inclusive = true
                 }

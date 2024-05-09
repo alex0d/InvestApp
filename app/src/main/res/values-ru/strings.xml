@@ -10,4 +10,8 @@
     <string name="register">Зарегистрироваться</string>
     <string name="firstname">Имя</string>
     <string name="last_name">Фамилия</string>
+    <string name="go_back">Назад</string>
+    <string name="in_portfolio_text">В портфеле</string>
+    <string name="buy">Купить</string>
+    <string name="sell">Продать</string>
 </resources>

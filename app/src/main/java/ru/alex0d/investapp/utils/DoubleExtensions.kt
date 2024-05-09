@@ -13,6 +13,7 @@ internal fun Double.toCurrencyFormat(currencyCode: String): String {
 
 internal fun Double.toDecimalFormat(): String {
     val format = NumberFormat.getInstance().apply {
+        minimumFractionDigits = 2
         maximumFractionDigits = 2
     }
     return format.format(this)

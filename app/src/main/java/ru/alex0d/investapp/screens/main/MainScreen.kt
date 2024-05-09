@@ -26,13 +26,13 @@ fun MainScreen(
         BottomBar(navController = navController)
     }) { innerPadding ->
         DestinationsNavHost(
-            modifier = Modifier.padding(innerPadding),
+            modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding()),
             navGraph = NavGraphs.main,
             navController = navController
         ) {
             composable(ProfileScreenDestination) {
                 ProfileScreen(
-                    navigator = rootNavigator
+                    rootNavigator = rootNavigator
                 )
             }
         }
