@@ -8,20 +8,25 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import ru.alex0d.investapp.BuildConfig
-import ru.alex0d.investapp.data.remote.PortfolioApi
-import ru.alex0d.investapp.utils.InvestApiTokenInterceptor
+import ru.alex0d.investapp.data.remote.services.AuthApiService
+import ru.alex0d.investapp.data.remote.services.PortfolioApiService
+import ru.alex0d.investapp.utils.AuthInterceptor
+import ru.alex0d.investapp.utils.AuthAuthenticator
 
 const val investApiBaseUrl = BuildConfig.INVEST_API_BASE_URL
-const val investApiToken = BuildConfig.INVEST_API_TOKEN
 
-private fun provideHttpClient(): OkHttpClient {
+private fun provideHttpClient(
+    authInterceptor: AuthInterceptor,
+    authAuthenticator: AuthAuthenticator
+): OkHttpClient {
     return OkHttpClient.Builder()
         .addInterceptor(
             HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BASIC
             }
         )
-        .addInterceptor(InvestApiTokenInterceptor(investApiToken))
+        .addInterceptor(authInterceptor)
+        .authenticator(authAuthenticator)
         .build()
 }
 
@@ -33,12 +38,24 @@ private fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         .build()
 }
 
-private fun providePortfolioService(retrofit: Retrofit): PortfolioApi {
-    return retrofit.create(PortfolioApi::class.java)
+private fun providePortfolioService(retrofit: Retrofit): PortfolioApiService {
+    return retrofit.create(PortfolioApiService::class.java)
+}
+
+private fun provideAuthService(retrofit: Retrofit): AuthApiService {
+    return retrofit.create(AuthApiService::class.java)
 }
 
 val networkModule = module {
-    single { provideHttpClient() }
-    single { provideRetrofit(get()) }
-    single { providePortfolioService(get()) }
+    single { AuthInterceptor(jwtDataStore = get()) }
+
+    single { AuthAuthenticator(jwtDataStore = get()) }
+
+    single { provideHttpClient(authInterceptor = get(), authAuthenticator = get()) }
+
+    single { provideRetrofit(okHttpClient = get()) }
+
+    single { providePortfolioService(retrofit = get()) }
+
+    single { provideAuthService(retrofit = get()) }
 }

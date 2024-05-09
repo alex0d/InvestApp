@@ -15,7 +15,6 @@ fun PortfolioInfoDto.toPortfolioInfo() = PortfolioInfo(
 fun PortfolioStockInfoDto.toPortfolioStockInfo() = PortfolioStockInfo(
     uid = uid,
     ticker = ticker,
-    classCode = classCode,
     name = name,
     amount = amount,
     price = price,

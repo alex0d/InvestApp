@@ -1,6 +1,7 @@
 [versions]
 agp = "8.4.0"
 coil = "2.6.0"
+datastorePreferences = "1.1.1"
 koinAndroid = "3.2.0"
 kotlin = "1.9.23"
 coreKtx = "1.13.1"
@@ -22,6 +23,7 @@ ksp = "1.9.23-1.0.20"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 coil = { module = "io.coil-kt:coil", version.ref = "coil" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 compose-destinations = { module = "io.github.raamcosta.compose-destinations:core", version.ref = "destinations" }

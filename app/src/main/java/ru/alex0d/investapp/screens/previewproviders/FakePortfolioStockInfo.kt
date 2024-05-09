@@ -9,7 +9,6 @@ internal class FakePortfolioStockInfo : PreviewParameterProvider<PortfolioStockI
             PortfolioStockInfo(
                 uid = "64c0da45-4c90-41d4-b053-0c66c7a8ddcd",
                 ticker = "SBERP",
-                classCode = "SPEQ",
                 name = "Сбер Банк - привилегированные акции",
                 amount = 10,
                 price = 308.15,
@@ -23,7 +22,6 @@ internal class FakePortfolioStockInfo : PreviewParameterProvider<PortfolioStockI
             PortfolioStockInfo(
                 uid = "de08affe-4fbd-454e-9fd1-46a81b23f870",
                 ticker = "POSI",
-                classCode = "PSSU",
                 name = "Positive Technologies",
                 amount = 5,
                 price = 2978.60,

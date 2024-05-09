@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import ru.alex0d.investapp.data.PortfolioRepository
+import ru.alex0d.investapp.data.repositories.PortfolioRepository
 import ru.alex0d.investapp.domain.models.PortfolioInfo
 
 class PortfolioViewModel(

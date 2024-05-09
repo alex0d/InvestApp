@@ -9,11 +9,16 @@ import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
 import com.ramcosta.composedestinations.generated.NavGraphs
+import com.ramcosta.composedestinations.generated.destinations.ProfileScreenDestination
+import com.ramcosta.composedestinations.manualcomposablecalls.composable
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import ru.alex0d.investapp.screens.profile.ProfileScreen
 import ru.alex0d.investapp.ui.composables.BottomBar
 
 @Destination<RootGraph>
 @Composable
 fun MainScreen(
+    rootNavigator: DestinationsNavigator
 ) {
     val navController = rememberNavController()
 
@@ -24,6 +29,12 @@ fun MainScreen(
             modifier = Modifier.padding(innerPadding),
             navGraph = NavGraphs.main,
             navController = navController
-        )
+        ) {
+            composable(ProfileScreenDestination) {
+                ProfileScreen(
+                    navigator = rootNavigator
+                )
+            }
+        }
     }
 }

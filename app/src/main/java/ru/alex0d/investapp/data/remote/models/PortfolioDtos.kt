@@ -14,7 +14,6 @@ data class PortfolioInfoDto(
 data class PortfolioStockInfoDto(
     var uid: String,
     var ticker: String,
-    var classCode: String,
     var name: String,
 
     var amount: Int,

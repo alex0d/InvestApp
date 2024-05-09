@@ -10,7 +10,6 @@ data class PortfolioInfo(
 data class PortfolioStockInfo(
     var uid: String,
     var ticker: String,
-    var classCode: String,
     var name: String,
 
     var amount: Int,

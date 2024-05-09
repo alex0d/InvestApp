@@ -65,6 +65,8 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
 
+    implementation(libs.androidx.datastore.preferences)
+
     implementation(libs.compose.destinations)
     ksp(libs.compose.destinations.ksp)
 

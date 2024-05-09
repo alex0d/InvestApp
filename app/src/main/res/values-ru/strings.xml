@@ -4,4 +4,10 @@
     <string name="portfolio">Портфель</string>
     <string name="pieces_short">шт</string>
     <string name="profile">Профиль</string>
+    <string name="email">Электронная почта</string>
+    <string name="password">Пароль</string>
+    <string name="log_in">Войти</string>
+    <string name="register">Зарегистрироваться</string>
+    <string name="firstname">Имя</string>
+    <string name="last_name">Фамилия</string>
 </resources>
