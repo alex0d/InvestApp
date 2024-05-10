@@ -3,8 +3,8 @@ package ru.alex0d.investapp.data.repositories
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import ru.alex0d.investapp.data.mappers.toShare
 import ru.alex0d.investapp.data.remote.services.StockApiService
-import ru.alex0d.investapp.data.toShare
 import ru.alex0d.investapp.domain.models.Share
 
 class StockRepository(private val stockApiService: StockApiService) {

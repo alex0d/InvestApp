@@ -1,11 +1,9 @@
-package ru.alex0d.investapp.data
+package ru.alex0d.investapp.data.mappers
 
 import ru.alex0d.investapp.data.remote.models.PortfolioInfoDto
 import ru.alex0d.investapp.data.remote.models.PortfolioStockInfoDto
-import ru.alex0d.investapp.data.remote.models.ShareDto
 import ru.alex0d.investapp.domain.models.PortfolioInfo
 import ru.alex0d.investapp.domain.models.PortfolioStockInfo
-import ru.alex0d.investapp.domain.models.Share
 
 fun PortfolioInfoDto.toPortfolioInfo() = PortfolioInfo(
     totalValue = totalValue,
@@ -27,21 +25,4 @@ fun PortfolioStockInfoDto.toPortfolioStockInfo() = PortfolioStockInfo(
     logoUrl = logoUrl,
     backgroundColor = backgroundColor,
     textColor = textColor
-)
-
-fun ShareDto.toShare() = Share(
-    uid = uid,
-    figi = figi,
-    ticker = ticker,
-    classCode = classCode,
-    isin = isin,
-    currency = currency,
-    name = name,
-    countryOfRisk = countryOfRisk,
-    countryOfRiskName = countryOfRiskName,
-    sector = sector,
-    lastPrice = lastPrice,
-    url = url,
-    textColor = textColor,
-    backgroundColor = backgroundColor
 )

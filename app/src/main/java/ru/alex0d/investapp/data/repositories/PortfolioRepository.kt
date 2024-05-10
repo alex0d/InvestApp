@@ -3,8 +3,8 @@ package ru.alex0d.investapp.data.repositories
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import ru.alex0d.investapp.data.mappers.toPortfolioInfo
 import ru.alex0d.investapp.data.remote.services.PortfolioApiService
-import ru.alex0d.investapp.data.toPortfolioInfo
 import ru.alex0d.investapp.domain.models.PortfolioInfo
 
 class PortfolioRepository(private val portfolioApiService: PortfolioApiService) {

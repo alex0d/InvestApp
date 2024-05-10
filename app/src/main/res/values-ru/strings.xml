@@ -15,4 +15,24 @@
     <string name="buy">Купить</string>
     <string name="sell">Продать</string>
     <string name="search">Поиск</string>
+    <string name="esoteric_analysis">Эзотерический анализ</string>
+    <string name="the_fool">Дурак</string>
+    <string name="the_magician">Маг</string>
+    <string name="the_high_priestess">Жрица</string>
+    <string name="the_empress">Императрица</string>
+    <string name="the_emperor">Император</string>
+    <string name="the_hierophant">Жрец</string>
+    <string name="the_lovers">Влюбленные</string>
+    <string name="the_chariot">Колесница</string>
+    <string name="justice">Правосудие</string>
+    <string name="the_hermit">Отшельник</string>
+    <string name="wheel_of_fortune">Колесо фортуны</string>
+    <string name="strength">Сила</string>
+    <string name="the_hanged_man">Повешенный</string>
+    <string name="death">Смерть</string>
+    <string name="temperance">Умеренность</string>
+    <string name="the_devil">Дьявол</string>
+    <string name="the_tower">Башня</string>
+    <string name="the_moon">Луна</string>
+    <string name="the_sun">Солнце</string>
 </resources>

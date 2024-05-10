@@ -7,6 +7,7 @@ import ru.alex0d.investapp.screens.portfolio.PortfolioViewModel
 import ru.alex0d.investapp.screens.profile.ProfileViewModel
 import ru.alex0d.investapp.screens.search.SearchViewModel
 import ru.alex0d.investapp.screens.stock.StockDetailsViewModel
+import ru.alex0d.investapp.screens.tarot.TarotViewModel
 
 val viewModelModule = module {
     viewModel { PortfolioViewModel(portfolioRepository = get()) }
@@ -24,6 +25,13 @@ val viewModelModule = module {
             stockRepository = get(),
             portfolioRepository = get(),
             stockUid = parameters.get()
+        )
+    }
+
+    viewModel { parameters ->
+        TarotViewModel(
+            tarotRepository = get(),
+            stockName = parameters.get()
         )
     }
 }

@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -33,10 +35,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.generated.destinations.TarotScreenDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import org.koin.androidx.compose.getViewModel
 import org.koin.core.parameter.parametersOf
@@ -93,7 +97,9 @@ fun StockDetailsScreen(
             }
         }
     ) { padding ->
-        Box(modifier = Modifier.padding(padding).padding(horizontal = 2.dp)) {
+        Box(modifier = Modifier
+            .padding(padding)
+            .padding(horizontal = 2.dp)) {
             when (state) {
                 is StockDetailsState.Loading -> Box(
                     modifier = Modifier.fillMaxSize(),
@@ -173,6 +179,30 @@ fun StockDetailsScreen(
                                         style = MaterialTheme.typography.bodyMedium
                                     )
                                 }
+                            }
+                        }
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Button(
+                                onClick = {
+                                    navigator.navigate(TarotScreenDestination(stockName = state.share.name))
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth(0.5f),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                                )
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.esoteric_analysis),
+                                    textAlign = TextAlign.Center,
+                                    style = MaterialTheme.typography.labelMedium
+                                )
                             }
                         }
                         Spacer(modifier = Modifier.weight(1f))

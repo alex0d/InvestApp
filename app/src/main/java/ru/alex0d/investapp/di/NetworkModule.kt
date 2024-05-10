@@ -11,6 +11,7 @@ import ru.alex0d.investapp.BuildConfig
 import ru.alex0d.investapp.data.remote.services.AuthApiService
 import ru.alex0d.investapp.data.remote.services.PortfolioApiService
 import ru.alex0d.investapp.data.remote.services.StockApiService
+import ru.alex0d.investapp.data.remote.services.TarotApiService
 import ru.alex0d.investapp.utils.AuthAuthenticator
 import ru.alex0d.investapp.utils.AuthInterceptor
 
@@ -47,6 +48,10 @@ private fun provideStockService(retrofit: Retrofit): StockApiService {
     return retrofit.create(StockApiService::class.java)
 }
 
+private fun provideTarotService(retrofit: Retrofit): TarotApiService {
+    return retrofit.create(TarotApiService::class.java)
+}
+
 private fun provideAuthService(retrofit: Retrofit): AuthApiService {
     return retrofit.create(AuthApiService::class.java)
 }
@@ -63,6 +68,8 @@ val networkModule = module {
     single { providePortfolioService(retrofit = get()) }
 
     single { provideStockService(retrofit = get()) }
+
+    single { provideTarotService(retrofit = get()) }
 
     single { provideAuthService(retrofit = get()) }
 }
