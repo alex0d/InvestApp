@@ -13,4 +13,5 @@
     <string name="in_portfolio_text">In the portfolio</string>
     <string name="buy">Buy</string>
     <string name="sell">Sell</string>
+    <string name="search">Search</string>
 </resources>

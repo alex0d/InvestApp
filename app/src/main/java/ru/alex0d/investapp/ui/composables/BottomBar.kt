@@ -14,6 +14,7 @@ import androidx.navigation.NavHostController
 import com.ramcosta.composedestinations.generated.NavGraphs
 import com.ramcosta.composedestinations.generated.destinations.PortfolioScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.ProfileScreenDestination
+import com.ramcosta.composedestinations.generated.destinations.SearchScreenDestination
 import com.ramcosta.composedestinations.spec.DestinationSpec
 import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 import com.ramcosta.composedestinations.utils.currentDestinationAsState
@@ -66,5 +67,6 @@ enum class BottomBarItem(
     @StringRes val label: Int
 ) {
     Portfolio(PortfolioScreenDestination, R.drawable.portfolio, R.string.portfolio),
+    Search(SearchScreenDestination, R.drawable.search, R.string.search),
     Profile(ProfileScreenDestination, R.drawable.account_circle, R.string.profile)
 }
