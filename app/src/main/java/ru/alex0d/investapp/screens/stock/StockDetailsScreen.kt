@@ -41,6 +41,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import org.koin.androidx.compose.getViewModel
 import org.koin.core.parameter.parametersOf
 import ru.alex0d.investapp.R
+import ru.alex0d.investapp.screens.stock.candles.CandlestickChart
 import ru.alex0d.investapp.ui.composables.ProfitText
 import ru.alex0d.investapp.utils.MainGraph
 import ru.alex0d.investapp.utils.fromHex
@@ -92,7 +93,7 @@ fun StockDetailsScreen(
             }
         }
     ) { padding ->
-        Box(modifier = Modifier.padding(padding)) {
+        Box(modifier = Modifier.padding(padding).padding(horizontal = 2.dp)) {
             when (state) {
                 is StockDetailsState.Loading -> Box(
                     modifier = Modifier.fillMaxSize(),
@@ -104,19 +105,20 @@ fun StockDetailsScreen(
                 is StockDetailsState.Success -> {
                     Column {
                         Text(
-                            modifier = Modifier.padding(16.dp),
+                            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
                             text = state.share.lastPrice.toCurrencyFormat("RUB"),
                             style = MaterialTheme.typography.titleLarge.copy(
                                 fontSize = 28.sp,
                                 fontWeight = FontWeight.Bold
                             )
                         )
-                        Spacer(Modifier.height(16.dp))
                         Box(
                             Modifier
                                 .height(200.dp)
                                 .fillMaxWidth()
-                        ) { /* Placeholder for chart */ }
+                        ) {
+                            CandlestickChart()
+                        }
                         state.stockInfo?.let { stockInfo ->
                             Text(
                                 text = stringResource(R.string.in_portfolio_text),

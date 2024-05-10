@@ -144,7 +144,7 @@ private fun StockItem(
         onClick = onClick
     ) {
         Row(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             AsyncImage(
@@ -154,7 +154,7 @@ private fun StockItem(
                 model = "https://invest-brands.cdn-tinkoff.ru/${stock.logoUrl}x160.png",
                 contentDescription = "${stock.name} logo"
             )
-            Spacer(Modifier.width(16.dp))
+            Spacer(Modifier.width(10.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
