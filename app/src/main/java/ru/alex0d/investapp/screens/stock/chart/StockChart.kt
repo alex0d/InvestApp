@@ -1,15 +1,19 @@
-package ru.alex0d.investapp.screens.stock.candles
+package ru.alex0d.investapp.screens.stock.chart
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.Color
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStartAxis
 import com.patrykandpatrick.vico.compose.cartesian.layer.absoluteRelative
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberCandlestickCartesianLayer
+import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
+import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineSpec
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
+import com.patrykandpatrick.vico.compose.common.shader.color
 import com.patrykandpatrick.vico.core.cartesian.Scroll
 import com.patrykandpatrick.vico.core.cartesian.Zoom
 import com.patrykandpatrick.vico.core.cartesian.axis.AxisItemPlacer
@@ -20,19 +24,28 @@ import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
 import com.patrykandpatrick.vico.core.cartesian.data.ChartValues
 import com.patrykandpatrick.vico.core.cartesian.layer.CandlestickCartesianLayer
 import com.patrykandpatrick.vico.core.common.data.ExtraStore
+import com.patrykandpatrick.vico.core.common.shader.DynamicShader
 import ru.alex0d.investapp.utils.toDecimalFormat
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun CandlestickChart(modelProducer: CartesianChartModelProducer) {
+fun StockChart(modelProducer: CartesianChartModelProducer) {
     val marker = rememberMarker(showIndicator = false)
     val scroll = rememberVicoScrollState(initialScroll = Scroll.Absolute.End)
     val zoom = rememberVicoZoomState(initialZoom = remember { Zoom.min(Zoom.static(), Zoom.Content) })
 
     CartesianChartHost(
         chart = rememberCartesianChart(
+            rememberLineCartesianLayer(
+                lines = listOf(element = rememberLineSpec(DynamicShader.color(Color(0xffa485e0)))),
+                axisValueOverrider = object : AxisValueOverrider {
+                    override fun getMaxY(minY: Float, maxY: Float, extraStore: ExtraStore) = maxY + 1
+                    override fun getMinY(minY: Float, maxY: Float, extraStore: ExtraStore) = if (minY > 1) minY - 1 else minY
+                }
+            ),
+
             rememberCandlestickCartesianLayer(
                 candles = CandlestickCartesianLayer.CandleProvider.absoluteRelative(),
                 scaleCandleWicks = true,
@@ -42,6 +55,7 @@ fun CandlestickChart(modelProducer: CartesianChartModelProducer) {
                     override fun getMinY(minY: Float, maxY: Float, extraStore: ExtraStore) = if (minY > 1) minY - 1 else minY
                 }
             },
+
             startAxis = rememberStartAxis(
                 valueFormatter = object : CartesianValueFormatter {
                     override fun format(value: Float, chartValues: ChartValues, verticalAxisPosition: AxisPosition.Vertical?): CharSequence {

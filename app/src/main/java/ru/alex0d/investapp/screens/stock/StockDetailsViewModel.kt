@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.patrykandpatrick.vico.core.cartesian.data.CandlestickCartesianLayerModel
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.core.cartesian.data.LineCartesianLayerModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,7 +29,14 @@ class StockDetailsViewModel(
     private val _state = MutableStateFlow<StockDetailsState>(StockDetailsState.Loading)
     val state: StateFlow<StockDetailsState> = _state.asStateFlow()
 
+    var chartType = ChartType.LINE
+        set(value) {
+            field = value
+            updateChartModel(candles)
+        }
+
     val modelProducer = CartesianChartModelProducer.build()
+    private val candles = mutableListOf<Candle>()
 
     init {
         fetchStockDetails()
@@ -37,26 +45,38 @@ class StockDetailsViewModel(
 
     fun fetchCandles(interval: CandleInterval) {
         viewModelScope.launch {
-            val candles = marketRepository.getCandles(
+            val newCandles = marketRepository.getCandles(
                 uid = stockUid,
                 from = getFirstTimestamp(interval),
                 to = System.currentTimeMillis() / 1000,
                 interval = interval
             )
-            candles?.let {
+            newCandles?.let {
+                candles.clear()
+                candles.addAll(it)
+
                 updateChartModel(it)
             }
         }
     }
 
     private fun updateChartModel(candles: List<Candle>) {
-        val layerModel = CandlestickCartesianLayerModel.partial(
-            x = candles.map { it.timestamp },
-            opening = candles.map { it.open },
-            closing = candles.map { it.close },
-            high = candles.map { it.high },
-            low = candles.map { it.low }
-        )
+        val layerModel = if (chartType == ChartType.LINE) {
+            LineCartesianLayerModel.partial {
+                series(
+                    x = candles.map { it.timestamp },
+                    y = candles.map { it.close }
+                )
+            }
+        } else {
+            CandlestickCartesianLayerModel.partial(
+                x = candles.map { it.timestamp },
+                opening = candles.map { it.open },
+                closing = candles.map { it.close },
+                high = candles.map { it.high },
+                low = candles.map { it.low }
+            )
+        }
         viewModelScope.launch(Dispatchers.Default) {
             modelProducer.tryRunTransaction {
                 add(layerModel)
@@ -108,4 +128,9 @@ sealed class StockDetailsState {
     object Loading : StockDetailsState()
     data class Success(val share: Share, val stockInfo: PortfolioStockInfo?) : StockDetailsState()
     data class Error(val message: String) : StockDetailsState()
+}
+
+enum class ChartType {
+    CANDLES,
+    LINE
 }

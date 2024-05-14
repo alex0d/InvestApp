@@ -1,4 +1,4 @@
-package ru.alex0d.investapp.screens.stock.candles
+package ru.alex0d.investapp.screens.stock.chart
 
 import android.graphics.Typeface
 import android.text.Layout

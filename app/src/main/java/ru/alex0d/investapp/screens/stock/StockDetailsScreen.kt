@@ -27,6 +27,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -42,6 +43,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -59,7 +61,7 @@ import ru.alex0d.investapp.R
 import ru.alex0d.investapp.domain.models.CandleInterval
 import ru.alex0d.investapp.domain.models.PortfolioStockInfo
 import ru.alex0d.investapp.domain.models.toStringRes
-import ru.alex0d.investapp.screens.stock.candles.CandlestickChart
+import ru.alex0d.investapp.screens.stock.chart.StockChart
 import ru.alex0d.investapp.ui.composables.ProfitText
 import ru.alex0d.investapp.utils.MainGraph
 import ru.alex0d.investapp.utils.fromHex
@@ -127,6 +129,7 @@ fun StockDetailsScreen(
                     StockDetailsOnSuccess(
                         state = state,
                         modelProducer = modelProducer,
+                        onSwitchChartType = viewModel::chartType::set,
                         onIntervalClick = viewModel::fetchCandles,
                         navigator = navigator
                     )
@@ -140,24 +143,52 @@ fun StockDetailsScreen(
 private fun StockDetailsOnSuccess(
     state: StockDetailsState.Success,
     modelProducer: CartesianChartModelProducer,
+    onSwitchChartType: (ChartType) -> Unit = {},
     onIntervalClick: (CandleInterval) -> Unit = {},
     navigator: DestinationsNavigator
 ) {
+    var chartType by remember { mutableStateOf(ChartType.LINE) }
+
     Column {
-        Text(
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
-            text = state.share.lastPrice.toCurrencyFormat("RUB"),
-            style = MaterialTheme.typography.titleLarge.copy(
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Bold
+        Row(
+            modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp, top = 10.dp, bottom = 0.dp)
+                .height(36.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Absolute.SpaceBetween,
+        ) {
+            Text(
+                modifier = Modifier.padding(top = 5.dp),
+                text = state.share.lastPrice.toCurrencyFormat("RUB"),
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontSize = 28.sp,
+                    fontWeight = FontWeight.Bold
+                ),
             )
-        )
+            Spacer(modifier = Modifier.weight(1f))
+            IconButton(
+                onClick = {
+                    chartType =
+                        if (chartType == ChartType.LINE) ChartType.CANDLES else ChartType.LINE
+                    onSwitchChartType(chartType)
+                },
+                colors = IconButtonDefaults.iconButtonColors(
+                    containerColor = MaterialTheme.colorScheme.tertiary,
+                    contentColor = MaterialTheme.colorScheme.onTertiary
+                )
+            ) {
+                Icon(
+                    painter = painterResource(id = if (chartType == ChartType.LINE) R.drawable.line_chart else R.drawable.candlestick_chart),
+                    contentDescription = null
+                )
+            }
+        }
         Box(
             Modifier
                 .height(200.dp)
                 .fillMaxWidth()
         ) {
-            CandlestickChart(modelProducer)
+            StockChart(modelProducer)
         }
         TabsSection(onIntervalClick = onIntervalClick)
         state.stockInfo?.let { stockInfo ->
