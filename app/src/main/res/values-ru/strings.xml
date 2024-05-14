@@ -36,4 +36,17 @@
     <string name="the_tower">Башня</string>
     <string name="the_moon">Луна</string>
     <string name="the_sun">Солнце</string>
+    <string name="interval_1_min">М1</string>
+    <string name="interval_2_min">М2</string>
+    <string name="interval_3_min">М3</string>
+    <string name="interval_5_min">М5</string>
+    <string name="interval_10_min">М10</string>
+    <string name="interval_15_min">М15</string>
+    <string name="interval_30_min">М30</string>
+    <string name="interval_hour">Ч1</string>
+    <string name="interval_2_hour">Ч2</string>
+    <string name="interval_4_hour">Ч4</string>
+    <string name="interval_day">День</string>
+    <string name="interval_week">Неделя</string>
+    <string name="interval_month">Месяц</string>
 </resources>

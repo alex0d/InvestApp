@@ -9,6 +9,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import ru.alex0d.investapp.BuildConfig
 import ru.alex0d.investapp.data.remote.services.AuthApiService
+import ru.alex0d.investapp.data.remote.services.MarketApiService
 import ru.alex0d.investapp.data.remote.services.PortfolioApiService
 import ru.alex0d.investapp.data.remote.services.StockApiService
 import ru.alex0d.investapp.data.remote.services.TarotApiService
@@ -48,6 +49,10 @@ private fun provideStockService(retrofit: Retrofit): StockApiService {
     return retrofit.create(StockApiService::class.java)
 }
 
+private fun provideMarketService(retrofit: Retrofit): MarketApiService {
+    return retrofit.create(MarketApiService::class.java)
+}
+
 private fun provideTarotService(retrofit: Retrofit): TarotApiService {
     return retrofit.create(TarotApiService::class.java)
 }
@@ -68,6 +73,8 @@ val networkModule = module {
     single { providePortfolioService(retrofit = get()) }
 
     single { provideStockService(retrofit = get()) }
+
+    single { provideMarketService(retrofit = get()) }
 
     single { provideTarotService(retrofit = get()) }
 

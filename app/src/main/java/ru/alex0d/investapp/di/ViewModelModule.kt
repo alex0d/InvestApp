@@ -23,6 +23,7 @@ val viewModelModule = module {
     viewModel { parameters ->
         StockDetailsViewModel(
             stockRepository = get(),
+            marketRepository = get(),
             portfolioRepository = get(),
             stockUid = parameters.get()
         )
