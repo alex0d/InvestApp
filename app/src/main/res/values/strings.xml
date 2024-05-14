@@ -35,4 +35,5 @@
     <string name="the_tower">The Tower</string>
     <string name="the_moon">The Moon</string>
     <string name="the_sun">The Sun</string>
+    <string name="not_iir_disclaimer">Not an individual investment recommendation</string>
 </resources>

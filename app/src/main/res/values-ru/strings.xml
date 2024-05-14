@@ -36,4 +36,5 @@
     <string name="the_tower">Башня</string>
     <string name="the_moon">Луна</string>
     <string name="the_sun">Солнце</string>
+    <string name="not_iir_disclaimer">Не является индивидуальной инвестиционной рекомендацией</string>
 </resources>
