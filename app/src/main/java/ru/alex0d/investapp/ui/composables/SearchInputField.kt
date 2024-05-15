@@ -100,7 +100,7 @@ fun SearchInputField(
         },
         placeholder = {
             Text(
-                text = stringResource(R.string.enter_ticker),
+                text = stringResource(R.string.search_stock_placeholder),
                 overflow = TextOverflow.Ellipsis,
                 style = TextStyle(
                     fontWeight = FontWeight(500),

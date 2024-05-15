@@ -49,7 +49,7 @@
     <string name="interval_week">Week</string>
     <string name="interval_month">Month</string>
     <string name="not_iir_disclaimer">Not an individual investment recommendation</string>
-    <string name="enter_ticker">Enter ticker</string>
+    <string name="search_stock_placeholder">Enter name or ticker</string>
     <string name="start_investing">Start investing now!</string>
     <string name="error_occurred">Some error occurred…</string>
     <string name="no_results">Nothing was found</string>
