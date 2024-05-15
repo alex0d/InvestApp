@@ -7,6 +7,7 @@ import org.koin.dsl.module
 import ru.alex0d.investapp.data.JwtDataStore
 import ru.alex0d.investapp.data.local.AppDatabase
 import ru.alex0d.investapp.data.repositories.AuthRepository
+import ru.alex0d.investapp.data.repositories.MarketRepository
 import ru.alex0d.investapp.data.repositories.PortfolioRepository
 import ru.alex0d.investapp.data.repositories.StockRepository
 import ru.alex0d.investapp.data.repositories.TarotRepository
@@ -23,6 +24,8 @@ val dataModule = module {
     single { PortfolioRepository(portfolioApiService = get()) }
 
     single { StockRepository(stockApiService = get())}
+
+    single { MarketRepository(marketApiService = get()) }
 
     single { AuthRepository(apiService = get()) }
 

@@ -35,5 +35,18 @@
     <string name="the_tower">The Tower</string>
     <string name="the_moon">The Moon</string>
     <string name="the_sun">The Sun</string>
+    <string name="interval_1_min">M1</string>
+    <string name="interval_2_min">M2</string>
+    <string name="interval_3_min">M3</string>
+    <string name="interval_5_min">M5</string>
+    <string name="interval_10_min">M10</string>
+    <string name="interval_15_min">M15</string>
+    <string name="interval_30_min">M30</string>
+    <string name="interval_hour">H1</string>
+    <string name="interval_2_hour">H2</string>
+    <string name="interval_4_hour">H4</string>
+    <string name="interval_day">Day</string>
+    <string name="interval_week">Week</string>
+    <string name="interval_month">Month</string>
     <string name="not_iir_disclaimer">Not an individual investment recommendation</string>
 </resources>
