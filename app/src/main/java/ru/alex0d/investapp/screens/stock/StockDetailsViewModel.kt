@@ -43,6 +43,19 @@ class StockDetailsViewModel(
         fetchCandles(CandleInterval.INTERVAL_DAY)
     }
 
+    fun fetchStockDetails() {
+        viewModelScope.launch {
+            try {
+                val share = stockRepository.getShareByUid(stockUid)
+                val portfolio = portfolioRepository.getPortfolio()
+                val stockInPortfolio = portfolio.stocks.firstOrNull { it.uid == stockUid }
+                _state.value = StockDetailsState.Success(share!!, stockInPortfolio)
+            } catch (e: Exception) {
+                _state.value = StockDetailsState.Error(e.localizedMessage ?: "An error occurred")
+            }
+        }
+    }
+
     fun fetchCandles(interval: CandleInterval) {
         viewModelScope.launch {
             val newCandles = marketRepository.getCandles(
@@ -107,19 +120,6 @@ class StockDetailsViewModel(
             }
         }
         return calendar.timeInMillis / 1000
-    }
-
-    private fun fetchStockDetails() {
-        viewModelScope.launch {
-            try {
-                val share = stockRepository.getShareByUid(stockUid)
-                val portfolio = portfolioRepository.getPortfolio()
-                val stockInPortfolio = portfolio.stocks.firstOrNull { it.uid == stockUid }
-                _state.value = StockDetailsState.Success(share!!, stockInPortfolio)
-            } catch (e: Exception) {
-                _state.value = StockDetailsState.Error(e.localizedMessage ?: "An error occurred")
-            }
-        }
     }
 
 }

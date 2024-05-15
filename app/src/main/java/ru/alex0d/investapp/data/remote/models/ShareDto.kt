@@ -15,6 +15,7 @@ data class ShareDto(
     val countryOfRiskName: String,
     val sector: String,
     val lastPrice: Double,
+    val lot: Int,
     val url: String,
     val textColor: String,
     val backgroundColor: String,

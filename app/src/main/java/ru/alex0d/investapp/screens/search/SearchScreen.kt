@@ -2,26 +2,17 @@ package ru.alex0d.investapp.screens.search
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,7 +22,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -39,10 +29,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.generated.destinations.StockDetailsScreenDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -51,9 +39,9 @@ import ru.alex0d.investapp.R
 import ru.alex0d.investapp.domain.models.Share
 import ru.alex0d.investapp.ui.composables.Keyboard
 import ru.alex0d.investapp.ui.composables.SearchInputField
+import ru.alex0d.investapp.ui.composables.ShareItem
 import ru.alex0d.investapp.ui.composables.keyboardAsState
 import ru.alex0d.investapp.utils.MainGraph
-import ru.alex0d.investapp.utils.toCurrencyFormat
 
 @Destination<MainGraph>
 @Composable
@@ -220,59 +208,13 @@ private fun SearchResultsList(items: List<Share>, onItemClicked: (Share) -> Unit
                 Spacer(
                     modifier = Modifier.height(height = if (index == 0) 16.dp else 4.dp)
                 )
-                ShareItem(share = share, onClick = onItemClicked)
-            }
-        }
-    }
-}
-
-@Composable
-private fun ShareItem(
-    share: Share,
-    onClick: (Share) -> Unit = {}
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-            .clickable { onClick(share) },
-        elevation = CardDefaults.cardElevation(4.dp),
-        shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer
-        ),
-    ) {
-        Row(
-            modifier = Modifier.padding(10.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            AsyncImage(
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(CircleShape),
-                model = "https://invest-brands.cdn-tinkoff.ru/${share.url}x160.png",
-                contentDescription = "${share.name} logo"
-            )
-            Spacer(Modifier.width(10.dp))
-            Column(modifier = Modifier.weight(1f)) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = share.name,
-                        style = MaterialTheme.typography.titleMedium,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(1f)
-                    )
-                    Spacer(Modifier.width(2.dp))
-                    Text(
-                        text = share.lastPrice.toCurrencyFormat("RUB"),
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                }
+                ShareItem(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    share = share,
+                    onClick = onItemClicked
+                )
             }
         }
     }

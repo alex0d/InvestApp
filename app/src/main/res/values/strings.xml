@@ -54,4 +54,11 @@
     <string name="error_occurred">Some error occurred…</string>
     <string name="no_results">Nothing was found</string>
     <string name="stock_search">Stock search</string>
+    <string name="buying">Buying</string>
+    <string name="selling">Selling</string>
+    <string name="order_completed">Order has been completed</string>
+    <string name="amount">Amount</string>
+    <string name="available_lots">Available: %1$s lots</string>
+    <string name="pcs_in_lot">(1 lot = %1$s pc)</string>
+    <string name="total_value">Total value</string>
 </resources>

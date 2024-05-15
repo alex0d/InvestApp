@@ -3,6 +3,7 @@ package ru.alex0d.investapp.di
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import ru.alex0d.investapp.screens.login.AuthViewModel
+import ru.alex0d.investapp.screens.order.OrderViewModel
 import ru.alex0d.investapp.screens.portfolio.PortfolioViewModel
 import ru.alex0d.investapp.screens.profile.ProfileViewModel
 import ru.alex0d.investapp.screens.search.SearchViewModel
@@ -25,6 +26,15 @@ val viewModelModule = module {
             stockRepository = get(),
             marketRepository = get(),
             portfolioRepository = get(),
+            stockUid = parameters.get()
+        )
+    }
+
+    viewModel { parameters ->
+        OrderViewModel(
+            stockRepository = get(),
+            portfolioRepository = get(),
+            orderAction = parameters.get(),
             stockUid = parameters.get()
         )
     }

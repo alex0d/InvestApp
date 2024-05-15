@@ -15,6 +15,7 @@ fun ShareDto.toShare() = Share(
     countryOfRiskName = countryOfRiskName,
     sector = sector,
     lastPrice = lastPrice,
+    lot = lot,
     url = url,
     textColor = textColor,
     backgroundColor = backgroundColor

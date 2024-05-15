@@ -41,7 +41,7 @@ fun StockChart(modelProducer: CartesianChartModelProducer) {
             rememberLineCartesianLayer(
                 lines = listOf(element = rememberLineSpec(DynamicShader.color(Color(0xffa485e0)))),
                 axisValueOverrider = object : AxisValueOverrider {
-                    override fun getMaxY(minY: Float, maxY: Float, extraStore: ExtraStore) = maxY + 1
+                    override fun getMaxY(minY: Float, maxY: Float, extraStore: ExtraStore) = maxY + if (maxY > 1) 1 else 0
                     override fun getMinY(minY: Float, maxY: Float, extraStore: ExtraStore) = if (minY > 1) minY - 1 else minY
                 }
             ),

@@ -55,4 +55,11 @@
     <string name="error_occurred">Произошла ошибка…</string>
     <string name="no_results">Ничего не найдено</string>
     <string name="stock_search">Поиск акций</string>
+    <string name="buying">Покупка</string>
+    <string name="selling">Продажа</string>
+    <string name="order_completed">Заявка выполнена</string>
+    <string name="amount">Количество</string>
+    <string name="available_lots">Доступно: %1$s лотов</string>
+    <string name="pcs_in_lot">(1 лот = %1$s шт)</string>
+    <string name="total_value">Итого</string>
 </resources>

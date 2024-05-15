@@ -23,22 +23,26 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,21 +50,25 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.generated.destinations.OrderScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.TarotScreenDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.result.NavResult
+import com.ramcosta.composedestinations.result.ResultRecipient
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 import org.koin.core.parameter.parametersOf
 import ru.alex0d.investapp.R
 import ru.alex0d.investapp.domain.models.CandleInterval
 import ru.alex0d.investapp.domain.models.PortfolioStockInfo
 import ru.alex0d.investapp.domain.models.toStringRes
+import ru.alex0d.investapp.screens.order.OrderAction
 import ru.alex0d.investapp.screens.stock.chart.StockChart
 import ru.alex0d.investapp.ui.composables.ProfitText
 import ru.alex0d.investapp.utils.MainGraph
@@ -72,13 +80,38 @@ import ru.alex0d.investapp.utils.toCurrencyFormat
 @Composable
 fun StockDetailsScreen(
     navigator: DestinationsNavigator,
+    resultRecipient: ResultRecipient<OrderScreenDestination, Boolean>,
     stockUid: String = ""
 ) {
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+
     val viewModel: StockDetailsViewModel = getViewModel { parametersOf(stockUid) }
     val state = viewModel.state.collectAsState().value
     val modelProducer = viewModel.modelProducer
 
+    val orderMessage = stringResource(R.string.order_completed)
+    resultRecipient.onNavResult { result ->
+        if (result is NavResult.Value && result.value) {
+            scope.launch {
+                snackbarHostState.showSnackbar(
+                    message = orderMessage,
+                    withDismissAction = true
+                )
+                viewModel.fetchStockDetails()
+            }
+        }
+    }
+
     Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) {
+            Snackbar(
+                snackbarData = it,
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                dismissActionContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            )
+        } },
         topBar = {
             if (state is StockDetailsState.Success) {
                 TopAppBar(
@@ -173,13 +206,14 @@ private fun StockDetailsOnSuccess(
                     onSwitchChartType(chartType)
                 },
                 colors = IconButtonDefaults.iconButtonColors(
-                    containerColor = MaterialTheme.colorScheme.tertiary,
-                    contentColor = MaterialTheme.colorScheme.onTertiary
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                 )
             ) {
                 Icon(
                     painter = painterResource(id = if (chartType == ChartType.LINE) R.drawable.line_chart else R.drawable.candlestick_chart),
-                    contentDescription = null
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSecondaryContainer
                 )
             }
         }
@@ -196,7 +230,7 @@ private fun StockDetailsOnSuccess(
         }
         TarotSection(navigator, state)
         Spacer(modifier = Modifier.weight(1f))
-        SellBuyButton(state)
+        SellBuyButton(navigator, state)
     }
 }
 
@@ -232,8 +266,8 @@ private fun TabsSection(
                     .height(30.dp)
                     .widthIn(min = 40.dp),
                 colors = ButtonDefaults.textButtonColors(
-                    contentColor = if (tab == selected) MaterialTheme.colorScheme.onTertiary else MaterialTheme.colorScheme.onSurface,
-                    containerColor = if (tab == selected) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.surface
+                    containerColor = if (tab == selected) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surface,
+                    contentColor = if (tab == selected) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onSurface
                 ),
                 contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
             ) {
@@ -262,7 +296,8 @@ private fun PortfolioSection(stockInfo: PortfolioStockInfo) {
         elevation = CardDefaults.cardElevation(4.dp),
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+            contentColor = MaterialTheme.colorScheme.contentColorFor(MaterialTheme.colorScheme.surfaceContainerHighest)
         ),
     ) {
         Column(
@@ -322,24 +357,24 @@ private fun TarotSection(
             onClick = {
                 navigator.navigate(TarotScreenDestination(stockName = state.share.name))
             },
-            modifier = Modifier
-                .fillMaxWidth(0.5f),
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
             )
         ) {
             Text(
                 text = stringResource(R.string.esoteric_analysis),
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.labelMedium
             )
         }
     }
 }
 
 @Composable
-private fun SellBuyButton(state: StockDetailsState.Success) {
+private fun SellBuyButton(
+    navigator: DestinationsNavigator,
+    state: StockDetailsState.Success
+) {
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -347,31 +382,39 @@ private fun SellBuyButton(state: StockDetailsState.Success) {
         horizontalArrangement = Arrangement.SpaceAround
     ) {
         if (state.stockInfo != null) {
-            FloatingActionButton(
-                modifier = Modifier.width(110.dp),
-                containerColor = Color.Red,
-                onClick = { /* Implement sell logic */ }
+            Button(
+                modifier = Modifier.width(125.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.onSurface,
+                    contentColor = MaterialTheme.colorScheme.surface
+                ),
+                onClick = {
+                    navigator.navigate(OrderScreenDestination(orderAction = OrderAction.SELL, stockUid = state.share.uid))
+                }
             ) {
                 Text(
                     text = stringResource(R.string.sell),
                     style = MaterialTheme.typography.labelLarge.copy(
                         fontSize = 18.sp
                     ),
-                    color = Color.White
                 )
             }
         }
-        FloatingActionButton(
-            modifier = Modifier.width(110.dp),
-            containerColor = Color.Green,
-            onClick = { /* Implement buy logic */ }
+        Button(
+            modifier = Modifier.width(125.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF4376F8),
+                contentColor = Color.White
+            ),
+            onClick = {
+                navigator.navigate(OrderScreenDestination(orderAction = OrderAction.BUY, stockUid = state.share.uid))
+            }
         ) {
             Text(
                 text = stringResource(R.string.buy),
                 style = MaterialTheme.typography.labelLarge.copy(
                     fontSize = 18.sp
                 ),
-                color = Color.Black
             )
         }
     }
