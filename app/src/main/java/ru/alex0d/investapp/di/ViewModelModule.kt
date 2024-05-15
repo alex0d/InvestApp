@@ -16,7 +16,7 @@ val viewModelModule = module {
         AuthViewModel(authRepository = get(), jwtDataStore = get())
     }
 
-    viewModel { SearchViewModel() }
+    viewModel { SearchViewModel(stockRepository = get()) }
 
     viewModel { ProfileViewModel(jwtDataStore = get()) }
 

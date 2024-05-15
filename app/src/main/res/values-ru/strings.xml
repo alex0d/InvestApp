@@ -50,4 +50,9 @@
     <string name="interval_week">Неделя</string>
     <string name="interval_month">Месяц</string>
     <string name="not_iir_disclaimer">Не является индивидуальной инвестиционной рекомендацией</string>
+    <string name="enter_ticker">Введите тикер</string>
+    <string name="start_investing">Начните инвестировать уже сейчас!</string>
+    <string name="error_occurred">Произошла ошибка…</string>
+    <string name="no_results">Ничего не найдено</string>
+    <string name="stock_search">Поиск акций</string>
 </resources>
