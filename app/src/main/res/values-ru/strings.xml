@@ -63,4 +63,9 @@
     <string name="pcs_in_lot">(1 лот = %1$s шт)</string>
     <string name="total_value">Итого</string>
     <string name="empty_portfolio_message">Ваш портфель пока пуст</string>
+    <string name="refresh">Обновить</string>
+    <string name="confirm">Подтвердить</string>
+    <string name="dismiss">Отмена</string>
+    <string name="updating_prediction_title">Обновление предсказания</string>
+    <string name="updating_prediction_text">Обновляйте предсказание только в случае существенных изменений на рынке</string>
 </resources>

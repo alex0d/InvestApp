@@ -16,7 +16,6 @@ class TarotRepository(
     private val tag = TarotRepository::class.java.simpleName
 
     suspend fun getPrediction(stockName: String): TarotPrediction? {
-
         return withContext(Dispatchers.IO) {
             val prediction = getFromDatabase(stockName)
             if (prediction != null) {
@@ -25,6 +24,13 @@ class TarotRepository(
             }
 
             Log.d(tag, "Getting tarot prediction from api")
+            return@withContext getFromApi(stockName)
+        }
+    }
+
+    suspend fun refreshPrediction(stockName: String): TarotPrediction? {
+        return withContext(Dispatchers.IO) {
+            database.tarotPredictionDao().delete(stockName)
             return@withContext getFromApi(stockName)
         }
     }

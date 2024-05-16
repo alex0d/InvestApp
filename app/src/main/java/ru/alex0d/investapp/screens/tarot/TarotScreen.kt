@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -36,7 +37,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.LineBreak
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,6 +47,7 @@ import org.koin.androidx.compose.getViewModel
 import org.koin.core.parameter.parametersOf
 import ru.alex0d.investapp.R
 import ru.alex0d.investapp.domain.models.TarotCard
+import ru.alex0d.investapp.ui.composables.TwoButtonsAlertDialog
 import ru.alex0d.investapp.utils.MainGraph
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,6 +59,8 @@ fun TarotScreen(
 ) {
     val viewModel: TarotViewModel = getViewModel { parametersOf(stockName) }
     val state = viewModel.state.collectAsState().value
+
+    var openAlertDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -82,13 +85,23 @@ fun TarotScreen(
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                         titleContentColor = MaterialTheme.colorScheme.primary,
                     ),
+                    actions = {
+                        IconButton(onClick = { openAlertDialog = true }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.refresh),
+                                contentDescription = stringResource(R.string.refresh),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
                 )
             }
         }
     ) { padding ->
         Box(modifier = Modifier
             .padding(padding)
-            .padding(horizontal = 2.dp)) {
+            .padding(horizontal = 2.dp)
+        ) {
             when (state) {
                 is TarotPredictionState.Loading -> Box(
                     modifier = Modifier.fillMaxSize(),
@@ -108,6 +121,19 @@ fun TarotScreen(
                     )
                 }
                 is TarotPredictionState.Success -> TarotPredictionOnSuccess(stockName, state)
+            }
+
+            if (openAlertDialog) {
+                TwoButtonsAlertDialog(
+                    onDismissRequest = { openAlertDialog = false },
+                    onConfirmation = {
+                        openAlertDialog = false
+                        viewModel.refreshTarotPrediction()
+                    },
+                    dialogTitle = stringResource(R.string.updating_prediction_title),
+                    dialogText = stringResource(R.string.updating_prediction_text),
+                    icon = Icons.Default.Warning
+                )
             }
         }
     }

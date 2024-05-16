@@ -20,6 +20,20 @@ class TarotViewModel(
         fetchTarotPrediction()
     }
 
+    fun refreshTarotPrediction() {
+        viewModelScope.launch {
+            _state.value = TarotPredictionState.Loading
+
+            val prediction = tarotRepository.refreshPrediction(stockName)
+
+            if (prediction != null) {
+                _state.value = TarotPredictionState.Success(prediction)
+            } else {
+                _state.value = TarotPredictionState.Error("An error occurred")
+            }
+        }
+    }
+
     private fun fetchTarotPrediction() {
         viewModelScope.launch {
             val prediction = tarotRepository.getPrediction(stockName)

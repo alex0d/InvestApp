@@ -17,6 +17,9 @@ interface TarotPredictionDao {
     @Delete
     suspend fun delete(tarotPredictionDbo: TarotPredictionDbo)
 
+    @Query("DELETE FROM tarot_predictions WHERE stock_name = :stockName")
+    suspend fun delete(stockName: String)
+
     @Query("DELETE FROM tarot_predictions")
     suspend fun deleteAll()
 }

@@ -62,4 +62,9 @@
     <string name="pcs_in_lot">(1 lot = %1$s pc)</string>
     <string name="total_value">Total value</string>
     <string name="empty_portfolio_message">Your portfolio is still empty</string>
+    <string name="refresh">Refresh</string>
+    <string name="confirm">Confirm</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="updating_prediction_title">Updating the prediction</string>
+    <string name="updating_prediction_text">Update the prediction only in case of significant changes in the market</string>
 </resources>
