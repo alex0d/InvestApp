@@ -1,10 +1,18 @@
 package ru.alex0d.investapp.screens.portfolio
 
+import androidx.compose.animation.animateColor
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -14,9 +22,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,7 +34,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -41,6 +51,7 @@ import com.ramcosta.composedestinations.generated.destinations.StockDetailsScree
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import org.koin.androidx.compose.koinViewModel
 import ru.alex0d.investapp.R
+import ru.alex0d.investapp.domain.models.PortfolioInfo
 import ru.alex0d.investapp.domain.models.PortfolioStockInfo
 import ru.alex0d.investapp.screens.previewproviders.FakePortfolioStockInfo
 import ru.alex0d.investapp.ui.composables.ProfitText
@@ -54,7 +65,7 @@ fun PortfolioScreen(
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
     viewModel: PortfolioViewModel = koinViewModel()
 ) {
-    val portfolioState by viewModel.portfolioState.collectAsState()
+    val state = viewModel.state.collectAsState().value
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
@@ -71,20 +82,63 @@ fun PortfolioScreen(
         }
     }
 
-    Column(
-        modifier = Modifier.background(MaterialTheme.colorScheme.surface).statusBarsPadding(),
+    Box(
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.surface)
+            .statusBarsPadding()
     ) {
+        when (state) {
+            is PortfolioState.Loading -> PortfolioScreenOnLoading()
+            is PortfolioState.PortfolioInfoFetched -> PortfolioScreenOnSuccess(
+                portfolioInfo = state.portfolioInfo,
+                navigator = navigator
+            )
+            is PortfolioState.Error -> PortfolioScreenOnError()
+        }
+    }
+}
+
+@Composable
+private fun PortfolioScreenOnSuccess(
+    portfolioInfo: PortfolioInfo,
+    navigator: DestinationsNavigator
+) {
+    Column {
         TotalBalanceCard(
-            portfolioState.totalValue,
-            portfolioState.totalProfit,
-            portfolioState.totalProfitPercent
+            portfolioInfo.totalValue,
+            portfolioInfo.totalProfit,
+            portfolioInfo.totalProfitPercent
         )
-        LazyColumn {
-            items(portfolioState.stocks) { stock ->
-                StockItem(stock, onClick = {
-                    navigator.navigate(StockDetailsScreenDestination(stockUid = stock.uid))
-                })
+        if (portfolioInfo.stocks.isNotEmpty()) {
+            LazyColumn {
+                items(portfolioInfo.stocks) { stock ->
+                    StockItem(stock, onClick = {
+                        navigator.navigate(StockDetailsScreenDestination(stockUid = stock.uid))
+                    })
+                }
             }
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(R.string.empty_portfolio_message),
+                    style = MaterialTheme.typography.headlineSmall,
+                    textAlign = TextAlign.Center,
+                )
+                Spacer(Modifier.height(24.dp))
+                Icon(
+                    painterResource(id = R.drawable.sentiment_dissatisfied),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                    modifier = Modifier.size(48.dp)
+                )
+            }
+
         }
     }
 }
@@ -137,7 +191,6 @@ private fun StockItem(
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
         elevation = CardDefaults.cardElevation(4.dp),
-        shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.secondaryContainer
         ),
@@ -194,3 +247,70 @@ private fun StockItem(
     }
 }
 
+@Composable
+private fun PortfolioScreenOnLoading() {
+    val infiniteTransition = rememberInfiniteTransition(label = "infinite")
+
+    val topCardColor by infiniteTransition.animateColor(
+        initialValue = MaterialTheme.colorScheme.primaryContainer,
+        targetValue = MaterialTheme.colorScheme.secondaryContainer,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1000, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "topCardColor"
+    )
+
+    val itemsColor by infiniteTransition.animateColor(
+        initialValue = MaterialTheme.colorScheme.surfaceVariant,
+        targetValue = MaterialTheme.colorScheme.secondaryContainer,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1000, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "itemsColor"
+    )
+
+    Column {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp)
+                .height(128.dp),
+            elevation = CardDefaults.cardElevation(8.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = topCardColor,
+            )
+        ) { }
+        Spacer(Modifier.height(8.dp))
+        Column {
+            repeat(5) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .height(68.dp),
+                    elevation = CardDefaults.cardElevation(4.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = itemsColor
+                    )
+                ) { }
+            }
+        }
+    }
+}
+
+@Composable
+private fun PortfolioScreenOnError() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = stringResource(R.string.error_occurred),
+            textAlign = TextAlign.Center,
+        )
+    }
+}

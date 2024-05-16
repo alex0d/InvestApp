@@ -1,26 +1,26 @@
 package ru.alex0d.investapp.domain.models
 
 data class PortfolioInfo(
-    var totalValue: Double,
-    var totalProfit: Double,
-    var totalProfitPercent: Double,
-    var stocks: List<PortfolioStockInfo>
+    val totalValue: Double,
+    val totalProfit: Double,
+    val totalProfitPercent: Double,
+    val stocks: List<PortfolioStockInfo>
 )
 
 data class PortfolioStockInfo(
-    var uid: String,
-    var ticker: String,
-    var name: String,
+    val uid: String,
+    val ticker: String,
+    val name: String,
 
-    var amount: Int,
-    var averagePrice: Double,
-    var lastPrice: Double,
+    val amount: Int,
+    val averagePrice: Double,
+    val lastPrice: Double,
 
-    var totalValue: Double,
-    var profit: Double,
-    var profitPercent: Double,
+    val totalValue: Double,
+    val profit: Double,
+    val profitPercent: Double,
 
-    var logoUrl: String,
-    var backgroundColor: String,
-    var textColor: String
+    val logoUrl: String,
+    val backgroundColor: String,
+    val textColor: String
 )
