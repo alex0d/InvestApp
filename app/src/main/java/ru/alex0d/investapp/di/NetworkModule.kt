@@ -16,6 +16,7 @@ import ru.alex0d.investapp.data.remote.services.StockApiService
 import ru.alex0d.investapp.data.remote.services.TarotApiService
 import ru.alex0d.investapp.utils.AuthAuthenticator
 import ru.alex0d.investapp.utils.AuthInterceptor
+import java.util.concurrent.TimeUnit
 
 const val investApiBaseUrl = BuildConfig.INVEST_API_BASE_URL
 
@@ -31,6 +32,7 @@ private fun provideHttpClient(
         )
         .addInterceptor(authInterceptor)
         .authenticator(authAuthenticator)
+        .readTimeout(60, TimeUnit.SECONDS)
         .build()
 }
 

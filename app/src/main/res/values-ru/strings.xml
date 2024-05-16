@@ -23,7 +23,7 @@
     <string name="the_empress">Императрица</string>
     <string name="the_emperor">Император</string>
     <string name="the_hierophant">Жрец</string>
-    <string name="the_lovers">Влюбленные</string>
+    <string name="the_lovers">Влюблённые</string>
     <string name="the_chariot">Колесница</string>
     <string name="justice">Правосудие</string>
     <string name="the_hermit">Отшельник</string>
@@ -62,4 +62,5 @@
     <string name="available_lots">Доступно: %1$s лотов</string>
     <string name="pcs_in_lot">(1 лот = %1$s шт)</string>
     <string name="total_value">Итого</string>
+    <string name="empty_portfolio_message">Ваш портфель пока пуст</string>
 </resources>
