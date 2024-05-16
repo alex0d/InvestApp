@@ -61,4 +61,5 @@
     <string name="available_lots">Available: %1$s lots</string>
     <string name="pcs_in_lot">(1 lot = %1$s pc)</string>
     <string name="total_value">Total value</string>
+    <string name="empty_portfolio_message">Your portfolio is still empty</string>
 </resources>

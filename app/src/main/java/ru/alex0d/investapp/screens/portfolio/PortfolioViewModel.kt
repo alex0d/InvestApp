@@ -15,9 +15,9 @@ import ru.alex0d.investapp.domain.models.PortfolioInfo
 class PortfolioViewModel(
     private val portfolioRepository: PortfolioRepository
 ) : ViewModel() {
-    private val _portfolioState =
-        MutableStateFlow<PortfolioInfo>(PortfolioInfo(0.0, 0.0, 0.0, emptyList()))
-    val portfolioState: StateFlow<PortfolioInfo> = _portfolioState.asStateFlow()
+
+    private val _state = MutableStateFlow<PortfolioState>(PortfolioState.Loading)
+    val state: StateFlow<PortfolioState> = _state.asStateFlow()
 
     private var updateJob: Job? = null
 
@@ -25,7 +25,7 @@ class PortfolioViewModel(
         updateJob = viewModelScope.launch {
             while (isActive) {
                 updatePortfolioState()
-                delay(50000)
+                delay(30000)
             }
         }
     }
@@ -37,6 +37,16 @@ class PortfolioViewModel(
 
     private suspend fun updatePortfolioState() {
         val portfolioInfo = portfolioRepository.getPortfolio()
-        _portfolioState.value = portfolioInfo
+        portfolioInfo?.let {
+            _state.value = PortfolioState.PortfolioInfoFetched(it)
+        } ?: run {
+            _state.value = PortfolioState.Error
+        }
     }
+}
+
+sealed class PortfolioState {
+    object Loading : PortfolioState()
+    data class PortfolioInfoFetched(val portfolioInfo: PortfolioInfo) : PortfolioState()
+    object Error : PortfolioState()
 }

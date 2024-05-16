@@ -48,7 +48,7 @@ class StockDetailsViewModel(
             try {
                 val share = stockRepository.getShareByUid(stockUid)
                 val portfolio = portfolioRepository.getPortfolio()
-                val stockInPortfolio = portfolio.stocks.firstOrNull { it.uid == stockUid }
+                val stockInPortfolio = portfolio?.stocks?.firstOrNull { it.uid == stockUid }
                 _state.value = StockDetailsState.Success(share!!, stockInPortfolio)
             } catch (e: Exception) {
                 _state.value = StockDetailsState.Error(e.localizedMessage ?: "An error occurred")
