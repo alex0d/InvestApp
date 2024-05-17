@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
-import ru.alex0d.investapp.data.JwtDataStore
 import ru.alex0d.investapp.data.local.AppDatabase
+import ru.alex0d.investapp.data.local.JwtDataStore
 import ru.alex0d.investapp.data.repositories.AuthRepository
 import ru.alex0d.investapp.data.repositories.MarketRepository
 import ru.alex0d.investapp.data.repositories.PortfolioRepository

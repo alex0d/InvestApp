@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
-import ru.alex0d.investapp.data.JwtDataStore
+import ru.alex0d.investapp.data.local.JwtDataStore
 
 class AuthInterceptor(private val jwtDataStore: JwtDataStore) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {

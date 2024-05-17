@@ -243,7 +243,7 @@ private fun LoginButtons(
 ) {
     Button(
         onClick = onAuthenticate,
-        enabled = isLoginButtonEnabled
+        enabled = isLoginButtonEnabled && !isLoading
     ) {
         if (!isLoading) {
             Text(stringResource(R.string.log_in))
@@ -271,7 +271,7 @@ private fun RegisterButtons(
 ) {
     Button(
         onClick = onRegister,
-        enabled = isRegisterButtonEnabled
+        enabled = isRegisterButtonEnabled && !isLoading
     ) {
         if (!isLoading) {
             Text(stringResource(R.string.register))
@@ -308,12 +308,12 @@ private fun SnackbarOnError(
                 AuthResult.USER_NOT_FOUND -> snackbarHostState.showSnackbar(userNotFoundMessage, withDismissAction = true)
                 else -> snackbarHostState.showSnackbar(unknownErrorMessage, withDismissAction = true)
             }
+            clearError()
         }
-        clearError()
     }
 }
 
-sealed class AuthScreenState {
+private sealed class AuthScreenState {
     object Login : AuthScreenState()
     object Register : AuthScreenState()
 }

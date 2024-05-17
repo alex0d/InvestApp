@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import ru.alex0d.investapp.data.JwtDataStore
+import ru.alex0d.investapp.data.local.JwtDataStore
 import ru.alex0d.investapp.data.repositories.AuthRepository
 import ru.alex0d.investapp.domain.models.AuthData
 import ru.alex0d.investapp.domain.models.AuthResult

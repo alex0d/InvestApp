@@ -17,16 +17,13 @@ class SearchViewModel(
     private val stockRepository: StockRepository
 ) : ViewModel() {
 
-    private val _searchFieldState: MutableStateFlow<SearchFieldState> =
-        MutableStateFlow(SearchFieldState.Idle)
+    private val _searchFieldState = MutableStateFlow<SearchFieldState>(SearchFieldState.Idle)
     val searchFieldState: StateFlow<SearchFieldState> = _searchFieldState
 
-    private val _viewState: MutableStateFlow<ViewState> =
-        MutableStateFlow(ViewState.IdleScreen)
+    private val _viewState = MutableStateFlow<ViewState>(ViewState.IdleScreen)
     val viewState: StateFlow<ViewState> = _viewState
 
-    private val _inputText: MutableStateFlow<String> =
-        MutableStateFlow("")
+    private val _inputText = MutableStateFlow("")
     val inputText: StateFlow<String> = _inputText
 
     private val isInitialized = AtomicBoolean(false)

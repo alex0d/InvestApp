@@ -13,7 +13,7 @@ import okhttp3.Route
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import ru.alex0d.investapp.BuildConfig
-import ru.alex0d.investapp.data.JwtDataStore
+import ru.alex0d.investapp.data.local.JwtDataStore
 import ru.alex0d.investapp.data.remote.models.AuthResponse
 import ru.alex0d.investapp.data.remote.models.RefreshRequest
 import ru.alex0d.investapp.data.remote.services.AuthApiService

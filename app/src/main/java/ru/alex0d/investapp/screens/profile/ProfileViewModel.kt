@@ -2,7 +2,7 @@ package ru.alex0d.investapp.screens.profile
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.runBlocking
-import ru.alex0d.investapp.data.JwtDataStore
+import ru.alex0d.investapp.data.local.JwtDataStore
 
 class ProfileViewModel(
     private val jwtDataStore: JwtDataStore

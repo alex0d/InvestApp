@@ -236,9 +236,7 @@ fun OrderScreen(
                         ) {
                             if (!inTransaction) {
                                 Text(
-                                    text = if (orderAction == OrderAction.BUY) stringResource(R.string.buy) else stringResource(
-                                        R.string.sell
-                                    ),
+                                    text = if (orderAction == OrderAction.BUY) stringResource(R.string.buy) else stringResource(R.string.sell),
                                     style = MaterialTheme.typography.labelLarge.copy(
                                         fontSize = 18.sp
                                     )

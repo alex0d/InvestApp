@@ -1,4 +1,4 @@
-package ru.alex0d.investapp.data
+package ru.alex0d.investapp.data.local
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit
