@@ -76,4 +76,5 @@
     <string name="invalid_credentials">Неверный пароль</string>
     <string name="user_not_found">Пользователя с указанным адресом электронной почты не существует</string>
     <string name="unknown_error">Неизвестная ошибка</string>
+    <string name="logout">Выйти</string>
 </resources>
