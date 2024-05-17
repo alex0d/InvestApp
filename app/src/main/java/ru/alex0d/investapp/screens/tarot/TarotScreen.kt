@@ -99,7 +99,7 @@ fun TarotScreen(
         }
     ) { padding ->
         Box(modifier = Modifier
-            .padding(padding)
+            .padding(top = padding.calculateTopPadding())
             .padding(horizontal = 2.dp)
         ) {
             when (state) {
@@ -154,13 +154,12 @@ private fun TarotPredictionOnSuccess(
     }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp),
+        modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         AnimatedVisibility(visible = visible) {
             LazyColumn(
+                modifier = Modifier.padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 item {
@@ -175,7 +174,7 @@ private fun TarotPredictionOnSuccess(
                         fontSize = 30.sp,
                     )
                     Image(
-                        modifier = Modifier.clip(RoundedCornerShape(16.dp)),
+                        modifier = Modifier.fillParentMaxWidth(0.7f).clip(RoundedCornerShape(16.dp)),
                         painter = painterResource(id = getTarotImage(state.prediction.card)),
                         contentDescription = ""
                     )

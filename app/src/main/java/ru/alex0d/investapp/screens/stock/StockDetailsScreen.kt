@@ -148,7 +148,7 @@ fun StockDetailsScreen(
         }
     ) { padding ->
         Box(modifier = Modifier
-            .padding(padding)
+            .padding(top = padding.calculateTopPadding())
             .padding(horizontal = 2.dp)) {
             when (state) {
                 is StockDetailsState.Loading -> Box(
@@ -224,19 +224,20 @@ private fun StockDetailsOnSuccess(
         ) {
             StockChart(modelProducer)
         }
-        TabsSection(onIntervalClick = onIntervalClick)
+        IntervalTabsSection(onIntervalClick = onIntervalClick)
         state.stockInfo?.let { stockInfo ->
             PortfolioSection(stockInfo)
+        } ?: run {
+            TarotSection(navigator, state)
         }
-        TarotSection(navigator, state)
         Spacer(modifier = Modifier.weight(1f))
-        SellBuyButton(navigator, state)
+        ButtonsSection(navigator, state)
     }
 }
 
 @Preview
 @Composable
-private fun TabsSection(
+private fun IntervalTabsSection(
     onIntervalClick: (CandleInterval) -> Unit = {}
 ) {
     var selected by remember { mutableStateOf(CandleInterval.INTERVAL_DAY) }
@@ -370,38 +371,52 @@ private fun TarotSection(
 }
 
 @Composable
-private fun SellBuyButton(
+private fun ButtonsSection(
     navigator: DestinationsNavigator,
     state: StockDetailsState.Success
 ) {
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceAround
+            .padding(vertical = 16.dp, horizontal = 8.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         if (state.stockInfo != null) {
+            IconButton(
+                modifier = Modifier.width(60.dp),
+                onClick = { navigator.navigate(TarotScreenDestination(stockName = state.share.name)) },
+                colors = IconButtonDefaults.iconButtonColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+
+                )
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.cards),
+                    contentDescription = stringResource(R.string.esoteric_analysis),
+                )
+            }
             Button(
-                modifier = Modifier.width(125.dp),
+                modifier = Modifier.width(120.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.onSurface,
                     contentColor = MaterialTheme.colorScheme.surface
                 ),
                 onClick = {
                     navigator.navigate(OrderScreenDestination(orderAction = OrderAction.SELL, stockUid = state.share.uid))
-                }
+                },
+                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
             ) {
                 Text(
                     text = stringResource(R.string.sell),
                     style = MaterialTheme.typography.labelLarge.copy(
-                        fontSize = 18.sp
+                        fontSize = 16.sp
                     ),
                 )
             }
         }
         Button(
-            modifier = Modifier.width(125.dp),
+            modifier = Modifier.width(120.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFF4376F8),
                 contentColor = Color.White
@@ -413,7 +428,7 @@ private fun SellBuyButton(
             Text(
                 text = stringResource(R.string.buy),
                 style = MaterialTheme.typography.labelLarge.copy(
-                    fontSize = 18.sp
+                    fontSize = 16.sp
                 ),
             )
         }
