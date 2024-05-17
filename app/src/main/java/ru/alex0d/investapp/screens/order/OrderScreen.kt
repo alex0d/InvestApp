@@ -148,57 +148,53 @@ fun OrderScreen(
                         )
                         Spacer(modifier = Modifier.height(28.dp))
 
-                        Text(stringResource(R.string.amount), color = Color.Gray)
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            TextField(
-                                modifier = Modifier.weight(1f),
-                                value = inputLots.toString(),
-                                onValueChange = { newValue: String -> viewModel.updateInputLots(newValue) },
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                colors = TextFieldDefaults.colors(
-                                    focusedContainerColor = MaterialTheme.colorScheme.surface,
-                                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
-                                ),
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Row(
-                                horizontalArrangement = Arrangement.End
-                            ) {
-                                IconButton(
-                                    onClick = { viewModel.decreaseLots() },
-                                    enabled = inputLots > 0
+                        Text(stringResource(R.string.lots_amount), color = Color.Gray)
+                        TextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            value = inputLots.toString(),
+                            onValueChange = { newValue: String -> viewModel.updateInputLots(newValue) },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                            ),
+                            trailingIcon = {
+                                Row(
+                                    horizontalArrangement = Arrangement.End
                                 ) {
-                                    Icon(
-                                        painterResource(id = R.drawable.minus),
-                                        modifier = Modifier.size(24.dp),
-                                        contentDescription = null,
-                                        tint = if (inputLots > 0) {
-                                            if (context.isDarkThemeOn()) Color.White else Color.DarkGray
-                                        } else {
-                                            if (context.isDarkThemeOn()) Color.Gray else Color.LightGray
-                                        }
-                                    )
+                                    IconButton(
+                                        onClick = { viewModel.decreaseLots() },
+                                        enabled = inputLots > 0
+                                    ) {
+                                        Icon(
+                                            painterResource(id = R.drawable.minus),
+                                            modifier = Modifier.size(24.dp),
+                                            contentDescription = null,
+                                            tint = if (inputLots > 0) {
+                                                if (context.isDarkThemeOn()) Color.White else Color.DarkGray
+                                            } else {
+                                                if (context.isDarkThemeOn()) Color.Gray else Color.LightGray
+                                            }
+                                        )
+                                    }
+                                    IconButton(
+                                        onClick = { viewModel.increaseLots() },
+                                        enabled = orderAction == OrderAction.BUY || inputLots < availableLots
+                                    ) {
+                                        Icon(
+                                            painterResource(id = R.drawable.plus),
+                                            modifier = Modifier.size(24.dp),
+                                            contentDescription = null,
+                                            tint = if (orderAction == OrderAction.BUY || inputLots < availableLots) {
+                                                if (context.isDarkThemeOn()) Color.White else Color.DarkGray
+                                            } else {
+                                                if (context.isDarkThemeOn()) Color.Gray else Color.LightGray
+                                            }
+                                        )
+                                    }
                                 }
-                                IconButton(
-                                    onClick = { viewModel.increaseLots() },
-                                    enabled = orderAction == OrderAction.BUY || inputLots < availableLots
-                                ) {
-                                    Icon(
-                                        painterResource(id = R.drawable.plus),
-                                        modifier = Modifier.size(24.dp),
-                                        contentDescription = null,
-                                        tint = if (orderAction == OrderAction.BUY || inputLots < availableLots) {
-                                            if (context.isDarkThemeOn()) Color.White else Color.DarkGray
-                                        } else {
-                                            if (context.isDarkThemeOn()) Color.Gray else Color.LightGray
-                                        }
-                                    )
-                                }
-                            }
-                        }
+                            },
+                        )
                         Spacer(modifier = Modifier.height(8.dp))
 
                         Row(

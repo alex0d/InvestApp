@@ -53,7 +53,7 @@ import org.koin.androidx.compose.koinViewModel
 import ru.alex0d.investapp.R
 import ru.alex0d.investapp.domain.models.PortfolioInfo
 import ru.alex0d.investapp.domain.models.PortfolioStockInfo
-import ru.alex0d.investapp.screens.previewproviders.FakePortfolioStockInfo
+import ru.alex0d.investapp.utils.previewproviders.FakePortfolioStockInfo
 import ru.alex0d.investapp.ui.composables.ProfitText
 import ru.alex0d.investapp.utils.MainGraph
 import ru.alex0d.investapp.utils.toCurrencyFormat

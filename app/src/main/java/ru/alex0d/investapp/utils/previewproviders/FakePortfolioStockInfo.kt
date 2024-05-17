@@ -1,4 +1,4 @@
-package ru.alex0d.investapp.screens.previewproviders
+package ru.alex0d.investapp.utils.previewproviders
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import ru.alex0d.investapp.domain.models.PortfolioStockInfo
