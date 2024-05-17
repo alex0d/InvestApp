@@ -57,11 +57,7 @@ fun StockChart(modelProducer: CartesianChartModelProducer) {
             },
 
             startAxis = rememberStartAxis(
-                valueFormatter = object : CartesianValueFormatter {
-                    override fun format(value: Float, chartValues: ChartValues, verticalAxisPosition: AxisPosition.Vertical?): CharSequence {
-                        return value.toDouble().toDecimalFormat()
-                    }
-                },
+                valueFormatter = { value, _, _ -> value.toDouble().toDecimalFormat() },
                 itemPlacer = AxisItemPlacer.Vertical.count({ 4 })
             ),
             bottomAxis = rememberBottomAxis(

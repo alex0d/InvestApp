@@ -17,7 +17,6 @@ class StockRepository(private val stockApiService: StockApiService) {
                 Log.d(tag, "Got shares by ticker")
                 shares.map { it.toShare() }
             } catch (e: Exception) {
-                // TODO: handle error
                 Log.e(tag, "Error getting shares by ticker $ticker", e)
                 null
             }
@@ -31,7 +30,6 @@ class StockRepository(private val stockApiService: StockApiService) {
                 Log.d(tag, "Got share by uid")
                 share.toShare()
             } catch (e: Exception) {
-                // TODO: handle error
                 Log.e(tag, "Error getting share by uid $uid", e)
                 null
             }

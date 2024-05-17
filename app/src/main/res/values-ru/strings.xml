@@ -10,7 +10,7 @@
     <string name="log_in">Войти</string>
     <string name="register">Зарегистрироваться</string>
     <string name="firstname">Имя</string>
-    <string name="lastname">Фамилия</string>
+    <string name="lastname_optional">Фамилия (необязательно)</string>
     <string name="go_back">Назад</string>
     <string name="in_portfolio_text">В портфеле</string>
     <string name="buy">Купить</string>

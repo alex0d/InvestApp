@@ -27,13 +27,25 @@ class PortfolioRepository(private val portfolioApiService: PortfolioApiService) 
 
     suspend fun buyStock(uid: String, amount: Int): Boolean {
         val request = BuyStockRequest(uid, amount)
-        val response = portfolioApiService.buyStock(request)
+
+        val response = try {
+            portfolioApiService.buyStock(request)
+        } catch (e: Exception) {
+            return false
+        }
+
         return response.isSuccessful && response.body().toString() == "Stock bought"
     }
 
     suspend fun sellStock(uid: String, amount: Int): Boolean {
         val request = SellStockRequest(uid, amount)
-        val response = portfolioApiService.sellStock(request)
+
+        val response = try {
+            portfolioApiService.sellStock(request)
+        } catch (e: Exception) {
+            return false
+        }
+
         return response.isSuccessful && response.body().toString() == "Stock sold"
     }
 }

@@ -20,13 +20,13 @@ class OrderViewModel(
     private val _state = MutableStateFlow<OrderDetailsState>(OrderDetailsState.Loading)
     val state: StateFlow<OrderDetailsState> = _state
 
-    private val _availableLots = MutableStateFlow<Int>(0)
+    private val _availableLots = MutableStateFlow(0)
     val availableLots: StateFlow<Int> = _availableLots
 
-    private val _inputLots = MutableStateFlow<Int>(0)
+    private val _inputLots = MutableStateFlow(0)
     val inputLots: StateFlow<Int> = _inputLots
 
-    private val _totalValue = MutableStateFlow<String>("")
+    private val _totalValue = MutableStateFlow("")
     val totalValue: StateFlow<String> = _totalValue
 
     init {

@@ -66,9 +66,9 @@ private fun provideAuthService(retrofit: Retrofit): AuthApiService {
 }
 
 val networkModule = module {
-    single { AuthInterceptor(jwtDataStore = get()) }
+    single { AuthInterceptor(userDataStore = get()) }
 
-    single { AuthAuthenticator(jwtDataStore = get()) }
+    single { AuthAuthenticator(userDataStore = get()) }
 
     single { provideHttpClient(authInterceptor = get(), authAuthenticator = get()) }
 

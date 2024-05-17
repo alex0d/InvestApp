@@ -9,7 +9,7 @@
     <string name="log_in">Log in</string>
     <string name="register">Register</string>
     <string name="firstname">First name</string>
-    <string name="lastname">Last name</string>
+    <string name="lastname_optional">Last name (optional)</string>
     <string name="go_back">Go back</string>
     <string name="in_portfolio_text">In the portfolio</string>
     <string name="buy">Buy</string>

@@ -184,7 +184,7 @@ private fun NameTextFields(
     OutlinedTextField(
         value = lastname,
         onValueChange = { onLastnameUpdate(it) },
-        label = { Text(stringResource(R.string.lastname)) },
+        label = { Text(stringResource(R.string.lastname_optional)) },
         modifier = Modifier.fillMaxWidth(),
         keyboardOptions = KeyboardOptions(
             imeAction = ImeAction.Next

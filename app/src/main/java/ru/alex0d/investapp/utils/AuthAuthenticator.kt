@@ -13,7 +13,7 @@ import okhttp3.Route
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import ru.alex0d.investapp.BuildConfig
-import ru.alex0d.investapp.data.local.JwtDataStore
+import ru.alex0d.investapp.data.local.UserDataStore
 import ru.alex0d.investapp.data.remote.models.AuthResponse
 import ru.alex0d.investapp.data.remote.models.RefreshRequest
 import ru.alex0d.investapp.data.remote.services.AuthApiService
@@ -21,12 +21,12 @@ import ru.alex0d.investapp.data.remote.services.AuthApiService
 const val investApiBaseUrl = BuildConfig.INVEST_API_BASE_URL
 
 class AuthAuthenticator(
-    private val jwtDataStore: JwtDataStore
+    private val userDataStore: UserDataStore
 ) : Authenticator {
 
     override fun authenticate(route: Route?, response: Response): Request? {
         val token = runBlocking {
-            jwtDataStore.refreshToken.first()
+            userDataStore.refreshToken.first()
         } ?: return null
 
         return runBlocking {
@@ -37,8 +37,8 @@ class AuthAuthenticator(
             }
 
             newToken.let {
-                jwtDataStore.saveAccessToken(it.accessToken)
-                jwtDataStore.saveRefreshToken(it.refreshToken)
+                userDataStore.saveAccessToken(it.accessToken)
+                userDataStore.saveRefreshToken(it.refreshToken)
 
                 response.request.newBuilder()
                     .header("Authorization", "Bearer ${it.accessToken}")

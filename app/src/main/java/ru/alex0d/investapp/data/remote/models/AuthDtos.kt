@@ -11,13 +11,16 @@ data class AuthRequest(
 @Serializable
 data class RegisterRequest(
     val firstname: String,
-    val lastname: String,
+    val lastname: String? = null,
     val email: String,
     val password: String
 )
 
 @Serializable
 data class AuthResponse(
+    val firstname: String,
+    val lastname: String? = null,
+    val email: String,
     val accessToken: String,
     val refreshToken: String
 )

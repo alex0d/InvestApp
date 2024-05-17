@@ -9,16 +9,12 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import ru.alex0d.investapp.data.local.JwtDataStore
 import ru.alex0d.investapp.data.repositories.AuthRepository
-import ru.alex0d.investapp.domain.models.AuthData
 import ru.alex0d.investapp.domain.models.AuthResult
 
 class AuthViewModel(
-    private val authRepository: AuthRepository,
-    private val jwtDataStore: JwtDataStore
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     private val _authState = MutableStateFlow<AuthState>(AuthState.Idle)
@@ -34,7 +30,7 @@ class AuthViewModel(
 
     var lastname by mutableStateOf("")
         private set
-    var isValidLastname by mutableStateOf(false)
+    var isValidLastname by mutableStateOf(true)
         private set
 
     var email by mutableStateOf("")
@@ -49,9 +45,8 @@ class AuthViewModel(
 
     init {
         viewModelScope.launch {
-            val accessToken = jwtDataStore.accessToken.first()
-            val refreshToken = jwtDataStore.refreshToken.first()
-            if (!accessToken.isNullOrEmpty() && !refreshToken.isNullOrEmpty()) {
+            val authResult = authRepository.authenticateByTokensInDataBase()
+            if (authResult == AuthResult.SUCCESS) {
                 _authState.value = AuthState.Success
             }
         }
@@ -60,13 +55,13 @@ class AuthViewModel(
     fun updateFirstname(value: String) {
         if (value.length > 40) return
         firstname = value
-        isValidFirstname = Regex("^[A-ZА-Я .]{1,40}\$", RegexOption.IGNORE_CASE).matches(value)
+        isValidFirstname = Regex("^[A-ZА-Я ]{1,40}\$", RegexOption.IGNORE_CASE).matches(value)
     }
 
     fun updateLastname(value: String) {
         if (value.length > 40) return
         lastname = value
-        isValidLastname = Regex("^[A-ZА-Я .]{1,40}\$", RegexOption.IGNORE_CASE).matches(value)
+        isValidLastname = Regex("^[A-ZА-Я ]{0,40}\$", RegexOption.IGNORE_CASE).matches(value)
     }
 
     fun updateEmail(value: String) {
@@ -88,16 +83,16 @@ class AuthViewModel(
         if (!(isValidFirstname && isValidLastname && isValidEmail && isValidPassword)) return
 
         firstname = firstname.trim()
-        lastname = lastname.trim()
+        val userLastname = if (lastname.isNotBlank()) lastname.trim() else null
 
         viewModelScope.launch {
             _authState.value = AuthState.Loading
 
-            val response = authRepository.register(firstname, lastname, email, password)
-            if (response.result == AuthResult.SUCCESS) {
-                onSuccessAuth(response)
+            val authResult = authRepository.register(firstname, userLastname, email, password)
+            if (authResult == AuthResult.SUCCESS) {
+                _authState.value = AuthState.Success
             } else {
-                _authErrorState.value = AuthErrorState.Error(response.result)
+                _authErrorState.value = AuthErrorState.Error(authResult)
                 _authState.value = AuthState.Idle
             }
         }
@@ -109,20 +104,14 @@ class AuthViewModel(
         viewModelScope.launch {
             _authState.value = AuthState.Loading
 
-            val response = authRepository.authenticate(email, password)
-            if (response.result == AuthResult.SUCCESS) {
-                onSuccessAuth(response)
+            val authResult = authRepository.authenticate(email, password)
+            if (authResult == AuthResult.SUCCESS) {
+                _authState.value = AuthState.Success
             } else {
-                _authErrorState.value = AuthErrorState.Error(response.result)
+                _authErrorState.value = AuthErrorState.Error(authResult)
                 _authState.value = AuthState.Idle
             }
         }
-    }
-
-    private suspend fun onSuccessAuth(response: AuthData) {
-        jwtDataStore.saveAccessToken(response.accessToken!!)
-        jwtDataStore.saveRefreshToken(response.refreshToken!!)
-        _authState.value = AuthState.Success
     }
 }
 
