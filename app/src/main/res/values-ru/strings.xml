@@ -10,7 +10,7 @@
     <string name="log_in">Войти</string>
     <string name="register">Зарегистрироваться</string>
     <string name="firstname">Имя</string>
-    <string name="last_name">Фамилия</string>
+    <string name="lastname">Фамилия</string>
     <string name="go_back">Назад</string>
     <string name="in_portfolio_text">В портфеле</string>
     <string name="buy">Купить</string>
@@ -68,4 +68,12 @@
     <string name="dismiss">Отмена</string>
     <string name="updating_prediction_title">Обновление предсказания</string>
     <string name="updating_prediction_text">Обновляйте предсказание только в случае существенных изменений на рынке</string>
+    <string name="invalid_email">Введите корректный e-mail</string>
+    <string name="invalid_password" >Пароль должен содержать символы обоих регистров и  состоять как минимум из 8 символов. Также он должен содержать по крайней мере одну цифру</string>
+    <string name="invalid_firstname">Имя не должно содержать символы</string>
+    <string name="invalid_lastname">Фамилия не должна содержать символы</string>
+    <string name="email_already_registered">Пользователь с этим адресом электронной почты уже существует</string>
+    <string name="invalid_credentials">Неверный пароль</string>
+    <string name="user_not_found">Пользователя с указанным адресом электронной почты не существует</string>
+    <string name="unknown_error">Неизвестная ошибка</string>
 </resources>

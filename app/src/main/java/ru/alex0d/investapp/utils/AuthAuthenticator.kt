@@ -14,9 +14,9 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import ru.alex0d.investapp.BuildConfig
 import ru.alex0d.investapp.data.JwtDataStore
-import ru.alex0d.investapp.data.remote.services.AuthApiService
 import ru.alex0d.investapp.data.remote.models.AuthResponse
 import ru.alex0d.investapp.data.remote.models.RefreshRequest
+import ru.alex0d.investapp.data.remote.services.AuthApiService
 
 const val investApiBaseUrl = BuildConfig.INVEST_API_BASE_URL
 
@@ -60,6 +60,6 @@ class AuthAuthenticator(
 
         val service = retrofit.create(AuthApiService::class.java)
 
-        return service.refresh(RefreshRequest(refreshToken))
+        return service.refresh(RefreshRequest(refreshToken)).body()!!
     }
 }
