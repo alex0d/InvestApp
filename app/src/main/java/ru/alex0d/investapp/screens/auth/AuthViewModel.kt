@@ -1,9 +1,9 @@
 package ru.alex0d.investapp.screens.auth
 
-import android.util.Patterns
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.util.PatternsCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -66,7 +66,7 @@ class AuthViewModel(
 
     fun updateEmail(value: String) {
         email = value
-        isValidEmail = Patterns.EMAIL_ADDRESS.matcher(value).matches()
+        isValidEmail = PatternsCompat.EMAIL_ADDRESS.matcher(value).matches()
     }
 
     fun updatePassword(value: String) {

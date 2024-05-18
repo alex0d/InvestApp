@@ -224,7 +224,8 @@ private fun StockItem(
                     Spacer(Modifier.width(2.dp))
                     Text(
                         text = stock.totalValue.toCurrencyFormat("RUB"),
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleMedium,
+                        textAlign = TextAlign.End
                     )
                 }
                 Row(
@@ -236,10 +237,12 @@ private fun StockItem(
                         text = "${stock.amount} ${stringResource(R.string.pieces_short)} · ${stock.lastPrice.toCurrencyFormat("RUB")}",
                         style = MaterialTheme.typography.bodySmall
                     )
+                    Spacer(Modifier.width(2.dp))
                     ProfitText(
                         profit = stock.profit,
                         profitPercent = stock.profitPercent,
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodySmall,
+                        textAlign = TextAlign.End
                     )
                 }
             }
