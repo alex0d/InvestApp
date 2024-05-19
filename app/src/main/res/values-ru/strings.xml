@@ -77,4 +77,6 @@
     <string name="user_not_found">Пользователя с указанным адресом электронной почты не существует</string>
     <string name="unknown_error">Неизвестная ошибка</string>
     <string name="logout">Выйти</string>
+    <string name="switch_to_candlestick_chart">Переключить на свечной график</string>
+    <string name="switch_to_line_chart">Переключить на линейный график</string>
 </resources>

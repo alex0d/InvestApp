@@ -76,4 +76,6 @@
     <string name="user_not_found">The user with the specified email was not found</string>
     <string name="unknown_error">Unknown error</string>
     <string name="logout">Log out</string>
+    <string name="switch_to_candlestick_chart">Switch to candlestick chart</string>
+    <string name="switch_to_line_chart">Switch to line chart</string>
 </resources>

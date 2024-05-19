@@ -9,6 +9,7 @@ import ru.alex0d.investapp.data.repositories.PortfolioRepository
 import ru.alex0d.investapp.data.repositories.StockRepository
 import ru.alex0d.investapp.domain.models.Share
 import ru.alex0d.investapp.utils.toCurrencyFormat
+import ru.alex0d.investapp.utils.toIntOrZero
 
 class OrderViewModel(
     private val stockRepository: StockRepository,
@@ -23,8 +24,8 @@ class OrderViewModel(
     private val _availableLots = MutableStateFlow(0)
     val availableLots: StateFlow<Int> = _availableLots
 
-    private val _inputLots = MutableStateFlow(0)
-    val inputLots: StateFlow<Int> = _inputLots
+    private val _lotsInput = MutableStateFlow("0")
+    val lotsInput: StateFlow<String> = _lotsInput
 
     private val _totalValue = MutableStateFlow("")
     val totalValue: StateFlow<String> = _totalValue
@@ -55,33 +56,38 @@ class OrderViewModel(
     }
 
     fun increaseLots() {
-        updateInputLots((inputLots.value + 1).toString())
+        val lotsInt = lotsInput.value.toIntOrZero()
+        updateLotsInput((lotsInt + 1).toString())
     }
 
     fun decreaseLots() {
-        updateInputLots((inputLots.value - 1).toString())
+        val lotsInt = lotsInput.value.toIntOrZero()
+        updateLotsInput((lotsInt - 1).toString())
     }
 
-    fun updateInputLots(lots: String) {
-        var newLots = lots.toIntOrNull() ?: 0
+    fun updateLotsInput(lots: String) {
+        var newLots = lots.toIntOrZero()
         newLots = maxOf(0, newLots)
 
-        _inputLots.value = if (orderAction == OrderAction.SELL && newLots > availableLots.value) {
-            availableLots.value
-        } else {
-            newLots
+        if (orderAction == OrderAction.SELL && newLots > availableLots.value) {
+            newLots = availableLots.value
         }
+
+        _lotsInput.value = if(lots.isNotEmpty()) newLots.toString() else ""
 
         val share = (state.value as? OrderDetailsState.OrderDetailsFetched)?.share
         share?.let {
-            _totalValue.value = (inputLots.value * share.lot * share.lastPrice).toCurrencyFormat("RUB")
+            _totalValue.value = (newLots * share.lot * share.lastPrice).toCurrencyFormat("RUB")
         }
     }
 
     suspend fun confirmOrder(): Boolean {
+        val lotsInt = lotsInput.value.toIntOrZero()
+        if (lotsInt == 0) return false
+
         val share = (state.value as? OrderDetailsState.OrderDetailsFetched)?.share
         share?.let {
-            val amount = inputLots.value * share.lot
+            val amount = lotsInt * share.lot
             return if (orderAction == OrderAction.BUY) {
                 portfolioRepository.buyStock(uid = share.uid, amount = amount)
             } else {

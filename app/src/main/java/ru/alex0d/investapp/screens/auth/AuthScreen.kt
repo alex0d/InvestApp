@@ -39,6 +39,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
@@ -49,6 +50,11 @@ import org.koin.androidx.compose.koinViewModel
 import ru.alex0d.investapp.R
 import ru.alex0d.investapp.domain.models.AuthResult
 import ru.alex0d.investapp.utils.isDarkThemeOn
+
+private sealed class AuthScreenState {
+    object Login : AuthScreenState()
+    object Register : AuthScreenState()
+}
 
 @Destination<RootGraph>(start = true)
 @Composable
@@ -80,11 +86,6 @@ fun AuthScreen(
             return@Scaffold
         }
 
-        val context = LocalContext.current
-        val localFocusManager = LocalFocusManager.current
-
-        var screenState by remember { mutableStateOf<AuthScreenState>(AuthScreenState.Login) }
-
         val authErrorState = viewModel.authErrorState.collectAsState().value
         SnackbarOnError(
             authErrorState = authErrorState,
@@ -92,68 +93,111 @@ fun AuthScreen(
             clearError = { viewModel.clearError() }
         )
 
-        LazyColumn(
+        AuthScreenContent(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .padding(vertical = 8.dp, horizontal = 16.dp)
-                .pointerInput(Unit) {
-                    detectTapGestures(onTap = {
-                        localFocusManager.clearFocus()
-                    })
-                },
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            item {
-                Text(
-                    text = stringResource(R.string.welcome),
-                    style = MaterialTheme.typography.titleLarge,
-                    textAlign = TextAlign.Center
+                .padding(vertical = 8.dp, horizontal = 16.dp),
+            authState = authState,
+            firstname = viewModel.firstname,
+            onFirstnameUpdate = { viewModel.updateFirstname(it) },
+            isValidFirstname = viewModel.isValidFirstname,
+            lastname = viewModel.lastname,
+            onLastnameUpdate = { viewModel.updateLastname(it) },
+            isValidLastname = viewModel.isValidLastname,
+            email = viewModel.email,
+            onEmailUpdate = { viewModel.updateEmail(it) },
+            isValidEmail = viewModel.isValidEmail,
+            password = viewModel.password,
+            onPasswordUpdate = { viewModel.updatePassword(it) },
+            isValidPassword = viewModel.isValidPassword,
+            authenticate = { viewModel.authenticate() },
+            register = { viewModel.register() }
+        )
+    }
+}
+
+@Composable
+internal fun AuthScreenContent(
+    modifier: Modifier,
+    authState: AuthState,
+    firstname: String,
+    onFirstnameUpdate: (String) -> Unit,
+    isValidFirstname: Boolean,
+    lastname: String,
+    onLastnameUpdate: (String) -> Unit,
+    isValidLastname: Boolean,
+    email: String,
+    onEmailUpdate: (String) -> Unit,
+    isValidEmail: Boolean,
+    password: String,
+    onPasswordUpdate: (String) -> Unit,
+    isValidPassword: Boolean,
+    authenticate: () -> Unit,
+    register: () -> Unit
+) {
+    var screenState by remember { mutableStateOf<AuthScreenState>(AuthScreenState.Login) }
+    val localFocusManager = LocalFocusManager.current
+    val context = LocalContext.current
+
+    LazyColumn(
+        modifier = modifier
+            .pointerInput(Unit) {
+                detectTapGestures(onTap = {
+                    localFocusManager.clearFocus()
+                })
+            },
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        item {
+            Text(
+                text = stringResource(R.string.welcome),
+                style = MaterialTheme.typography.titleLarge,
+                textAlign = TextAlign.Center
+            )
+            Image(
+                modifier = Modifier.size(170.dp),
+                painter = painterResource(id = if (!context.isDarkThemeOn()) R.drawable.ic_launcher_foreground else R.drawable.ic_launcher_foreground_whiteborders),
+                contentDescription = null
+            )
+
+            if (screenState is AuthScreenState.Register) {
+                NameTextFields(
+                    firstname = firstname,
+                    onFirstnameUpdate = { onFirstnameUpdate(it) },
+                    isFirstnameError = !isValidFirstname && firstname.isNotEmpty(),
+                    lastname = lastname,
+                    onLastnameUpdate = { onLastnameUpdate(it) },
+                    isLastnameError = !isValidLastname && lastname.isNotEmpty()
                 )
-                Image(
-                    modifier = Modifier.size(170.dp),
-                    painter = painterResource(id = if (!context.isDarkThemeOn()) R.drawable.ic_launcher_foreground else R.drawable.ic_launcher_foreground_whiteborders),
-                    contentDescription = null
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+
+            EmailAndPasswordTextFields(
+                email = email,
+                onEmailUpdate = { onEmailUpdate(it) },
+                isEmailError = !isValidEmail && email.isNotEmpty(),
+                password = password,
+                onPasswordUpdate = { onPasswordUpdate(it) },
+                isPasswordError = !isValidPassword && password.isNotEmpty()
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            when (screenState) {
+                is AuthScreenState.Login -> LoginButtons(
+                    onAuthenticate = { authenticate() },
+                    onNavigateToRegister = { screenState = AuthScreenState.Register },
+                    isLoginButtonEnabled = isValidEmail && isValidPassword,
+                    isLoading = authState is AuthState.Loading
                 )
 
-                if (screenState is AuthScreenState.Register) {
-                    NameTextFields(
-                        firstname = viewModel.firstname,
-                        onFirstnameUpdate = { viewModel.updateFirstname(it) },
-                        isFirstnameError = !viewModel.isValidFirstname && viewModel.firstname.isNotEmpty(),
-                        lastname = viewModel.lastname,
-                        onLastnameUpdate = { viewModel.updateLastname(it) },
-                        isLastnameError = !viewModel.isValidLastname && viewModel.lastname.isNotEmpty()
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-
-                EmailAndPasswordTextFields(
-                    email = viewModel.email,
-                    onEmailUpdate = { viewModel.updateEmail(it) },
-                    isEmailError = !viewModel.isValidEmail && viewModel.email.isNotEmpty(),
-                    password = viewModel.password,
-                    onPasswordUpdate = { viewModel.updatePassword(it) },
-                    isPasswordError = !viewModel.isValidPassword && viewModel.password.isNotEmpty()
+                is AuthScreenState.Register -> RegisterButtons(
+                    onRegister = { register() },
+                    onNavigateToLogin = { screenState = AuthScreenState.Login },
+                    isRegisterButtonEnabled = isValidFirstname && isValidLastname && isValidEmail && isValidPassword,
+                    isLoading = authState is AuthState.Loading
                 )
-                Spacer(modifier = Modifier.height(16.dp))
-
-                when (screenState) {
-                    is AuthScreenState.Login -> LoginButtons(
-                        onAuthenticate = { viewModel.authenticate() },
-                        onNavigateToRegister = { screenState = AuthScreenState.Register },
-                        isLoginButtonEnabled = viewModel.isValidEmail && viewModel.isValidPassword,
-                        isLoading = authState is AuthState.Loading
-                    )
-
-                    is AuthScreenState.Register -> RegisterButtons(
-                        onRegister = { viewModel.register() },
-                        onNavigateToLogin = { screenState = AuthScreenState.Login },
-                        isRegisterButtonEnabled = viewModel.isValidFirstname && viewModel.isValidLastname && viewModel.isValidEmail && viewModel.isValidPassword,
-                        isLoading = authState is AuthState.Loading
-                    )
-                }
             }
         }
     }
@@ -303,17 +347,52 @@ private fun SnackbarOnError(
     LaunchedEffect(authErrorState) {
         if (authErrorState is AuthErrorState.Error) {
             when (authErrorState.result) {
-                AuthResult.EMAIL_ALREADY_REGISTERED -> snackbarHostState.showSnackbar(emailAlreadyRegisteredMessage, withDismissAction = true)
-                AuthResult.INVALID_CREDENTIALS -> snackbarHostState.showSnackbar(invalidCredentialsMessage, withDismissAction = true)
-                AuthResult.USER_NOT_FOUND -> snackbarHostState.showSnackbar(userNotFoundMessage, withDismissAction = true)
-                else -> snackbarHostState.showSnackbar(unknownErrorMessage, withDismissAction = true)
+                AuthResult.EMAIL_ALREADY_REGISTERED -> snackbarHostState.showSnackbar(
+                    emailAlreadyRegisteredMessage,
+                    withDismissAction = true
+                )
+
+                AuthResult.INVALID_CREDENTIALS -> snackbarHostState.showSnackbar(
+                    invalidCredentialsMessage,
+                    withDismissAction = true
+                )
+
+                AuthResult.USER_NOT_FOUND -> snackbarHostState.showSnackbar(
+                    userNotFoundMessage,
+                    withDismissAction = true
+                )
+
+                else -> snackbarHostState.showSnackbar(
+                    unknownErrorMessage,
+                    withDismissAction = true
+                )
             }
             clearError()
         }
     }
 }
 
-private sealed class AuthScreenState {
-    object Login : AuthScreenState()
-    object Register : AuthScreenState()
+@Preview(showBackground = true)
+@Composable
+private fun AuthScreenContentPreview() {
+    AuthScreenContent(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(vertical = 8.dp, horizontal = 16.dp),
+        authState = AuthState.Idle,
+        firstname = "John",
+        onFirstnameUpdate = {},
+        isValidFirstname = true,
+        lastname = "Doe",
+        onLastnameUpdate = {},
+        isValidLastname = true,
+        email = "john@doe.com",
+        onEmailUpdate = {},
+        isValidEmail = true,
+        password = "test1234",
+        onPasswordUpdate = {},
+        isValidPassword = true,
+        authenticate = {},
+        register = {}
+    )
 }

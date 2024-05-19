@@ -16,6 +16,7 @@ import ru.alex0d.investapp.domain.models.PortfolioStockInfo
 import ru.alex0d.investapp.domain.models.Share
 import ru.alex0d.investapp.utils.MainDispatcherRule
 import ru.alex0d.investapp.utils.toCurrencyFormat
+import ru.alex0d.investapp.utils.toIntOrZero
 
 private const val STOCK_UID = "stockUid"
 
@@ -46,42 +47,42 @@ class OrderViewModelTest {
 
     @Test
     fun `should increase lots`() {
-        val initialLots = orderViewModel.inputLots.value
+        val initialLots = orderViewModel.lotsInput.value.toInt()
         orderViewModel.increaseLots()
-        assertEquals(initialLots + 1, orderViewModel.inputLots.value)
+        assertEquals(initialLots + 1, orderViewModel.lotsInput.value.toIntOrZero())
     }
 
     @Test
     fun `should decrease lots`() {
         orderViewModel.increaseLots() // Increase once to ensure we have more than 0 lots
-        val initialLots = orderViewModel.inputLots.value
+        val initialLots = orderViewModel.lotsInput.value.toInt()
 
         orderViewModel.decreaseLots()
-        assertEquals(initialLots - 1, orderViewModel.inputLots.value)
+        assertEquals(initialLots - 1, orderViewModel.lotsInput.value.toIntOrZero())
     }
 
     @Test
     fun `should not decrease lots below 0`() {
-        val initialLots = orderViewModel.inputLots.value
+        val initialLots = orderViewModel.lotsInput.value
 
         orderViewModel.decreaseLots()
-        assertEquals(initialLots, orderViewModel.inputLots.value)
+        assertEquals(initialLots, orderViewModel.lotsInput.value)
     }
 
     @Test
     fun `should update input lots`() {
         val lots = 10
 
-        orderViewModel.updateInputLots(lots.toString())
-        assertEquals(lots, orderViewModel.inputLots.value)
+        orderViewModel.updateLotsInput(lots.toString())
+        assertEquals(lots, orderViewModel.lotsInput.value.toIntOrZero())
     }
 
     @Test
     fun `should not update input lots if invalid`() {
         val lots = -1
 
-        orderViewModel.updateInputLots(lots.toString())
-        assertEquals(0, orderViewModel.inputLots.value)
+        orderViewModel.updateLotsInput(lots.toString())
+        assertEquals(0, orderViewModel.lotsInput.value.toIntOrZero())
     }
 
     @Test
@@ -89,7 +90,7 @@ class OrderViewModelTest {
         val lots = 10
         val expectedTotalValue = lots * share.lot * share.lastPrice
 
-        orderViewModel.updateInputLots(lots.toString())
+        orderViewModel.updateLotsInput(lots.toString())
         assertEquals(expectedTotalValue.toCurrencyFormat("RUB"), orderViewModel.totalValue.value)
     }
 
@@ -97,7 +98,7 @@ class OrderViewModelTest {
     fun `should successfully confirm buy order`() = runTest {
         whenever(portfolioRepository.buyStock(STOCK_UID, 20)).thenReturn(true)
 
-        orderViewModel.updateInputLots("2")
+        orderViewModel.updateLotsInput("2")
 
         val result = orderViewModel.confirmOrder()
         assertEquals(true, result)
@@ -117,7 +118,7 @@ class OrderViewModelTest {
         whenever(portfolioRepository.sellStock(STOCK_UID, 20)).thenReturn(true)
 
         orderViewModel = OrderViewModel(stockRepository, portfolioRepository, OrderAction.SELL, STOCK_UID)
-        orderViewModel.updateInputLots("2")
+        orderViewModel.updateLotsInput("2")
 
         val result = orderViewModel.confirmOrder()
         assertEquals(true, result)

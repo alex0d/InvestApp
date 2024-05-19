@@ -50,6 +50,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -59,6 +60,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.generated.destinations.OrderScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.TarotScreenDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import com.ramcosta.composedestinations.result.NavResult
 import com.ramcosta.composedestinations.result.ResultRecipient
 import kotlinx.coroutines.launch
@@ -67,6 +69,7 @@ import org.koin.core.parameter.parametersOf
 import ru.alex0d.investapp.R
 import ru.alex0d.investapp.domain.models.CandleInterval
 import ru.alex0d.investapp.domain.models.PortfolioStockInfo
+import ru.alex0d.investapp.domain.models.Share
 import ru.alex0d.investapp.domain.models.toStringRes
 import ru.alex0d.investapp.screens.order.OrderAction
 import ru.alex0d.investapp.screens.stock.chart.StockChart
@@ -75,7 +78,6 @@ import ru.alex0d.investapp.utils.MainGraph
 import ru.alex0d.investapp.utils.fromHex
 import ru.alex0d.investapp.utils.toCurrencyFormat
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Destination<MainGraph>
 @Composable
 fun StockDetailsScreen(
@@ -114,36 +116,7 @@ fun StockDetailsScreen(
         } },
         topBar = {
             if (state is StockDetailsState.Success) {
-                TopAppBar(
-                    navigationIcon = {
-                        IconButton(onClick = { navigator.popBackStack() }) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                tint = Color.fromHex(state.share.textColor),
-                                contentDescription = stringResource(R.string.go_back)
-                            )
-                        }
-                    },
-                    title = {
-                        Column {
-                            Text(
-                                text = state.share.name,
-                                style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp),
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                            )
-                            Text(
-                                text = state.share.ticker,
-                                style = MaterialTheme.typography.titleMedium,
-                                color = Color.LightGray
-                            )
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color.fromHex(state.share.backgroundColor),
-                        titleContentColor = Color.fromHex(state.share.textColor)
-                    ),
-                )
+                StockDetailsTopAppBar(navigator, state)
             }
         }
     ) { padding ->
@@ -151,13 +124,6 @@ fun StockDetailsScreen(
             .padding(top = padding.calculateTopPadding())
             .padding(horizontal = 2.dp)) {
             when (state) {
-                is StockDetailsState.Loading -> Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-                is StockDetailsState.Error -> Text(state.message)
                 is StockDetailsState.Success -> {
                     StockDetailsOnSuccess(
                         state = state,
@@ -167,6 +133,8 @@ fun StockDetailsScreen(
                         navigator = navigator
                     )
                 }
+                is StockDetailsState.Loading -> OrderDetailsOnLoading()
+                is StockDetailsState.Error -> OrderDetailsOnError()
             }
         }
     }
@@ -212,7 +180,7 @@ private fun StockDetailsOnSuccess(
             ) {
                 Icon(
                     painter = painterResource(id = if (chartType == ChartType.LINE) R.drawable.line_chart else R.drawable.candlestick_chart),
-                    contentDescription = null,
+                    contentDescription = if (chartType == ChartType.LINE) stringResource(R.string.switch_to_candlestick_chart) else stringResource(R.string.switch_to_line_chart),
                     tint = MaterialTheme.colorScheme.onSecondaryContainer
                 )
             }
@@ -235,10 +203,9 @@ private fun StockDetailsOnSuccess(
     }
 }
 
-@Preview
 @Composable
 private fun IntervalTabsSection(
-    onIntervalClick: (CandleInterval) -> Unit = {}
+    onIntervalClick: (CandleInterval) -> Unit
 ) {
     var selected by remember { mutableStateOf(CandleInterval.INTERVAL_DAY) }
     LazyRow(
@@ -433,4 +400,141 @@ private fun ButtonsSection(
             )
         }
     }
+}
+
+@Composable
+private fun OrderDetailsOnLoading() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator()
+    }
+}
+
+@Composable
+private fun OrderDetailsOnError() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = stringResource(R.string.error_occurred),
+            textAlign = TextAlign.Center,
+        )
+    }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun StockDetailsTopAppBar(
+    navigator: DestinationsNavigator,
+    state: StockDetailsState.Success
+) {
+    TopAppBar(
+        navigationIcon = {
+            IconButton(onClick = { navigator.popBackStack() }) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    tint = Color.fromHex(state.share.textColor),
+                    contentDescription = stringResource(R.string.go_back)
+                )
+            }
+        },
+        title = {
+            Column {
+                Text(
+                    text = state.share.name,
+                    style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                Text(
+                    text = state.share.ticker,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color.LightGray
+                )
+            }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color.fromHex(state.share.backgroundColor),
+            titleContentColor = Color.fromHex(state.share.textColor)
+        ),
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun StockDetailsOnSuccessNotInPortfolioPreview() {
+    StockDetailsOnSuccess(
+        state = StockDetailsState.Success(
+            share = Share(
+                uid = "64c0da45-4c90-41d4-b053-0c66c7a8ddcd",
+                figi = "TCS109029557",
+                ticker = "SBERP",
+                classCode = "SPEQ",
+                isin = "RU0009029557",
+                currency = "rub",
+                name = "Сбер Банк - привилегированные акции",
+                countryOfRisk = "RU",
+                countryOfRiskName = "Российская Федерация",
+                sector = "financial",
+                lot = 1,
+                lastPrice = 295.94,
+                url = "sber3",
+                backgroundColor = "#309c0b",
+                textColor = "#ffffff"
+            ),
+            stockInfo = null,
+        ),
+        modelProducer = CartesianChartModelProducer.build(),
+        onSwitchChartType = {},
+        onIntervalClick = {},
+        navigator = EmptyDestinationsNavigator
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun StockDetailsOnSuccessInPortfolioPreview() {
+    StockDetailsOnSuccess(
+        state = StockDetailsState.Success(
+            share = Share(
+                uid = "64c0da45-4c90-41d4-b053-0c66c7a8ddcd",
+                figi = "TCS109029557",
+                ticker = "SBERP",
+                classCode = "SPEQ",
+                isin = "RU0009029557",
+                currency = "rub",
+                name = "Сбер Банк - привилегированные акции",
+                countryOfRisk = "RU",
+                countryOfRiskName = "Российская Федерация",
+                sector = "financial",
+                lot = 1,
+                lastPrice = 295.94,
+                url = "sber3",
+                backgroundColor = "#309c0b",
+                textColor = "#ffffff"
+            ),
+            stockInfo = PortfolioStockInfo(
+                uid = "64c0da45-4c90-41d4-b053-0c66c7a8ddcd",
+                ticker = "SBERP",
+                name = "Сбер Банк - привилегированные акции",
+                amount = 10,
+                averagePrice = 350.15,
+                lastPrice = 308.15,
+                totalValue = 3081.50,
+                profit = -215.10,
+                profitPercent = -10.00,
+                logoUrl = "sber3",
+                backgroundColor = "#309c0b",
+                textColor = "#ffffff"
+            ),
+        ),
+        modelProducer = CartesianChartModelProducer.build(),
+        onSwitchChartType = {},
+        onIntervalClick = {},
+        navigator = EmptyDestinationsNavigator
+    )
 }

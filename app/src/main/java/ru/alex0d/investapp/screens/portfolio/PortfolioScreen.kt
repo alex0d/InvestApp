@@ -49,13 +49,14 @@ import coil.compose.AsyncImage
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.generated.destinations.StockDetailsScreenDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import org.koin.androidx.compose.koinViewModel
 import ru.alex0d.investapp.R
 import ru.alex0d.investapp.domain.models.PortfolioInfo
 import ru.alex0d.investapp.domain.models.PortfolioStockInfo
-import ru.alex0d.investapp.utils.previewproviders.FakePortfolioStockInfo
 import ru.alex0d.investapp.ui.composables.ProfitText
 import ru.alex0d.investapp.utils.MainGraph
+import ru.alex0d.investapp.utils.previewproviders.FakePortfolioInfo
 import ru.alex0d.investapp.utils.toCurrencyFormat
 
 @Destination<MainGraph>(start = true)
@@ -89,7 +90,7 @@ fun PortfolioScreen(
     ) {
         when (state) {
             is PortfolioState.Loading -> PortfolioScreenOnLoading()
-            is PortfolioState.PortfolioInfoFetched -> PortfolioScreenOnSuccess(
+            is PortfolioState.PortfolioInfoFetched -> PortfolioScreenOnInfoFetched(
                 portfolioInfo = state.portfolioInfo,
                 navigator = navigator
             )
@@ -98,10 +99,11 @@ fun PortfolioScreen(
     }
 }
 
+@Preview
 @Composable
-private fun PortfolioScreenOnSuccess(
-    portfolioInfo: PortfolioInfo,
-    navigator: DestinationsNavigator
+private fun PortfolioScreenOnInfoFetched(
+    @PreviewParameter(FakePortfolioInfo::class) portfolioInfo: PortfolioInfo,
+    navigator: DestinationsNavigator = EmptyDestinationsNavigator
 ) {
     Column {
         TotalBalanceCard(
@@ -143,12 +145,11 @@ private fun PortfolioScreenOnSuccess(
     }
 }
 
-@Preview
 @Composable
 private fun TotalBalanceCard(
-    totalValue: Double = 0.0,
-    totalProfit: Double = 0.0,
-    totalProfitPercent: Double = 0.0
+    totalValue: Double,
+    totalProfit: Double,
+    totalProfitPercent: Double
 ) {
     Card(
         modifier = Modifier
@@ -180,11 +181,10 @@ private fun TotalBalanceCard(
     Spacer(Modifier.height(8.dp))
 }
 
-@Preview
 @Composable
 private fun StockItem(
-    @PreviewParameter(FakePortfolioStockInfo::class) stock: PortfolioStockInfo,
-    onClick: () -> Unit = {}
+    stock: PortfolioStockInfo,
+    onClick: () -> Unit
 ) {
     Card(
         modifier = Modifier

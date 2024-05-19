@@ -1,7 +1,21 @@
 package ru.alex0d.investapp.utils.previewproviders
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import ru.alex0d.investapp.domain.models.PortfolioInfo
 import ru.alex0d.investapp.domain.models.PortfolioStockInfo
+
+internal class FakePortfolioInfo : PreviewParameterProvider<PortfolioInfo> {
+    override val values: Sequence<PortfolioInfo>
+        get() = sequenceOf(
+            PortfolioInfo(
+                totalValue = 17974.50,
+                totalProfit = 1415.91,
+                totalProfitPercent = 8.56,
+                stocks = FakePortfolioStockInfo().values.toList()
+            )
+        )
+
+}
 
 internal class FakePortfolioStockInfo : PreviewParameterProvider<PortfolioStockInfo> {
     override val values: Sequence<PortfolioStockInfo>
@@ -32,6 +46,20 @@ internal class FakePortfolioStockInfo : PreviewParameterProvider<PortfolioStockI
                 profitPercent = 12.29,
                 logoUrl = "RU000A103X66",
                 backgroundColor = "#ff0000",
+                textColor = "#ffffff"
+            ),
+            PortfolioStockInfo(
+                uid = "509edd0c-129c-4ee2-934d-7f6246126da1",
+                ticker = "GMKN",
+                name = "Норильский никель",
+                amount = 200,
+                averagePrice = 157.06,
+                lastPrice = 157.06,
+                totalValue = 31412.0,
+                profit = 0.00,
+                profitPercent = 0.00,
+                logoUrl = "nornikel",
+                backgroundColor = "#2c499a",
                 textColor = "#ffffff"
             )
         )
