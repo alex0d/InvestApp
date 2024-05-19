@@ -14,12 +14,12 @@ val viewModelModule = module {
     viewModel { PortfolioViewModel(portfolioRepository = get()) }
 
     viewModel {
-        AuthViewModel(authRepository = get())
+        AuthViewModel(userRepository = get())
     }
 
     viewModel { SearchViewModel(stockRepository = get()) }
 
-    viewModel { ProfileViewModel(authRepository = get()) }
+    viewModel { ProfileViewModel(userRepository = get()) }
 
     viewModel { parameters ->
         StockDetailsViewModel(

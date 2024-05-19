@@ -7,7 +7,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import ru.alex0d.investapp.data.repositories.AuthRepository
+import ru.alex0d.investapp.data.repositories.UserRepository
 import ru.alex0d.investapp.domain.models.AuthResult
 import ru.alex0d.investapp.utils.MainDispatcherRule
 
@@ -21,13 +21,13 @@ class AuthViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private lateinit var authRepository: AuthRepository
+    private lateinit var userRepository: UserRepository
     private lateinit var authViewModel: AuthViewModel
 
     @Before
     fun setup() {
-        authRepository = mock()
-        authViewModel = AuthViewModel(authRepository)
+        userRepository = mock()
+        authViewModel = AuthViewModel(userRepository)
     }
 
     @Test
@@ -92,7 +92,7 @@ class AuthViewModelTest {
 
     @Test
     fun `should set auth state to success on register success`() = runTest {
-        whenever(authRepository.register(FIRSTNAME, LASTNAME, EMAIL, PASSWORD)).thenReturn(AuthResult.SUCCESS)
+        whenever(userRepository.register(FIRSTNAME, LASTNAME, EMAIL, PASSWORD)).thenReturn(AuthResult.SUCCESS)
 
         authViewModel.updateFirstname(FIRSTNAME)
         authViewModel.updateLastname(LASTNAME)
@@ -105,7 +105,7 @@ class AuthViewModelTest {
 
     @Test
     fun `should set auth state to idle on register failure`() = runTest {
-        whenever(authRepository.register(FIRSTNAME, LASTNAME, EMAIL, PASSWORD)).thenReturn(AuthResult.INVALID_CREDENTIALS)
+        whenever(userRepository.register(FIRSTNAME, LASTNAME, EMAIL, PASSWORD)).thenReturn(AuthResult.INVALID_CREDENTIALS)
 
         authViewModel.updateFirstname(FIRSTNAME)
         authViewModel.updateLastname(LASTNAME)
@@ -118,7 +118,7 @@ class AuthViewModelTest {
 
     @Test
     fun `should set auth state to success on authenticate success`() = runTest {
-        whenever(authRepository.authenticate(EMAIL, PASSWORD)).thenReturn(AuthResult.SUCCESS)
+        whenever(userRepository.authenticate(EMAIL, PASSWORD)).thenReturn(AuthResult.SUCCESS)
 
         authViewModel.updateEmail(EMAIL)
         authViewModel.updatePassword(PASSWORD)
@@ -129,7 +129,7 @@ class AuthViewModelTest {
 
     @Test
     fun `should set auth state to idle on authenticate failure`() = runTest {
-        whenever(authRepository.authenticate(EMAIL, PASSWORD)).thenReturn(AuthResult.INVALID_CREDENTIALS)
+        whenever(userRepository.authenticate(EMAIL, PASSWORD)).thenReturn(AuthResult.INVALID_CREDENTIALS)
 
         authViewModel.updateEmail(EMAIL)
         authViewModel.updatePassword(PASSWORD)

@@ -6,11 +6,11 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import ru.alex0d.investapp.data.local.AppDatabase
 import ru.alex0d.investapp.data.local.UserDataStore
-import ru.alex0d.investapp.data.repositories.AuthRepository
 import ru.alex0d.investapp.data.repositories.MarketRepository
 import ru.alex0d.investapp.data.repositories.PortfolioRepository
 import ru.alex0d.investapp.data.repositories.StockRepository
 import ru.alex0d.investapp.data.repositories.TarotRepository
+import ru.alex0d.investapp.data.repositories.UserRepository
 
 fun provideAppDatabase(context: Context): AppDatabase {
     return Room.databaseBuilder(
@@ -31,7 +31,7 @@ val dataModule = module {
 
     single { MarketRepository(marketApiService = get()) }
 
-    single { AuthRepository(apiService = get(), userDataStore = get()) }
+    single { UserRepository(apiService = get(), userDataStore = get()) }
 
     single { TarotRepository(tarotApiService = get(), database = get()) }
 }

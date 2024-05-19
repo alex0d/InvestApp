@@ -10,11 +10,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import ru.alex0d.investapp.data.repositories.AuthRepository
+import ru.alex0d.investapp.data.repositories.UserRepository
 import ru.alex0d.investapp.domain.models.AuthResult
 
 class AuthViewModel(
-    private val authRepository: AuthRepository
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     private val _authState = MutableStateFlow<AuthState>(AuthState.Idle)
@@ -45,7 +45,7 @@ class AuthViewModel(
 
     init {
         viewModelScope.launch {
-            val authResult = authRepository.authenticateByTokensInDataBase()
+            val authResult = userRepository.authenticateByTokensInDataBase()
             if (authResult == AuthResult.SUCCESS) {
                 _authState.value = AuthState.Success
             }
@@ -88,7 +88,7 @@ class AuthViewModel(
         viewModelScope.launch {
             _authState.value = AuthState.Loading
 
-            val authResult = authRepository.register(firstname, userLastname, email, password)
+            val authResult = userRepository.register(firstname, userLastname, email, password)
             if (authResult == AuthResult.SUCCESS) {
                 _authState.value = AuthState.Success
             } else {
@@ -104,7 +104,7 @@ class AuthViewModel(
         viewModelScope.launch {
             _authState.value = AuthState.Loading
 
-            val authResult = authRepository.authenticate(email, password)
+            val authResult = userRepository.authenticate(email, password)
             if (authResult == AuthResult.SUCCESS) {
                 _authState.value = AuthState.Success
             } else {

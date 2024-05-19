@@ -4,10 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import ru.alex0d.investapp.data.repositories.AuthRepository
+import ru.alex0d.investapp.data.repositories.UserRepository
 
 class ProfileViewModel(
-    private val authRepository: AuthRepository
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<ProfileState>(ProfileState.Loading)
@@ -19,9 +19,9 @@ class ProfileViewModel(
 
     private fun fetchUserDetails() {
         viewModelScope.launch {
-            val email = authRepository.getUserEmail()
-            val firstname = authRepository.getUserFirstname()
-            val lastname = authRepository.getUserLastname()
+            val email = userRepository.getUserEmail()
+            val firstname = userRepository.getUserFirstname()
+            val lastname = userRepository.getUserLastname()
             if (email != null && firstname != null) {
                 _state.value = ProfileState.Success(email, firstname, lastname)
             } else {
@@ -33,7 +33,7 @@ class ProfileViewModel(
 
     fun logout() {
         viewModelScope.launch {
-            authRepository.logout()
+            userRepository.logout()
         }
     }
 }

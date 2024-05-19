@@ -7,7 +7,7 @@ import ru.alex0d.investapp.data.remote.models.RegisterRequest
 import ru.alex0d.investapp.data.remote.services.AuthApiService
 import ru.alex0d.investapp.domain.models.AuthResult
 
-class AuthRepository(
+class UserRepository(
     private val apiService: AuthApiService,
     private val userDataStore: UserDataStore
 ) {

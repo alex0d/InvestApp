@@ -43,7 +43,7 @@ class OrderScreenTest {
         textColor = "#ffffff"
     )
     private var availableLots by mutableStateOf(10)
-    private var lotsInput by mutableStateOf("")  // Represents user input for lots
+    private var lotsInput by mutableStateOf("")
     private var totalValue by mutableStateOf("")
     private var orderAction by mutableStateOf(OrderAction.BUY)
 
