@@ -1,5 +1,6 @@
 package ru.alex0d.investapp.di
 
+import android.content.Context
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -16,9 +17,17 @@ import ru.alex0d.investapp.data.remote.services.StockApiService
 import ru.alex0d.investapp.data.remote.services.TarotApiService
 import ru.alex0d.investapp.utils.AuthAuthenticator
 import ru.alex0d.investapp.utils.AuthInterceptor
+import ru.alex0d.investapp.utils.connectivity.ConnectivityObserver
+import ru.alex0d.investapp.utils.connectivity.NetworkConnectivityObserver
 import java.util.concurrent.TimeUnit
 
 const val investApiBaseUrl = BuildConfig.INVEST_API_BASE_URL
+
+private fun provideNetworkConnectivityObserver(
+    context: Context
+): ConnectivityObserver {
+    return NetworkConnectivityObserver(context)
+}
 
 private fun provideHttpClient(
     authInterceptor: AuthInterceptor,
@@ -66,6 +75,8 @@ private fun provideAuthService(retrofit: Retrofit): AuthApiService {
 }
 
 val networkModule = module {
+    single { provideNetworkConnectivityObserver(context = get()) }
+
     single { AuthInterceptor(userDataStore = get()) }
 
     single { AuthAuthenticator(userDataStore = get()) }

@@ -79,4 +79,7 @@
     <string name="logout">Выйти</string>
     <string name="switch_to_candlestick_chart">Переключить на свечной график</string>
     <string name="switch_to_line_chart">Переключить на линейный график</string>
+    <string name="connectivity_available">Соединение восстановлено</string>
+    <string name="connectivity_unavailable">Нет подключения к Интернету!</string>
+    <string name="connectivity_icon_description">Статус подключения к Интернету</string>
 </resources>

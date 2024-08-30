@@ -4,8 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.ramcosta.composedestinations.DestinationsNavHost
-import com.ramcosta.composedestinations.generated.NavGraphs
+import ru.alex0d.investapp.screens.root.RootScreen
 import ru.alex0d.investapp.ui.theme.InvestAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -14,7 +13,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             InvestAppTheme {
-                DestinationsNavHost(navGraph = NavGraphs.root)
+                RootScreen()
             }
         }
     }

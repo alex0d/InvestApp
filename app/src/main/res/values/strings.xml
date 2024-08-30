@@ -78,4 +78,7 @@
     <string name="logout">Log out</string>
     <string name="switch_to_candlestick_chart">Switch to candlestick chart</string>
     <string name="switch_to_line_chart">Switch to line chart</string>
+    <string name="connectivity_available">Back Online!</string>
+    <string name="connectivity_unavailable">No Internet Connection!</string>
+    <string name="connectivity_icon_description">Connectivity Icon</string>
 </resources>

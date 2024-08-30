@@ -6,16 +6,18 @@ import ru.alex0d.investapp.screens.auth.AuthViewModel
 import ru.alex0d.investapp.screens.order.OrderViewModel
 import ru.alex0d.investapp.screens.portfolio.PortfolioViewModel
 import ru.alex0d.investapp.screens.profile.ProfileViewModel
+import ru.alex0d.investapp.screens.root.RootViewModel
 import ru.alex0d.investapp.screens.search.SearchViewModel
 import ru.alex0d.investapp.screens.stock.StockDetailsViewModel
 import ru.alex0d.investapp.screens.tarot.TarotViewModel
 
 val viewModelModule = module {
-    viewModel { PortfolioViewModel(portfolioRepository = get()) }
 
-    viewModel {
-        AuthViewModel(userRepository = get())
-    }
+    viewModel { RootViewModel(networkConnectivityObserver = get()) }
+
+    viewModel { AuthViewModel(userRepository = get()) }
+
+    viewModel { PortfolioViewModel(portfolioRepository = get()) }
 
     viewModel { SearchViewModel(stockRepository = get()) }
 
