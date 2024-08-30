@@ -57,7 +57,7 @@ import ru.alex0d.investapp.domain.models.PortfolioStockInfo
 import ru.alex0d.investapp.ui.composables.ProfitText
 import ru.alex0d.investapp.utils.MainGraph
 import ru.alex0d.investapp.utils.previewproviders.FakePortfolioInfo
-import ru.alex0d.investapp.utils.toCurrencyFormat
+import ru.alex0d.investapp.utils.extensions.toCurrencyFormat
 
 @Destination<MainGraph>(start = true)
 @Composable

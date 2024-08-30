@@ -1,4 +1,4 @@
-package ru.alex0d.investapp.utils
+package ru.alex0d.investapp.utils.extensions
 
 import androidx.compose.ui.graphics.Color
 

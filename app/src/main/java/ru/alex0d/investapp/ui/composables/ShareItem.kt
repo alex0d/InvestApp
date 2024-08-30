@@ -22,7 +22,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import ru.alex0d.investapp.domain.models.Share
-import ru.alex0d.investapp.utils.toCurrencyFormat
+import ru.alex0d.investapp.utils.extensions.toCurrencyFormat
 
 @Composable
 fun ShareItem(

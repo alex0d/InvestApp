@@ -2,6 +2,7 @@ package ru.alex0d.investapp.screens.auth
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,7 +32,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -49,7 +49,6 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import org.koin.androidx.compose.koinViewModel
 import ru.alex0d.investapp.R
 import ru.alex0d.investapp.domain.models.AuthResult
-import ru.alex0d.investapp.utils.isDarkThemeOn
 
 private sealed class AuthScreenState {
     object Login : AuthScreenState()
@@ -138,7 +137,6 @@ internal fun AuthScreenContent(
 ) {
     var screenState by remember { mutableStateOf<AuthScreenState>(AuthScreenState.Login) }
     val localFocusManager = LocalFocusManager.current
-    val context = LocalContext.current
 
     LazyColumn(
         modifier = modifier
@@ -158,7 +156,7 @@ internal fun AuthScreenContent(
             )
             Image(
                 modifier = Modifier.size(170.dp),
-                painter = painterResource(id = if (!context.isDarkThemeOn()) R.drawable.ic_launcher_foreground else R.drawable.ic_launcher_foreground_whiteborders),
+                painter = painterResource(id = if (!isSystemInDarkTheme()) R.drawable.ic_launcher_foreground else R.drawable.ic_launcher_foreground_whiteborders),
                 contentDescription = null
             )
 

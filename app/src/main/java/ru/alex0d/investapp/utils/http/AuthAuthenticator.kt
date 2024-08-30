@@ -1,4 +1,4 @@
-package ru.alex0d.investapp.utils
+package ru.alex0d.investapp.utils.http
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.coroutines.flow.first

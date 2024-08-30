@@ -75,8 +75,8 @@ import ru.alex0d.investapp.screens.order.OrderAction
 import ru.alex0d.investapp.screens.stock.chart.StockChart
 import ru.alex0d.investapp.ui.composables.ProfitText
 import ru.alex0d.investapp.utils.MainGraph
-import ru.alex0d.investapp.utils.fromHex
-import ru.alex0d.investapp.utils.toCurrencyFormat
+import ru.alex0d.investapp.utils.extensions.fromHex
+import ru.alex0d.investapp.utils.extensions.toCurrencyFormat
 
 @Destination<MainGraph>
 @Composable

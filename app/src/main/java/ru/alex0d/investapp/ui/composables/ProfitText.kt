@@ -6,8 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import ru.alex0d.investapp.utils.toCurrencyFormat
-import ru.alex0d.investapp.utils.toDecimalFormat
+import ru.alex0d.investapp.utils.extensions.toCurrencyFormat
+import ru.alex0d.investapp.utils.extensions.toDecimalFormat
 import kotlin.math.absoluteValue
 
 @Composable

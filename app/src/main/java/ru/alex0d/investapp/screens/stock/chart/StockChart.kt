@@ -25,7 +25,7 @@ import com.patrykandpatrick.vico.core.cartesian.data.ChartValues
 import com.patrykandpatrick.vico.core.cartesian.layer.CandlestickCartesianLayer
 import com.patrykandpatrick.vico.core.common.data.ExtraStore
 import com.patrykandpatrick.vico.core.common.shader.DynamicShader
-import ru.alex0d.investapp.utils.toDecimalFormat
+import ru.alex0d.investapp.utils.extensions.toDecimalFormat
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter

@@ -15,8 +15,8 @@ import ru.alex0d.investapp.domain.models.PortfolioInfo
 import ru.alex0d.investapp.domain.models.PortfolioStockInfo
 import ru.alex0d.investapp.domain.models.Share
 import ru.alex0d.investapp.utils.MainDispatcherRule
-import ru.alex0d.investapp.utils.toCurrencyFormat
-import ru.alex0d.investapp.utils.toIntOrZero
+import ru.alex0d.investapp.utils.extensions.toCurrencyFormat
+import ru.alex0d.investapp.utils.extensions.toIntOrZero
 
 private const val STOCK_UID = "stockUid"
 

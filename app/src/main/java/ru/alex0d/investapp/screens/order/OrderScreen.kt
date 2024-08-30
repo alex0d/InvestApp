@@ -1,5 +1,6 @@
 package ru.alex0d.investapp.screens.order
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,7 +37,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -53,9 +53,8 @@ import ru.alex0d.investapp.R
 import ru.alex0d.investapp.domain.models.Share
 import ru.alex0d.investapp.ui.composables.ShareItem
 import ru.alex0d.investapp.utils.MainGraph
-import ru.alex0d.investapp.utils.isDarkThemeOn
-import ru.alex0d.investapp.utils.toCurrencyFormat
-import ru.alex0d.investapp.utils.toIntOrZero
+import ru.alex0d.investapp.utils.extensions.toCurrencyFormat
+import ru.alex0d.investapp.utils.extensions.toIntOrZero
 
 @Destination<MainGraph>
 @Composable
@@ -216,7 +215,6 @@ private fun LotsSection(
     orderAction: OrderAction,
     availableLots: Int
 ) {
-    val context = LocalContext.current
     val lotsInt = lotsInput.toIntOrZero()
 
     Text(stringResource(R.string.lots_amount), color = Color.Gray)
@@ -242,9 +240,9 @@ private fun LotsSection(
                         modifier = Modifier.size(24.dp),
                         contentDescription = "-",
                         tint = if (lotsInt > 0) {
-                            if (context.isDarkThemeOn()) Color.White else Color.DarkGray
+                            if (isSystemInDarkTheme()) Color.White else Color.DarkGray
                         } else {
-                            if (context.isDarkThemeOn()) Color.Gray else Color.LightGray
+                            if (isSystemInDarkTheme()) Color.Gray else Color.LightGray
                         }
                     )
                 }
@@ -257,9 +255,9 @@ private fun LotsSection(
                         modifier = Modifier.size(24.dp),
                         contentDescription = "+",
                         tint = if (orderAction == OrderAction.BUY || lotsInt < availableLots) {
-                            if (context.isDarkThemeOn()) Color.White else Color.DarkGray
+                            if (isSystemInDarkTheme()) Color.White else Color.DarkGray
                         } else {
-                            if (context.isDarkThemeOn()) Color.Gray else Color.LightGray
+                            if (isSystemInDarkTheme()) Color.Gray else Color.LightGray
                         }
                     )
                 }

@@ -8,8 +8,8 @@ import kotlinx.coroutines.launch
 import ru.alex0d.investapp.data.repositories.PortfolioRepository
 import ru.alex0d.investapp.data.repositories.StockRepository
 import ru.alex0d.investapp.domain.models.Share
-import ru.alex0d.investapp.utils.toCurrencyFormat
-import ru.alex0d.investapp.utils.toIntOrZero
+import ru.alex0d.investapp.utils.extensions.toCurrencyFormat
+import ru.alex0d.investapp.utils.extensions.toIntOrZero
 
 class OrderViewModel(
     private val stockRepository: StockRepository,
