@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -39,8 +41,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -126,6 +131,7 @@ internal fun OrderOnDetailsFetched(
 
     Column(
         modifier = Modifier
+            .verticalScroll(rememberScrollState())
             .fillMaxSize()
             .padding(16.dp)
     ) {
@@ -161,7 +167,18 @@ internal fun OrderOnDetailsFetched(
             horizontalArrangement = Arrangement.Start
         ) {
             if (orderAction == OrderAction.SELL) {
-                Text(stringResource(R.string.available_lots, availableLots), color = Color.Gray)
+                val annotatedString = buildAnnotatedString {
+                    append(stringResource(R.string.available) + ": ")
+                    withLink(
+                        LinkAnnotation.Clickable("available_lots") {
+                            onUpdateInputLots(availableLots.toString())
+                        }
+                    ) {
+                        append(availableLots.toString())
+                    }
+                    append(" " + stringResource(R.string.lot_in_plural))
+                }
+                Text(text = annotatedString, color = Color.Gray)
                 Spacer(modifier = Modifier.width(6.dp))
             }
             Text(stringResource(R.string.pcs_in_lot, share.lot), color = Color.Gray)

@@ -59,7 +59,8 @@
     <string name="selling">Продажа</string>
     <string name="order_completed">Заявка выполнена</string>
     <string name="lots_amount">Количество лотов</string>
-    <string name="available_lots">Доступно: %1$s лотов</string>
+    <string name="available">Доступно</string>
+    <string name="lot_in_plural">лотов</string>
     <string name="pcs_in_lot">(1 лот = %1$s шт)</string>
     <string name="total_value">Итого</string>
     <string name="empty_portfolio_message">Ваш портфель пока пуст</string>
@@ -82,4 +83,6 @@
     <string name="connectivity_available">Соединение восстановлено</string>
     <string name="connectivity_unavailable">Нет подключения к Интернету!</string>
     <string name="connectivity_icon_description">Статус подключения к Интернету</string>
+    <string name="hide_password">Скрыть пароль</string>
+    <string name="show_password">Показать пароль</string>
 </resources>

@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -96,24 +98,26 @@ fun StockDetailsScreen(
     resultRecipient.onNavResult { result ->
         if (result is NavResult.Value && result.value) {
             scope.launch {
+                viewModel.fetchStockDetails()
                 snackbarHostState.showSnackbar(
                     message = orderMessage,
                     withDismissAction = true
                 )
-                viewModel.fetchStockDetails()
             }
         }
     }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) {
-            Snackbar(
-                snackbarData = it,
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                dismissActionContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-            )
-        } },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState) {
+                Snackbar(
+                    snackbarData = it,
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    dismissActionContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                )
+            }
+        },
         topBar = {
             if (state is StockDetailsState.Success) {
                 StockDetailsTopAppBar(navigator, state)
@@ -121,7 +125,7 @@ fun StockDetailsScreen(
         }
     ) { padding ->
         Box(modifier = Modifier
-            .padding(top = padding.calculateTopPadding())
+            .padding(padding)
             .padding(horizontal = 2.dp)) {
             when (state) {
                 is StockDetailsState.Success -> {
@@ -150,56 +154,64 @@ private fun StockDetailsOnSuccess(
 ) {
     var chartType by remember { mutableStateOf(ChartType.LINE) }
 
-    Column {
-        Row(
+    Column {  // ColumnScope is needed for applying weight modifier
+        Column(
             modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp, top = 10.dp, bottom = 0.dp)
-                .height(36.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Absolute.SpaceBetween,
+                .verticalScroll(rememberScrollState())
+                .weight(1f, fill = true)
         ) {
-            Text(
-                modifier = Modifier.padding(top = 5.dp),
-                text = state.share.lastPrice.toCurrencyFormat("RUB"),
-                style = MaterialTheme.typography.titleLarge.copy(
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.Bold
-                ),
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            IconButton(
-                onClick = {
-                    chartType =
-                        if (chartType == ChartType.LINE) ChartType.CANDLES else ChartType.LINE
-                    onSwitchChartType(chartType)
-                },
-                colors = IconButtonDefaults.iconButtonColors(
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-                )
+            Row(
+                modifier = Modifier
+                    .padding(start = 16.dp, end = 16.dp, top = 10.dp, bottom = 0.dp)
+                    .height(36.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Absolute.SpaceBetween,
             ) {
-                Icon(
-                    painter = painterResource(id = if (chartType == ChartType.LINE) R.drawable.line_chart else R.drawable.candlestick_chart),
-                    contentDescription = if (chartType == ChartType.LINE) stringResource(R.string.switch_to_candlestick_chart) else stringResource(R.string.switch_to_line_chart),
-                    tint = MaterialTheme.colorScheme.onSecondaryContainer
+                Text(
+                    modifier = Modifier.padding(top = 5.dp),
+                    text = state.share.lastPrice.toCurrencyFormat("RUB"),
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Bold
+                    ),
                 )
+                Spacer(modifier = Modifier.weight(1f))
+                IconButton(
+                    onClick = {
+                        chartType =
+                            if (chartType == ChartType.LINE) ChartType.CANDLES else ChartType.LINE
+                        onSwitchChartType(chartType)
+                    },
+                    colors = IconButtonDefaults.iconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
+                ) {
+                    Icon(
+                        painter = painterResource(id = if (chartType == ChartType.LINE) R.drawable.line_chart else R.drawable.candlestick_chart),
+                        contentDescription = if (chartType == ChartType.LINE) stringResource(R.string.switch_to_candlestick_chart) else stringResource(
+                            R.string.switch_to_line_chart
+                        ),
+                        tint = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
+                }
             }
+            Box(
+                Modifier
+                    .height(200.dp)
+                    .fillMaxWidth()
+            ) {
+                StockChart(modelProducer)
+            }
+            IntervalTabsSection(onIntervalClick = onIntervalClick)
+            state.stockInfo?.let { stockInfo ->
+                PortfolioSection(stockInfo)
+            } ?: run {
+                TarotSection(navigator, state)
+            }
+            Spacer(modifier = Modifier.weight(1f))
+            ButtonsSection(navigator, state)
         }
-        Box(
-            Modifier
-                .height(200.dp)
-                .fillMaxWidth()
-        ) {
-            StockChart(modelProducer)
-        }
-        IntervalTabsSection(onIntervalClick = onIntervalClick)
-        state.stockInfo?.let { stockInfo ->
-            PortfolioSection(stockInfo)
-        } ?: run {
-            TarotSection(navigator, state)
-        }
-        Spacer(modifier = Modifier.weight(1f))
-        ButtonsSection(navigator, state)
     }
 }
 

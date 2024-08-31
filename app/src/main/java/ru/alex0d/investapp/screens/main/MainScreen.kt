@@ -1,7 +1,11 @@
 package ru.alex0d.investapp.screens.main
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
@@ -22,11 +26,14 @@ fun MainScreen(
 ) {
     val navController = rememberNavController()
 
-    Scaffold(bottomBar = {
-        BottomBar(navController = navController)
-    }) { innerPadding ->
+    Scaffold(
+        contentWindowInsets = ScaffoldDefaults.contentWindowInsets.exclude(WindowInsets.statusBars),
+        bottomBar = {
+            BottomBar(navController = navController)
+        }
+    ) { innerPadding ->
         DestinationsNavHost(
-            modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding()),
+            modifier = Modifier.padding(innerPadding),
             navGraph = NavGraphs.main,
             navController = navController
         ) {

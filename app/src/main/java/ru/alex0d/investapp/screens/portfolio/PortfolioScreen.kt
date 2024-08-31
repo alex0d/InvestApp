@@ -56,8 +56,8 @@ import ru.alex0d.investapp.domain.models.PortfolioInfo
 import ru.alex0d.investapp.domain.models.PortfolioStockInfo
 import ru.alex0d.investapp.ui.composables.ProfitText
 import ru.alex0d.investapp.utils.MainGraph
-import ru.alex0d.investapp.utils.previewproviders.FakePortfolioInfo
 import ru.alex0d.investapp.utils.extensions.toCurrencyFormat
+import ru.alex0d.investapp.utils.previewproviders.FakePortfolioInfo
 
 @Destination<MainGraph>(start = true)
 @Composable
@@ -113,10 +113,14 @@ private fun PortfolioScreenOnInfoFetched(
         )
         if (portfolioInfo.stocks.isNotEmpty()) {
             LazyColumn {
-                items(portfolioInfo.stocks) { stock ->
-                    StockItem(stock, onClick = {
-                        navigator.navigate(StockDetailsScreenDestination(stockUid = stock.uid))
-                    })
+                items(portfolioInfo.stocks, key = { it.uid }) { stock ->
+                    StockItem(
+                        stock = stock,
+                        onClick = {
+                            navigator.navigate(StockDetailsScreenDestination(stockUid = stock.uid))
+                        },
+                        modifier = Modifier.animateItem()
+                    )
                 }
             }
         } else {
@@ -184,10 +188,11 @@ private fun TotalBalanceCard(
 @Composable
 private fun StockItem(
     stock: PortfolioStockInfo,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
         elevation = CardDefaults.cardElevation(4.dp),

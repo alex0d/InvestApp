@@ -8,10 +8,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Warning
@@ -158,46 +160,46 @@ private fun TarotPredictionOnSuccess(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         AnimatedVisibility(visible = visible) {
-            LazyColumn(
-                modifier = Modifier.padding(horizontal = 16.dp),
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                item {
-                    Text(
-                        modifier = Modifier.padding(vertical = 20.dp),
-                        text = stockName,
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            lineBreak = LineBreak.Paragraph,
-                        ),
-                        lineHeight = 28.sp,
-                        textAlign = TextAlign.Center,
-                        fontSize = 30.sp,
-                    )
-                    Image(
-                        modifier = Modifier.fillParentMaxWidth(0.7f).clip(RoundedCornerShape(16.dp)),
-                        painter = painterResource(id = getTarotImage(state.prediction.card)),
-                        contentDescription = ""
-                    )
-                    Text(
-                        modifier = Modifier.padding(vertical = 16.dp),
-                        text = stringResource(id = getTarotCardName(state.prediction.card)),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontSize = 24.sp,
-                    )
-                    Text(
-                        modifier = Modifier.padding(horizontal = 8.dp),
-                        text = state.prediction.prediction,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                    Spacer(modifier = Modifier.size(32.dp))
-                    Text(
-                        text = stringResource(R.string.not_iir_disclaimer),
-                        style = MaterialTheme.typography.bodySmall,
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Spacer(modifier = Modifier.size(16.dp))
-                }
+                Text(
+                    modifier = Modifier.padding(vertical = 20.dp),
+                    text = stockName,
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        lineBreak = LineBreak.Paragraph,
+                    ),
+                    lineHeight = 28.sp,
+                    textAlign = TextAlign.Center,
+                    fontSize = 30.sp,
+                )
+                Image(
+                    modifier = Modifier.fillMaxWidth(0.7f).clip(RoundedCornerShape(16.dp)),
+                    painter = painterResource(id = getTarotImage(state.prediction.card)),
+                    contentDescription = ""
+                )
+                Text(
+                    modifier = Modifier.padding(vertical = 16.dp),
+                    text = stringResource(id = getTarotCardName(state.prediction.card)),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontSize = 24.sp,
+                )
+                Text(
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    text = state.prediction.prediction,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Spacer(modifier = Modifier.size(32.dp))
+                Text(
+                    text = stringResource(R.string.not_iir_disclaimer),
+                    style = MaterialTheme.typography.bodySmall,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(modifier = Modifier.size(16.dp))
             }
         }
     }

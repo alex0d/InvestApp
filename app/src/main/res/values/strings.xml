@@ -58,7 +58,8 @@
     <string name="selling">Selling</string>
     <string name="order_completed">Order has been completed</string>
     <string name="lots_amount">Amount of lots</string>
-    <string name="available_lots">Available: %1$s lots</string>
+    <string name="available">Available</string>
+    <string name="lot_in_plural">lots</string>
     <string name="pcs_in_lot">(1 lot = %1$s pc)</string>
     <string name="total_value">Total value</string>
     <string name="empty_portfolio_message">Your portfolio is still empty</string>
@@ -81,4 +82,6 @@
     <string name="connectivity_available">Back Online!</string>
     <string name="connectivity_unavailable">No Internet Connection!</string>
     <string name="connectivity_icon_description">Connectivity Icon</string>
+    <string name="hide_password">Hide password</string>
+    <string name="show_password">Show password</string>
 </resources>
