@@ -33,7 +33,7 @@
 1. Разверните серверную часть приложения, используя [репозиторий InvestmentAnalyst](https://github.com/alex0d/InvestmentAnalyst)
 2. Создайте файл `secrets.properties` в корне проекта и добавьте в него адрес вашего сервера, например:
     ```
-    INVEST_API_BASE_URL=http://localhost:8080
+    INVEST_API_BASE_URL=http://10.0.2.2:8080
     ```
 3. Соберите и установите приложение на устройство или эмулятор, используя [Android Studio](https://developer.android.com/studio)
 
