@@ -54,7 +54,7 @@ class AuthScreenTest {
         registerString = rule.activity.getString(R.string.register)
 
         rule.activity.setContent {
-            AuthScreenContent(
+            AuthScreen().AuthScreenContent (
                 modifier = Modifier,
                 authState = AuthState.Idle,
                 firstname = firstname,

@@ -1,47 +1,50 @@
 package ru.alex0d.investapp.screens.main
 
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.exclude
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ScaffoldDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.navigation.compose.rememberNavController
-import com.ramcosta.composedestinations.DestinationsNavHost
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootGraph
-import com.ramcosta.composedestinations.generated.NavGraphs
-import com.ramcosta.composedestinations.generated.destinations.ProfileScreenDestination
-import com.ramcosta.composedestinations.manualcomposablecalls.composable
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
+import cafe.adriel.voyager.navigator.tab.Tab
+import cafe.adriel.voyager.navigator.tab.TabNavigator
+import ru.alex0d.investapp.screens.portfolio.PortfolioScreen
 import ru.alex0d.investapp.screens.profile.ProfileScreen
-import ru.alex0d.investapp.ui.composables.BottomBar
+import ru.alex0d.investapp.screens.search.SearchScreen
+import ru.alex0d.investapp.ui.composables.CurrentTabX
 
-@Destination<RootGraph>
-@Composable
-fun MainScreen(
-    rootNavigator: DestinationsNavigator
-) {
-    val navController = rememberNavController()
-
-    Scaffold(
-        contentWindowInsets = ScaffoldDefaults.contentWindowInsets.exclude(WindowInsets.statusBars),
-        bottomBar = {
-            BottomBar(navController = navController)
-        }
-    ) { innerPadding ->
-        DestinationsNavHost(
-            modifier = Modifier.padding(innerPadding),
-            navGraph = NavGraphs.main,
-            navController = navController
-        ) {
-            composable(ProfileScreenDestination) {
-                ProfileScreen(
-                    rootNavigator = rootNavigator
-                )
+class MainScreen : Screen {
+    @Composable
+    override fun Content() {
+        TabNavigator(PortfolioScreen(), disposeNestedNavigators = true) {
+            Scaffold(
+                bottomBar = {
+                    BottomAppBar {
+                        TabNavigationItem(PortfolioScreen())
+                        TabNavigationItem(SearchScreen())
+                        TabNavigationItem(ProfileScreen())
+                    }
+                },
+            ) { innerPadding ->
+                CurrentTabX(innerPadding)
             }
         }
+    }
+
+    @Composable
+    private fun RowScope.TabNavigationItem(tab: Tab) {
+        val tabNavigator = LocalTabNavigator.current
+        println(tabNavigator)
+        println(tabNavigator.current)
+
+        NavigationBarItem(
+            selected = tabNavigator.current.javaClass == tab.javaClass,
+            onClick = { tabNavigator.current = tab },
+            label = { Text(text = tab.options.title) },
+            icon = { Icon(painter = tab.options.icon!!, contentDescription = tab.options.title) }
+        )
     }
 }

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -81,11 +79,12 @@ fun SearchInputField(
                 )
             }
         },
-        colors = when (searchFieldState) {
-            SearchViewModel.SearchFieldState.Idle -> searchFieldColorsStateIdle()
-            SearchViewModel.SearchFieldState.EmptyActive,
-            SearchViewModel.SearchFieldState.WithInputActive -> searchFieldColorsStateActive()
-        },
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+            focusedTextColor = MaterialTheme.colorScheme.onSecondaryContainer,
+            unfocusedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+            unfocusedTextColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        ),
         trailingIcon = if (searchFieldState is SearchViewModel.SearchFieldState.WithInputActive) {
             {
                 Icon(
@@ -129,28 +128,3 @@ fun SearchInputField(
         },
     )
 }
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun searchFieldColorsStateIdle() = TextFieldDefaults.textFieldColors(
-    containerColor = MaterialTheme.colorScheme.primaryContainer,
-    focusedIndicatorColor = Color.Transparent,
-    unfocusedIndicatorColor = Color.Transparent,
-    disabledIndicatorColor = Color.Transparent,
-    disabledTextColor = MaterialTheme.colorScheme.onPrimaryContainer,
-    cursorColor = Color.Transparent,
-    focusedLabelColor = Color.Transparent,
-    unfocusedLabelColor = Color.Transparent,
-)
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun searchFieldColorsStateActive() = TextFieldDefaults.textFieldColors(
-    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-    focusedIndicatorColor = Color.Transparent,
-    unfocusedIndicatorColor = Color.Transparent,
-    disabledIndicatorColor = Color.Transparent,
-    disabledTextColor = MaterialTheme.colorScheme.onSecondaryContainer,
-    focusedLabelColor = Color.Transparent,
-    unfocusedLabelColor = Color.Transparent,
-)

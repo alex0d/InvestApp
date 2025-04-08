@@ -10,19 +10,19 @@ coreKtx = "1.13.1"
 lifecycleRuntimeKtx = "2.8.4"
 coreSplashscreen = "1.0.1"
 
-compose = "1.9.1"
-composeBom = "2024.08.00"
-composeAnimation = "1.6.8"
+compose = "1.10.1"
+composeBom = "2025.03.01"
+composeAnimation = "1.7.8"
 
 kotlinxCoroutinesAndroid = "1.8.1"
 kotlinxSerializationJson = "1.7.1"
-destinations = "2.1.0-beta04"
 retrofit = "2.9.0"
 retrofitKotlinxSerializationConverter = "1.0.0"
 okhttp = "4.12.0"
 datastorePreferences = "1.1.1"
 room = "2.6.1"
-koinAndroid = "3.2.0"
+voyager = "1.1.0-beta03"
+koinAndroid = "4.0.3"
 coil = "2.6.0"
 vico = "2.0.0-alpha.19"
 
@@ -54,10 +54,6 @@ androidx-compose-material3 = { group = "androidx.compose.material3", name = "mat
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 
-# Compose Destinations (navigation)
-compose-destinations = { module = "io.github.raamcosta.compose-destinations:core", version.ref = "destinations" }
-compose-destinations-ksp = { module = "io.github.raamcosta.compose-destinations:ksp", version.ref = "destinations" }
-
 # Retrofit
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 retrofit-converter-scalars = { module = "com.squareup.retrofit2:converter-scalars", version.ref = "retrofit" }
@@ -71,6 +67,11 @@ androidx-datastore-preferences = { module = "androidx.datastore:datastore-prefer
 # Room
 androidx-room-ksp = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room = { module = "androidx.room:room-ktx", version.ref = "room" }
+
+# Voyager
+voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
+voyager-tabNavigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
+voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyager" }
 
 # Koin
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }

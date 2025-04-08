@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "ru.alex0d.investapp"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "ru.alex0d.investapp"
@@ -75,10 +75,6 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.serialization.json)
 
-    // Compose Destinations (navigation)
-    implementation(libs.compose.destinations)
-    ksp(libs.compose.destinations.ksp)
-
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.scalars)
@@ -92,6 +88,11 @@ dependencies {
     // Room
     implementation(libs.androidx.room)
     ksp(libs.androidx.room.ksp)
+
+    // Voyager
+    implementation(libs.voyager.navigator)
+    implementation(libs.voyager.tabNavigator)
+    implementation(libs.voyager.koin)
 
     // Koin
     implementation(libs.koin.android)

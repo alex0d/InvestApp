@@ -6,6 +6,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -42,164 +43,181 @@ import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import cafe.adriel.voyager.core.screen.uniqueScreenKey
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.tab.TabOptions
 import kotlinx.coroutines.delay
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import ru.alex0d.investapp.R
 import ru.alex0d.investapp.domain.models.TarotCard
+import ru.alex0d.investapp.screens.main.MainTabs
+import ru.alex0d.investapp.screens.main.voyagerTabOptions
+import ru.alex0d.investapp.ui.composables.TabX
 import ru.alex0d.investapp.ui.composables.TwoButtonsAlertDialog
-import ru.alex0d.investapp.utils.MainGraph
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Destination<MainGraph>
-@Composable
-fun TarotScreen(
-    navigator: DestinationsNavigator,
-    stockName: String = ""
-) {
-    val viewModel: TarotViewModel = getViewModel { parametersOf(stockName) }
-    val state = viewModel.state.collectAsState().value
+data class TarotScreen(
+    val stockName: String = "",
+) : TabX {
+    override val key = uniqueScreenKey
+    override val options: TabOptions
+        @Composable
+        get() = MainTabs.TAROT.voyagerTabOptions
 
-    var openAlertDialog by remember { mutableStateOf(false) }
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    override fun Content(
+        innerPadding: PaddingValues,
+    ) {
+        val navigator = LocalNavigator.current
+        val viewModel: TarotViewModel = koinViewModel { parametersOf(stockName) }
+        val state = viewModel.state.collectAsState().value
 
-    Scaffold(
-        topBar = {
-            if (state is TarotPredictionState.Success) {
-                TopAppBar(
-                    navigationIcon = {
-                        IconButton(onClick = { navigator.popBackStack() }) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                tint = MaterialTheme.colorScheme.primary,
-                                contentDescription = stringResource(R.string.go_back)
+        var openAlertDialog by remember { mutableStateOf(false) }
+
+        Scaffold(
+            modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding()),
+            topBar = {
+                if (state is TarotPredictionState.Success) {
+                    TopAppBar(
+                        navigationIcon = {
+                            IconButton(onClick = { navigator?.pop() }) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    contentDescription = stringResource(R.string.go_back)
+                                )
+                            }
+                        },
+                        title = {
+                            Text(
+                                text = stringResource(R.string.esoteric_analysis),
+                                style = MaterialTheme.typography.titleLarge
                             )
+                        },
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            titleContentColor = MaterialTheme.colorScheme.primary,
+                        ),
+                        actions = {
+                            IconButton(onClick = { openAlertDialog = true }) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.refresh),
+                                    contentDescription = stringResource(R.string.refresh),
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }
                         }
-                    },
-                    title = {
-                        Text(
-                            text = stringResource(R.string.esoteric_analysis),
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        titleContentColor = MaterialTheme.colorScheme.primary,
-                    ),
-                    actions = {
-                        IconButton(onClick = { openAlertDialog = true }) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.refresh),
-                                contentDescription = stringResource(R.string.refresh),
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                    }
-                )
-            }
-        }
-    ) { padding ->
-        Box(modifier = Modifier
-            .padding(top = padding.calculateTopPadding())
-            .padding(horizontal = 2.dp)
-        ) {
-            when (state) {
-                is TarotPredictionState.Loading -> Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-                is TarotPredictionState.Error -> Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = stringResource(R.string.error_occurred),
-                        textAlign = TextAlign.Center,
                     )
                 }
-                is TarotPredictionState.Success -> TarotPredictionOnSuccess(stockName, state)
             }
-
-            if (openAlertDialog) {
-                TwoButtonsAlertDialog(
-                    onDismissRequest = { openAlertDialog = false },
-                    onConfirmation = {
-                        openAlertDialog = false
-                        viewModel.refreshTarotPrediction()
-                    },
-                    dialogTitle = stringResource(R.string.updating_prediction_title),
-                    dialogText = stringResource(R.string.updating_prediction_text),
-                    icon = Icons.Default.Warning
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun TarotPredictionOnSuccess(
-    stockName: String,
-    state: TarotPredictionState.Success
-) {
-    var visible by remember { mutableStateOf(false) }
-
-    LaunchedEffect(visible) {
-        if (!visible) {
-            delay(150)
-            visible = true
-        }
-    }
-
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        AnimatedVisibility(visible = visible) {
-            Column(
+        ) { scaffoldPadding ->
+            Box(
                 modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                    .padding(top = scaffoldPadding.calculateTopPadding())
+                    .padding(horizontal = 2.dp)
             ) {
-                Text(
-                    modifier = Modifier.padding(vertical = 20.dp),
-                    text = stockName,
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        lineBreak = LineBreak.Paragraph,
-                    ),
-                    lineHeight = 28.sp,
-                    textAlign = TextAlign.Center,
-                    fontSize = 30.sp,
-                )
-                Image(
-                    modifier = Modifier.fillMaxWidth(0.7f).clip(RoundedCornerShape(16.dp)),
-                    painter = painterResource(id = getTarotImage(state.prediction.card)),
-                    contentDescription = ""
-                )
-                Text(
-                    modifier = Modifier.padding(vertical = 16.dp),
-                    text = stringResource(id = getTarotCardName(state.prediction.card)),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontSize = 24.sp,
-                )
-                Text(
-                    modifier = Modifier.padding(horizontal = 8.dp),
-                    text = state.prediction.prediction,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Spacer(modifier = Modifier.size(32.dp))
-                Text(
-                    text = stringResource(R.string.not_iir_disclaimer),
-                    style = MaterialTheme.typography.bodySmall,
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Spacer(modifier = Modifier.size(16.dp))
+                when (state) {
+                    is TarotPredictionState.Loading -> Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+
+                    is TarotPredictionState.Error -> Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 16.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = stringResource(R.string.error_occurred),
+                            textAlign = TextAlign.Center,
+                        )
+                    }
+
+                    is TarotPredictionState.Success -> TarotPredictionOnSuccess(stockName, state)
+                }
+
+                if (openAlertDialog) {
+                    TwoButtonsAlertDialog(
+                        onDismissRequest = { openAlertDialog = false },
+                        onConfirmation = {
+                            openAlertDialog = false
+                            viewModel.refreshTarotPrediction()
+                        },
+                        dialogTitle = stringResource(R.string.updating_prediction_title),
+                        dialogText = stringResource(R.string.updating_prediction_text),
+                        icon = Icons.Default.Warning
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun TarotPredictionOnSuccess(
+        stockName: String,
+        state: TarotPredictionState.Success
+    ) {
+        var visible by remember { mutableStateOf(false) }
+
+        LaunchedEffect(visible) {
+            if (!visible) {
+                delay(150)
+                visible = true
+            }
+        }
+
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            AnimatedVisibility(visible = visible) {
+                Column(
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = 16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Text(
+                        modifier = Modifier.padding(vertical = 20.dp),
+                        text = stockName,
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            lineBreak = LineBreak.Paragraph,
+                        ),
+                        lineHeight = 28.sp,
+                        textAlign = TextAlign.Center,
+                        fontSize = 30.sp,
+                    )
+                    Image(
+                        modifier = Modifier
+                            .fillMaxWidth(0.7f)
+                            .clip(RoundedCornerShape(16.dp)),
+                        painter = painterResource(id = getTarotImage(state.prediction.card)),
+                        contentDescription = ""
+                    )
+                    Text(
+                        modifier = Modifier.padding(vertical = 16.dp),
+                        text = stringResource(id = getTarotCardName(state.prediction.card)),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontSize = 24.sp,
+                    )
+                    Text(
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                        text = state.prediction.prediction,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Spacer(modifier = Modifier.size(32.dp))
+                    Text(
+                        text = stringResource(R.string.not_iir_disclaimer),
+                        style = MaterialTheme.typography.bodySmall,
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(modifier = Modifier.size(16.dp))
+                }
             }
         }
     }

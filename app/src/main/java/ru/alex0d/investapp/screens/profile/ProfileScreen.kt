@@ -3,11 +3,11 @@ package ru.alex0d.investapp.screens.profile
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -22,90 +22,94 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.generated.destinations.MainScreenDestination
-import com.ramcosta.composedestinations.generated.navgraphs.RootNavGraph
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
+import cafe.adriel.voyager.navigator.tab.TabOptions
 import org.koin.androidx.compose.koinViewModel
 import ru.alex0d.investapp.R
-import ru.alex0d.investapp.utils.MainGraph
+import ru.alex0d.investapp.screens.auth.AuthScreen
+import ru.alex0d.investapp.screens.main.MainTabs
+import ru.alex0d.investapp.screens.main.voyagerTabOptions
+import ru.alex0d.investapp.ui.composables.TabX
 
-@Destination<MainGraph>
-@Composable
-fun ProfileScreen(
-    rootNavigator: DestinationsNavigator,
-    viewModel: ProfileViewModel = koinViewModel()
-) {
-    val state = viewModel.state.collectAsState().value
+class ProfileScreen : TabX {
+    override val options: TabOptions
+        @Composable
+        get() = MainTabs.PROFILE.voyagerTabOptions
 
-    Column(
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.surface)
-            .fillMaxSize()
-            .statusBarsPadding(),
-        horizontalAlignment = Alignment.CenterHorizontally
+    @Composable
+    override fun Content(
+        innerPadding: PaddingValues,
     ) {
-        when (state) {
-            is ProfileState.Error -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = stringResource(R.string.error_occurred),
-                        textAlign = TextAlign.Center,
-                    )
-                }
-            }
+        val navigator = LocalNavigator.currentOrThrow
+        val viewModel = koinViewModel<ProfileViewModel>()
+        val state = viewModel.state.collectAsState().value
 
-            is ProfileState.Loading -> {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.surface),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            when (state) {
+                is ProfileState.Error -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 16.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = stringResource(R.string.error_occurred),
+                            textAlign = TextAlign.Center,
+                        )
+                    }
                 }
-            }
 
-            is ProfileState.Success -> {
-                Icon(
-                    modifier = Modifier
-                        .size(240.dp)
-                        .padding(top = 32.dp, bottom = 16.dp),
-                    painter = painterResource(id = R.drawable.account_circle),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
-                Text(
-                    modifier = Modifier.padding(bottom = 8.dp),
-                    text = state.email,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                Text(
-                    text = "${state.firstname} ${state.lastname ?: ""}".trimEnd(),
-                    color = MaterialTheme.colorScheme.onSurface,
-                    style = MaterialTheme.typography.headlineMedium
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                Button(
-                    modifier = Modifier.padding(bottom = 32.dp),
-                    onClick = {
-                        viewModel.logout()
-                        rootNavigator.navigate(RootNavGraph) {
-                            popUpTo(MainScreenDestination) {
-                                inclusive = true
-                            }
-                        }
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+                is ProfileState.Loading -> {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
+                    }
+                }
+
+                is ProfileState.Success -> {
+                    Icon(
+                        modifier = Modifier
+                            .size(240.dp)
+                            .padding(top = 32.dp, bottom = 16.dp),
+                        painter = painterResource(id = R.drawable.account_circle),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
-                ) {
                     Text(
-                        text = stringResource(R.string.logout),
-                        style = MaterialTheme.typography.labelLarge
+                        modifier = Modifier.padding(bottom = 8.dp),
+                        text = state.email,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        style = MaterialTheme.typography.bodyLarge
                     )
+                    Text(
+                        text = "${state.firstname} ${state.lastname ?: ""}".trimEnd(),
+                        color = MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.headlineMedium
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Button(
+                        modifier = Modifier.padding(bottom = 32.dp),
+                        onClick = {
+                            viewModel.logout()
+                            navigator.parent?.replaceAll(AuthScreen())
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+                        )
+                    ) {
+                        Text(
+                            text = stringResource(R.string.logout),
+                            style = MaterialTheme.typography.labelLarge
+                        )
+                    }
                 }
             }
         }

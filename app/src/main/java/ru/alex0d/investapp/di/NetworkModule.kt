@@ -15,10 +15,10 @@ import ru.alex0d.investapp.data.remote.services.MarketApiService
 import ru.alex0d.investapp.data.remote.services.PortfolioApiService
 import ru.alex0d.investapp.data.remote.services.StockApiService
 import ru.alex0d.investapp.data.remote.services.TarotApiService
-import ru.alex0d.investapp.utils.http.AuthAuthenticator
-import ru.alex0d.investapp.utils.http.AuthInterceptor
 import ru.alex0d.investapp.utils.connectivity.ConnectivityObserver
 import ru.alex0d.investapp.utils.connectivity.NetworkConnectivityObserver
+import ru.alex0d.investapp.utils.http.AuthAuthenticator
+import ru.alex0d.investapp.utils.http.AuthInterceptor
 import java.util.concurrent.TimeUnit
 
 const val investApiBaseUrl = BuildConfig.INVEST_API_BASE_URL

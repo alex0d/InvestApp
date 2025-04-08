@@ -56,16 +56,18 @@ class OrderScreenTest {
         sellString = rule.activity.getString(R.string.sell)
 
         rule.activity.setContent {
-            OrderOnDetailsFetched(
+            OrderScreen("", orderAction).OrderOnDetailsFetched(
                 share = share,
                 availableLots = availableLots,
                 lotsInput = lotsInput,
                 totalValue = totalValue,
                 orderAction = orderAction,
                 onUpdateInputLots = { lotsInput = it },
-                onDecreaseLots = { if (lotsInput.toInt() > 0) lotsInput = (lotsInput.toInt() - 1).toString() },
+                onDecreaseLots = {
+                    if (lotsInput.toInt() > 0) lotsInput = (lotsInput.toInt() - 1).toString()
+                },
                 onIncreaseLots = { lotsInput = (lotsInput.toInt() + 1).toString() },
-                onConfirmOrder = {  }
+                onConfirmOrder = { }
             )
         }
     }

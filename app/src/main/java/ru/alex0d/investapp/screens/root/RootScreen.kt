@@ -4,11 +4,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,10 +16,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.ramcosta.composedestinations.DestinationsNavHost
-import com.ramcosta.composedestinations.generated.NavGraphs
+import cafe.adriel.voyager.navigator.Navigator
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
+import ru.alex0d.investapp.screens.auth.AuthScreen
 import ru.alex0d.investapp.ui.composables.ConnectivityStatusBox
 import ru.alex0d.investapp.utils.connectivity.ConnectivityObserver
 import kotlin.time.Duration.Companion.seconds
@@ -33,20 +30,20 @@ fun RootScreen() {
     val networkStatus by viewModel.networkStatus.collectAsState()
     val isConnected = networkStatus == ConnectivityObserver.Status.AVAILABLE
 
-    var visibility by remember { mutableStateOf(false) }
+    var connectivityVisibility by remember { mutableStateOf(false) }
 
     LaunchedEffect(isConnected) {
         if (!isConnected) {
-            visibility = true
+            connectivityVisibility = true
         } else {
             delay(1.seconds)
-            visibility = false
+            connectivityVisibility = false
         }
     }
 
     Column {
         AnimatedVisibility(
-            visible = visibility,
+            visible = connectivityVisibility,
             enter = expandVertically(),
             exit = shrinkVertically()
         ) {
@@ -59,9 +56,6 @@ fun RootScreen() {
             )
         }
 
-        DestinationsNavHost(
-            navGraph = NavGraphs.root,
-            modifier = if (visibility) Modifier.consumeWindowInsets(WindowInsets.statusBars) else Modifier
-        )
+        Navigator(AuthScreen())
     }
 }
