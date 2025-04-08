@@ -26,20 +26,31 @@ class UserRepository(
             return AuthResult.UNKNOWN_ERROR
         }
 
-        return if (response.isSuccessful && response.body() != null) {
-            userDataStore.saveUserDetails(
-                accessToken = response.body()!!.accessToken,
-                refreshToken = response.body()!!.refreshToken,
-                firstname = response.body()!!.firstname,
-                lastname = response.body()!!.lastname,
-                email = response.body()!!.email
-            )
-            AuthResult.SUCCESS
-        } else if (response.code() == 409) {
-            AuthResult.EMAIL_ALREADY_REGISTERED
-        } else {
-            AuthResult.UNKNOWN_ERROR
-        }
+// TODO: Wrap with custom validators
+//        return if (response.isSuccessful && response.body() != null) {
+//            userDataStore.saveUserDetails(
+//                accessToken = response.body()!!.accessToken,
+//                refreshToken = response.body()!!.refreshToken,
+//                firstname = response.body()!!.firstname,
+//                lastname = response.body()!!.lastname,
+//                email = response.body()!!.email
+//            )
+//            AuthResult.SUCCESS
+//        } else if (response.code() == 409) {
+//            AuthResult.EMAIL_ALREADY_REGISTERED
+//        } else {
+//            AuthResult.UNKNOWN_ERROR
+//        }
+
+        userDataStore.saveUserDetails(
+            accessToken = response.accessToken,
+            refreshToken = response.refreshToken,
+            firstname = response.firstname,
+            lastname = response.lastname,
+            email = response.email
+        )
+
+        return AuthResult.SUCCESS
     }
 
     suspend fun authenticate(email: String, password: String): AuthResult {
@@ -54,22 +65,33 @@ class UserRepository(
             return AuthResult.UNKNOWN_ERROR
         }
 
-        return if (response.isSuccessful && response.body() != null) {
-            userDataStore.saveUserDetails(
-                accessToken = response.body()!!.accessToken,
-                refreshToken = response.body()!!.refreshToken,
-                firstname = response.body()!!.firstname,
-                lastname = response.body()!!.lastname,
-                email = response.body()!!.email
-            )
-            AuthResult.SUCCESS
-        } else if (response.code() == 401) {
-            AuthResult.INVALID_CREDENTIALS
-        } else if (response.code() == 422) {
-            AuthResult.USER_NOT_FOUND
-        } else {
-            AuthResult.UNKNOWN_ERROR
-        }
+// TODO: Wrap with custom validators
+//        return if (response.isSuccessful && response.body() != null) {
+//            userDataStore.saveUserDetails(
+//                accessToken = response.body()!!.accessToken,
+//                refreshToken = response.body()!!.refreshToken,
+//                firstname = response.body()!!.firstname,
+//                lastname = response.body()!!.lastname,
+//                email = response.body()!!.email
+//            )
+//            AuthResult.SUCCESS
+//        } else if (response.code() == 401) {
+//            AuthResult.INVALID_CREDENTIALS
+//        } else if (response.code() == 422) {
+//            AuthResult.USER_NOT_FOUND
+//        } else {
+//            AuthResult.UNKNOWN_ERROR
+//        }
+
+        userDataStore.saveUserDetails(
+            accessToken = response.accessToken,
+            refreshToken = response.refreshToken,
+            firstname = response.firstname,
+            lastname = response.lastname,
+            email = response.email
+        )
+
+        return AuthResult.SUCCESS
     }
 
     suspend fun authenticateByTokensInDataBase(): AuthResult {

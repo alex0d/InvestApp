@@ -1,15 +1,29 @@
 package ru.alex0d.investapp.di
 
 import android.content.Context
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.auth.Auth
+import io.ktor.client.plugins.auth.providers.BearerTokens
+import io.ktor.client.plugins.auth.providers.bearer
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.DEFAULT
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.flow.first
 import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
-import retrofit2.Retrofit
-import retrofit2.converter.scalars.ScalarsConverterFactory
 import ru.alex0d.investapp.BuildConfig
+import ru.alex0d.investapp.data.local.UserDataStore
+import ru.alex0d.investapp.data.remote.models.AuthResponse
+import ru.alex0d.investapp.data.remote.models.RefreshRequest
 import ru.alex0d.investapp.data.remote.services.AuthApiService
 import ru.alex0d.investapp.data.remote.services.MarketApiService
 import ru.alex0d.investapp.data.remote.services.PortfolioApiService
@@ -17,9 +31,6 @@ import ru.alex0d.investapp.data.remote.services.StockApiService
 import ru.alex0d.investapp.data.remote.services.TarotApiService
 import ru.alex0d.investapp.utils.connectivity.ConnectivityObserver
 import ru.alex0d.investapp.utils.connectivity.NetworkConnectivityObserver
-import ru.alex0d.investapp.utils.http.AuthAuthenticator
-import ru.alex0d.investapp.utils.http.AuthInterceptor
-import java.util.concurrent.TimeUnit
 
 const val investApiBaseUrl = BuildConfig.INVEST_API_BASE_URL
 
@@ -29,69 +40,69 @@ private fun provideNetworkConnectivityObserver(
     return NetworkConnectivityObserver(context)
 }
 
-private fun provideHttpClient(
-    authInterceptor: AuthInterceptor,
-    authAuthenticator: AuthAuthenticator
-): OkHttpClient {
-    return OkHttpClient.Builder()
-        .addInterceptor(
-            HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BASIC
+fun provideHttpClient(userDataSource: UserDataStore): HttpClient { // TODO: change UserDataStore to multiplatform solution
+    return HttpClient {
+        install(Logging) {
+            logger = Logger.DEFAULT
+            level = LogLevel.ALL
+        }
+
+        install(Auth) {
+            bearer {
+                loadTokens {
+                    BearerTokens(
+                        accessToken = userDataSource.accessToken.first() ?: "",
+                        refreshToken = userDataSource.refreshToken.first() ?: ""
+                    )
+                }
+
+                refreshTokens {
+                    val refreshRequest = RefreshRequest(
+                        refreshToken = userDataSource.refreshToken.first() ?: ""
+                    )
+
+                    client.post("$investApiBaseUrl/api/auth/refresh") {
+                        markAsRefreshTokenRequest()
+                        contentType(ContentType.Application.Json)
+                        setBody(refreshRequest)
+                    }.body<AuthResponse>().let {
+                        userDataSource.saveAccessToken(it.accessToken)
+                        userDataSource.saveRefreshToken(it.refreshToken)
+
+                        BearerTokens(
+                            accessToken = it.accessToken,
+                            refreshToken = it.refreshToken
+                        )
+                    }
+                }
             }
-        )
-        .addInterceptor(authInterceptor)
-        .authenticator(authAuthenticator)
-        .readTimeout(60, TimeUnit.SECONDS)
-        .build()
-}
+        }
 
-private fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
-    return Retrofit.Builder()
-        .baseUrl(investApiBaseUrl)
-        .client(okHttpClient)
-        .addConverterFactory(ScalarsConverterFactory.create())
-        .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
-        .build()
-}
+        install(ContentNegotiation) {
+            json(Json {
+                prettyPrint = true
+                isLenient = true
+            })
+        }
 
-private fun providePortfolioService(retrofit: Retrofit): PortfolioApiService {
-    return retrofit.create(PortfolioApiService::class.java)
-}
-
-private fun provideStockService(retrofit: Retrofit): StockApiService {
-    return retrofit.create(StockApiService::class.java)
-}
-
-private fun provideMarketService(retrofit: Retrofit): MarketApiService {
-    return retrofit.create(MarketApiService::class.java)
-}
-
-private fun provideTarotService(retrofit: Retrofit): TarotApiService {
-    return retrofit.create(TarotApiService::class.java)
-}
-
-private fun provideAuthService(retrofit: Retrofit): AuthApiService {
-    return retrofit.create(AuthApiService::class.java)
+        install(HttpTimeout) {
+            socketTimeoutMillis = 60_000
+        }
+    }
 }
 
 val networkModule = module {
     single { provideNetworkConnectivityObserver(context = get()) }
 
-    single { AuthInterceptor(userDataStore = get()) }
+    single { provideHttpClient(userDataSource = get()) }
 
-    single { AuthAuthenticator(userDataStore = get()) }
+    single { AuthApiService(httpClient = get(), investApiBaseUrl = investApiBaseUrl) }
 
-    single { provideHttpClient(authInterceptor = get(), authAuthenticator = get()) }
+    single { MarketApiService(httpClient = get(), investApiBaseUrl = investApiBaseUrl) }
 
-    single { provideRetrofit(okHttpClient = get()) }
+    single { PortfolioApiService(httpClient = get(), investApiBaseUrl = investApiBaseUrl) }
 
-    single { providePortfolioService(retrofit = get()) }
+    single { StockApiService(httpClient = get(), investApiBaseUrl = investApiBaseUrl) }
 
-    single { provideStockService(retrofit = get()) }
-
-    single { provideMarketService(retrofit = get()) }
-
-    single { provideTarotService(retrofit = get()) }
-
-    single { provideAuthService(retrofit = get()) }
+    single { TarotApiService(httpClient = get(), investApiBaseUrl = investApiBaseUrl) }
 }

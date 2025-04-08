@@ -1,20 +1,35 @@
 package ru.alex0d.investapp.data.remote.services
 
-import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.get
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import ru.alex0d.investapp.data.remote.models.BuyStockRequest
 import ru.alex0d.investapp.data.remote.models.PortfolioInfoDto
 import ru.alex0d.investapp.data.remote.models.SellStockRequest
 
-interface PortfolioApiService {
-    @GET("/api/portfolio")
-    suspend fun getPortfolio(): PortfolioInfoDto
+class PortfolioApiService(
+    private val httpClient: HttpClient,
+    private val investApiBaseUrl: String
+) {
+    suspend fun getPortfolio(): PortfolioInfoDto {
+        return httpClient.get("$investApiBaseUrl/api/portfolio").body()
+    }
 
-    @POST("/api/portfolio/buy")
-    suspend fun buyStock(@Body request: BuyStockRequest): Response<String>
+    suspend fun buyStock(request: BuyStockRequest): String {
+        return httpClient.post("$investApiBaseUrl/api/portfolio/buy") {
+            contentType(ContentType.Application.Json)
+            setBody(request)
+        }.body()
+    }
 
-    @POST("/api/portfolio/sell")
-    suspend fun sellStock(@Body request: SellStockRequest): Response<String>
+    suspend fun sellStock(request: SellStockRequest): String {
+        return httpClient.post("$investApiBaseUrl/api/portfolio/sell") {
+            contentType(ContentType.Application.Json)
+            setBody(request)
+        }.body()
+    }
 }

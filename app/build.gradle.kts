@@ -75,12 +75,13 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.serialization.json)
 
-    // Retrofit
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.converter.scalars)
-    implementation(libs.retrofit.converter.kotlinx.serialization)
-    implementation(libs.okhttp)
-    implementation(libs.okhttp.logging.interceptor)
+    // Ktor Client
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.client.auth)
+    implementation(libs.ktor.client.logging)
+    implementation(libs.ktor.serialization)
+    implementation(libs.ktor.client.android)
 
     // DataStore
     implementation(libs.androidx.datastore.preferences)

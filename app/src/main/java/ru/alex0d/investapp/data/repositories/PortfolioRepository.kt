@@ -34,7 +34,7 @@ class PortfolioRepository(private val portfolioApiService: PortfolioApiService) 
             return false
         }
 
-        return response.isSuccessful && response.body().toString() == "Stock bought"
+        return response == "Stock bought"
     }
 
     suspend fun sellStock(uid: String, amount: Int): Boolean {
@@ -46,6 +46,6 @@ class PortfolioRepository(private val portfolioApiService: PortfolioApiService) 
             return false
         }
 
-        return response.isSuccessful && response.body().toString() == "Stock sold"
+        return response == "Stock sold"
     }
 }

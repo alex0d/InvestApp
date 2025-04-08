@@ -16,9 +16,7 @@ composeAnimation = "1.7.8"
 
 kotlinxCoroutinesAndroid = "1.8.1"
 kotlinxSerializationJson = "1.7.1"
-retrofit = "2.9.0"
-retrofitKotlinxSerializationConverter = "1.0.0"
-okhttp = "4.12.0"
+ktor = "3.1.2"
 datastorePreferences = "1.1.1"
 room = "2.6.1"
 voyager = "1.1.0-beta03"
@@ -54,12 +52,13 @@ androidx-compose-material3 = { group = "androidx.compose.material3", name = "mat
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 
-# Retrofit
-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
-retrofit-converter-scalars = { module = "com.squareup.retrofit2:converter-scalars", version.ref = "retrofit" }
-retrofit-converter-kotlinx-serialization = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "retrofitKotlinxSerializationConverter" }
-okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
-okhttp-logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
+# Ktor Client
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktor-client-android = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktor" }
+ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-auth = { group = "io.ktor", name = "ktor-client-auth", version.ref = "ktor" }
+ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
+ktor-serialization = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
 # DataStore
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }

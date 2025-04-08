@@ -1,6 +1,6 @@
 package ru.alex0d.investapp.di
 
-import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 import ru.alex0d.investapp.screens.auth.AuthViewModel
 import ru.alex0d.investapp.screens.order.OrderViewModel

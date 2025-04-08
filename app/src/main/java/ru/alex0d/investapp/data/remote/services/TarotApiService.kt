@@ -1,10 +1,15 @@
 package ru.alex0d.investapp.data.remote.services
 
-import retrofit2.http.GET
-import retrofit2.http.Path
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.get
 import ru.alex0d.investapp.data.remote.models.TarotPredictionDto
 
-interface TarotApiService {
-    @GET("/api/tarot/{stockName}")
-    suspend fun getPredictionByStockName(@Path("stockName") stockName: String): TarotPredictionDto
+class TarotApiService(
+    private val httpClient: HttpClient,
+    private val investApiBaseUrl: String
+) {
+    suspend fun getPredictionByStockName(stockName: String): TarotPredictionDto {
+        return httpClient.get("$investApiBaseUrl/api/tarot/$stockName").body()
+    }
 }

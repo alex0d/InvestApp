@@ -124,7 +124,7 @@ class PortfolioScreen : TabX {
                             onClick = {
                                 navigator?.push(StockDetailsScreen(stockUid = stock.uid))
                             },
-                            modifier = Modifier.animateItemPlacement()
+                            modifier = Modifier.animateItem()
                         )
                     }
                 }
