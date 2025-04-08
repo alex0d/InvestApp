@@ -2,9 +2,9 @@ package ru.alex0d.investapp.screens.stock
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.patrykandpatrick.vico.core.cartesian.data.CandlestickCartesianLayerModel
-import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
-import com.patrykandpatrick.vico.core.cartesian.data.LineCartesianLayerModel
+import com.patrykandpatrick.vico.multiplatform.cartesian.data.CandlestickCartesianLayerModel
+import com.patrykandpatrick.vico.multiplatform.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.multiplatform.cartesian.data.LineCartesianLayerModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -35,7 +35,7 @@ class StockDetailsViewModel(
             updateChartModel(candles)
         }
 
-    val modelProducer = CartesianChartModelProducer.build()
+    val modelProducer = CartesianChartModelProducer()
     private val candles = mutableListOf<Candle>()
 
     init {
@@ -91,7 +91,7 @@ class StockDetailsViewModel(
             )
         }
         viewModelScope.launch(Dispatchers.Default) {
-            modelProducer.tryRunTransaction {
+            modelProducer.runTransaction {
                 add(layerModel)
             }
         }

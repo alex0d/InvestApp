@@ -1,102 +1,67 @@
 package ru.alex0d.investapp.screens.stock.chart
 
 import android.graphics.Typeface
-import android.text.Layout
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberAxisGuidelineComponent
-import com.patrykandpatrick.vico.compose.common.component.fixed
-import com.patrykandpatrick.vico.compose.common.component.rememberLayeredComponent
-import com.patrykandpatrick.vico.compose.common.component.rememberShapeComponent
-import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
-import com.patrykandpatrick.vico.compose.common.of
-import com.patrykandpatrick.vico.compose.common.shape.markerCornered
-import com.patrykandpatrick.vico.core.cartesian.CartesianMeasureContext
-import com.patrykandpatrick.vico.core.cartesian.HorizontalDimensions
-import com.patrykandpatrick.vico.core.cartesian.Insets
-import com.patrykandpatrick.vico.core.cartesian.marker.CartesianMarker
-import com.patrykandpatrick.vico.core.cartesian.marker.DefaultCartesianMarker
-import com.patrykandpatrick.vico.core.common.Dimensions
-import com.patrykandpatrick.vico.core.common.component.TextComponent
-import com.patrykandpatrick.vico.core.common.shape.Corner
-import com.patrykandpatrick.vico.core.common.shape.Shape
+import com.patrykandpatrick.vico.multiplatform.cartesian.axis.rememberAxisGuidelineComponent
+import com.patrykandpatrick.vico.multiplatform.cartesian.marker.CartesianMarker
+import com.patrykandpatrick.vico.multiplatform.cartesian.marker.DefaultCartesianMarker
+import com.patrykandpatrick.vico.multiplatform.common.Fill
+import com.patrykandpatrick.vico.multiplatform.common.Insets
+import com.patrykandpatrick.vico.multiplatform.common.LayeredComponent
+import com.patrykandpatrick.vico.multiplatform.common.component.TextComponent
+import com.patrykandpatrick.vico.multiplatform.common.component.rememberShapeComponent
+import com.patrykandpatrick.vico.multiplatform.common.component.rememberTextComponent
+import com.patrykandpatrick.vico.multiplatform.common.shape.CorneredShape
 
 @Composable
 internal fun rememberMarker(
     labelPosition: DefaultCartesianMarker.LabelPosition = DefaultCartesianMarker.LabelPosition.Top,
     showIndicator: Boolean = true,
 ): CartesianMarker {
-    val labelBackgroundShape = Shape.markerCornered(Corner.FullyRounded)
-    val labelBackground =
-        rememberShapeComponent(labelBackgroundShape, MaterialTheme.colorScheme.surface)
-            .setShadow(
-                radius = LABEL_BACKGROUND_SHADOW_RADIUS_DP,
-                dy = LABEL_BACKGROUND_SHADOW_DY_DP,
-                applyElevationOverlay = true,
-            )
-    val label =
-        rememberTextComponent(
+    val labelBackgroundShape = CorneredShape.rounded(allPercent = 100)
+    val labelBackground = rememberShapeComponent(
+        fill = Fill(MaterialTheme.colorScheme.surface),
+        shape = labelBackgroundShape
+    )
+    val label = rememberTextComponent(
+        style = TextStyle(
             color = MaterialTheme.colorScheme.onSurface,
-            background = labelBackground,
-            padding = Dimensions.of(8.dp, 4.dp),
-            typeface = Typeface.MONOSPACE,
-            textAlignment = Layout.Alignment.ALIGN_CENTER,
-            minWidth = TextComponent.MinWidth.fixed(40.dp),
-        )
-    val indicatorFrontComponent = rememberShapeComponent(Shape.Pill, MaterialTheme.colorScheme.surface)
-    val indicatorCenterComponent = rememberShapeComponent(Shape.Pill)
-    val indicatorRearComponent = rememberShapeComponent(Shape.Pill)
-    val indicator =
-        rememberLayeredComponent(
-            rear = indicatorRearComponent,
-            front =
-            rememberLayeredComponent(
-                rear = indicatorCenterComponent,
-                front = indicatorFrontComponent,
-                padding = Dimensions.of(5.dp),
-            ),
-            padding = Dimensions.of(10.dp),
-        )
+            fontFamily = FontFamily(Typeface.MONOSPACE),
+            textAlign = TextAlign.Center,
+        ),
+        background = labelBackground,
+        padding = Insets(horizontal = 8.dp, vertical = 4.dp),
+        minWidth = TextComponent.MinWidth.fixed(40.dp),
+    )
+    val indicatorFrontComponent = rememberShapeComponent(
+        fill = Fill(MaterialTheme.colorScheme.surface),
+        shape = CorneredShape.Pill,
+    )
+    val indicatorCenterComponent = rememberShapeComponent(shape = CorneredShape.Pill)
+    val indicatorRearComponent = rememberShapeComponent(shape = CorneredShape.Pill)
+    val indicator = LayeredComponent(
+        back = indicatorRearComponent,
+        front = LayeredComponent(
+            back = indicatorCenterComponent,
+            front = indicatorFrontComponent,
+            padding = Insets(all = 5.dp),
+        ),
+        padding = Insets(all = 10.dp),
+    )
     val guideline = rememberAxisGuidelineComponent()
     return remember(label, labelPosition, indicator, showIndicator, guideline) {
-        object : DefaultCartesianMarker(
+        DefaultCartesianMarker(
             label = label,
             labelPosition = labelPosition,
-            indicator = if (showIndicator) indicator else null,
-            indicatorSizeDp = 36f,
-            setIndicatorColor =
-            if (showIndicator) {
-                { color ->
-                    indicatorCenterComponent.color = color
-                    indicatorCenterComponent.setShadow(radius = 12f, color = color)
-                }
-            } else {
-                null
-            },
+            indicator = if (showIndicator) { _ -> indicator } else null,
+            indicatorSize = 36.dp,
             guideline = guideline,
-        ) {
-            override fun getInsets(
-                context: CartesianMeasureContext,
-                outInsets: Insets,
-                horizontalDimensions: HorizontalDimensions,
-            ) {
-                with(context) {
-                    outInsets.top =
-                        (
-                                CLIPPING_FREE_SHADOW_RADIUS_MULTIPLIER * LABEL_BACKGROUND_SHADOW_RADIUS_DP -
-                                        LABEL_BACKGROUND_SHADOW_DY_DP
-                                )
-                            .pixels
-                    if (labelPosition == LabelPosition.AroundPoint) return
-                    outInsets.top += label.getHeight(context) + labelBackgroundShape.tickSizeDp.pixels
-                }
-            }
-        }
+        )
     }
 }
-
-private const val LABEL_BACKGROUND_SHADOW_RADIUS_DP = 4f
-private const val LABEL_BACKGROUND_SHADOW_DY_DP = 2f
-private const val CLIPPING_FREE_SHADOW_RADIUS_MULTIPLIER = 1.4f

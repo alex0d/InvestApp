@@ -62,7 +62,7 @@ import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.multiplatform.cartesian.data.CartesianChartModelProducer
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -516,7 +516,7 @@ private fun StockDetailsOnSuccessNotInPortfolioPreview() {
                 ),
                 stockInfo = null,
             ),
-            modelProducer = CartesianChartModelProducer.build(),
+            modelProducer = CartesianChartModelProducer(),
             onSwitchChartType = {},
             onIntervalClick = {},
         )
@@ -560,7 +560,7 @@ private fun StockDetailsOnSuccessInPortfolioPreview() {
                     textColor = "#ffffff"
                 ),
             ),
-            modelProducer = CartesianChartModelProducer.build(),
+            modelProducer = CartesianChartModelProducer(),
             onSwitchChartType = {},
             onIntervalClick = {},
         )

@@ -22,7 +22,7 @@ room = "2.6.1"
 voyager = "1.1.0-beta03"
 koinAndroid = "4.0.3"
 coil = "2.6.0"
-vico = "2.0.0-alpha.19"
+vico = "2.1.2"
 
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -81,7 +81,7 @@ coil = { module = "io.coil-kt:coil", version.ref = "coil" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 
 # Vico (charts)
-vico-compose-m3 = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref = "vico" }
+vico-multiplatform-m3 = { group = "com.patrykandpatrick.vico", name = "multiplatform-m3", version.ref = "vico" }
 
 # Secrets Gradle Plugin
 secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secretsGradlePlugin" }

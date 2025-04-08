@@ -104,7 +104,7 @@ dependencies {
     implementation(libs.coil.compose)
 
     // Vico (charts)
-    implementation(libs.vico.compose.m3)
+    implementation(libs.vico.multiplatform.m3)
 
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
