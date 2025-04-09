@@ -1,6 +1,7 @@
+@file:OptIn(ExperimentalAdaptiveApi::class)
+
 package ru.alex0d.investapp.screens.order
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,17 +19,12 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -66,6 +62,12 @@ import investapp.composeapp.generated.resources.plus
 import investapp.composeapp.generated.resources.sell
 import investapp.composeapp.generated.resources.selling
 import investapp.composeapp.generated.resources.total_value
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveButton
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveCircularProgressIndicator
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveIconButton
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveScaffold
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveTopAppBar
+import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -78,6 +80,7 @@ import ru.alex0d.investapp.screens.main.voyagerTabOptions
 import ru.alex0d.investapp.ui.composables.ShareItem
 import ru.alex0d.investapp.ui.composables.TabX
 import ru.alex0d.investapp.ui.composables.navigationResult
+import ru.alex0d.investapp.ui.theme.isSystemInDarkAdaptiveTheme
 import ru.alex0d.investapp.utils.extensions.toCurrencyFormat
 import ru.alex0d.investapp.utils.extensions.toIntOrZero
 
@@ -111,7 +114,7 @@ data class OrderScreen(
             viewModel.fetchOrderDetails()
         }
 
-        Scaffold(
+        AdaptiveScaffold(
             modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding()),
             topBar = {
                 OrderTopAppBar(
@@ -231,7 +234,7 @@ data class OrderScreen(
                 }
             }
             Spacer(modifier = Modifier.height(24.dp))
-            Button(
+            AdaptiveButton(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp),
@@ -253,9 +256,8 @@ data class OrderScreen(
                         )
                     )
                 } else {
-                    CircularProgressIndicator(
+                    AdaptiveCircularProgressIndicator(
                         modifier = Modifier.size(24.dp),
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 }
             }
@@ -287,7 +289,7 @@ data class OrderScreen(
                 Row(
                     horizontalArrangement = Arrangement.End
                 ) {
-                    IconButton(
+                    AdaptiveIconButton(
                         onClick = onDecreaseLots,
                         enabled = lotsInt > 0
                     ) {
@@ -296,13 +298,13 @@ data class OrderScreen(
                             modifier = Modifier.size(24.dp),
                             contentDescription = "-",
                             tint = if (lotsInt > 0) {
-                                if (isSystemInDarkTheme()) Color.White else Color.DarkGray
+                                if (isSystemInDarkAdaptiveTheme()) Color.White else Color.DarkGray
                             } else {
-                                if (isSystemInDarkTheme()) Color.Gray else Color.LightGray
+                                if (isSystemInDarkAdaptiveTheme()) Color.Gray else Color.LightGray
                             }
                         )
                     }
-                    IconButton(
+                    AdaptiveIconButton(
                         onClick = onIncreaseLots,
                         enabled = orderAction == OrderAction.BUY || lotsInt < availableLots
                     ) {
@@ -311,9 +313,9 @@ data class OrderScreen(
                             modifier = Modifier.size(24.dp),
                             contentDescription = "+",
                             tint = if (orderAction == OrderAction.BUY || lotsInt < availableLots) {
-                                if (isSystemInDarkTheme()) Color.White else Color.DarkGray
+                                if (isSystemInDarkAdaptiveTheme()) Color.White else Color.DarkGray
                             } else {
-                                if (isSystemInDarkTheme()) Color.Gray else Color.LightGray
+                                if (isSystemInDarkAdaptiveTheme()) Color.Gray else Color.LightGray
                             }
                         )
                     }
@@ -330,7 +332,7 @@ data class OrderScreen(
                 .padding(horizontal = 16.dp),
             contentAlignment = Alignment.Center
         ) {
-            CircularProgressIndicator()
+            AdaptiveCircularProgressIndicator()
         }
     }
 
@@ -349,15 +351,15 @@ data class OrderScreen(
         }
     }
 
-    @Composable
     @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
     private fun OrderTopAppBar(
         onNavigationIconClick: () -> Unit,
         orderAction: OrderAction
     ) {
-        TopAppBar(
+        AdaptiveTopAppBar(
             navigationIcon = {
-                IconButton(onClick = onNavigationIconClick) {
+                AdaptiveIconButton(onClick = onNavigationIconClick) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         tint = MaterialTheme.colorScheme.primary,
@@ -377,10 +379,14 @@ data class OrderScreen(
                         style = MaterialTheme.typography.titleLarge
                     )
             },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                titleContentColor = MaterialTheme.colorScheme.primary,
-            ),
+            adaptation = {
+                material {
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        titleContentColor = MaterialTheme.colorScheme.primary,
+                    )
+                }
+            }
         )
     }
 }

@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalAdaptiveApi::class)
+
 package ru.alex0d.investapp.screens.search
 
 import androidx.compose.animation.AnimatedVisibility
@@ -13,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,6 +39,8 @@ import investapp.composeapp.generated.resources.error_occurred
 import investapp.composeapp.generated.resources.no_results
 import investapp.composeapp.generated.resources.start_investing
 import investapp.composeapp.generated.resources.stock_search
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveCircularProgressIndicator
+import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import ru.alex0d.investapp.domain.models.Share
@@ -168,7 +171,7 @@ class SearchScreen : TabX {
 
                 SearchViewModel.ViewState.Loading -> {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator()
+                        AdaptiveCircularProgressIndicator()
                     }
                 }
 

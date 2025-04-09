@@ -1,9 +1,11 @@
 package ru.alex0d.investapp.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveTheme
 import io.github.alexzhirkevich.cupertino.adaptive.CupertinoThemeSpec
 import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
@@ -32,7 +34,19 @@ private val materialLightColorScheme = lightColorScheme(
     */
 )
 
+@Composable
+@ReadOnlyComposable
+expect fun isSystemInDarkAdaptiveTheme(): Boolean
+
 expect fun determineTheme(): Theme
+
+@OptIn(ExperimentalAdaptiveApi::class)
+@Composable
+expect fun materialThemeSpec(
+    darkTheme: Boolean,
+    darkColorScheme: ColorScheme,
+    lightColorScheme: ColorScheme,
+): MaterialThemeSpec
 
 @OptIn(ExperimentalAdaptiveApi::class)
 @Composable
@@ -43,10 +57,12 @@ fun InvestAppTheme(
 ) {
     AdaptiveTheme(
         target = theme,
-        material = MaterialThemeSpec.Default(
-            colorScheme = if (darkTheme) materialDarkColorScheme else materialLightColorScheme,
+        material = materialThemeSpec(
+            darkTheme = darkTheme,
+            darkColorScheme = materialDarkColorScheme,
+            lightColorScheme = materialLightColorScheme
         ),
-        cupertino = CupertinoThemeSpec.Default(),
+        cupertino = CupertinoThemeSpec.Default(),  // TODO: implement dark theme
         content = content
     )
 }

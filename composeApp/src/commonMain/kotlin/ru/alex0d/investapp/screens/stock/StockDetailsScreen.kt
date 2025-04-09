@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalAdaptiveApi::class)
+
 package ru.alex0d.investapp.screens.stock
 
 import androidx.compose.foundation.layout.Arrangement
@@ -23,14 +25,11 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -74,6 +73,12 @@ import investapp.composeapp.generated.resources.pieces_short
 import investapp.composeapp.generated.resources.sell
 import investapp.composeapp.generated.resources.switch_to_candlestick_chart
 import investapp.composeapp.generated.resources.switch_to_line_chart
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveButton
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveCircularProgressIndicator
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveHorizontalDivider
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveIconButton
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveScaffold
+import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -132,7 +137,7 @@ data class StockDetailsScreen(
             }
         }
 
-        Scaffold(
+        AdaptiveScaffold(
             modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding()),
             snackbarHost = {
                 SnackbarHost(hostState = snackbarHostState) {
@@ -328,9 +333,8 @@ data class StockDetailsScreen(
                     style = MaterialTheme.typography.bodyMedium
                 )
 
-                HorizontalDivider(
+                AdaptiveHorizontalDivider(
                     modifier = Modifier.padding(vertical = 8.dp),
-                    color = MaterialTheme.colorScheme.onSecondaryContainer,
                 )
 
                 Text(
@@ -359,14 +363,18 @@ data class StockDetailsScreen(
                 .padding(16.dp),
             contentAlignment = Alignment.Center,
         ) {
-            Button(
+            AdaptiveButton(
                 onClick = {
                     navigator?.push(TarotScreen(stockName = state.share.name))
                 },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                )
+                adaptation = {
+                    material {
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    }
+                },
             ) {
                 Text(
                     text = stringResource(Res.string.esoteric_analysis),
@@ -451,7 +459,7 @@ data class StockDetailsScreen(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            CircularProgressIndicator()
+            AdaptiveCircularProgressIndicator()
         }
     }
 
@@ -475,7 +483,7 @@ data class StockDetailsScreen(
         val navigator = LocalNavigator.current
         TopAppBar(
             navigationIcon = {
-                IconButton(onClick = { navigator?.pop() }) {
+                AdaptiveIconButton(onClick = { navigator?.pop() }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         tint = Color.fromHex(state.share.textColor),

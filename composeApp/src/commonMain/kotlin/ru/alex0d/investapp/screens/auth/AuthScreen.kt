@@ -1,8 +1,9 @@
+@file:OptIn(ExperimentalAdaptiveApi::class)
+
 package ru.alex0d.investapp.screens.auth
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -14,13 +15,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -69,12 +67,17 @@ import investapp.composeapp.generated.resources.show_password
 import investapp.composeapp.generated.resources.unknown_error
 import investapp.composeapp.generated.resources.user_not_found
 import investapp.composeapp.generated.resources.welcome
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveButton
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveCircularProgressIndicator
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveScaffold
+import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import ru.alex0d.investapp.domain.models.AuthResult
 import ru.alex0d.investapp.screens.main.MainScreen
+import ru.alex0d.investapp.ui.theme.isSystemInDarkAdaptiveTheme
 
 private sealed class AuthScreenState {
     object Login : AuthScreenState()
@@ -92,7 +95,7 @@ class AuthScreen : Screen {
         val authState = viewModel.authState.collectAsState().value
 
         val snackbarHostState = remember { SnackbarHostState() }
-        Scaffold(
+        AdaptiveScaffold(
             snackbarHost = {
                 SnackbarHost(hostState = snackbarHostState) {
                     Snackbar(
@@ -106,7 +109,7 @@ class AuthScreen : Screen {
         ) { innerPadding ->
             if (authState is AuthState.Success) {
                 navigator.replaceAll(MainScreen())
-                return@Scaffold
+                return@AdaptiveScaffold
             }
 
             val authErrorState = viewModel.authErrorState.collectAsState().value
@@ -180,7 +183,13 @@ class AuthScreen : Screen {
             )
             Image(
                 modifier = Modifier.size(170.dp),
-                painter = painterResource(if (!isSystemInDarkTheme()) Res.drawable.ic_launcher_foreground else Res.drawable.ic_launcher_foreground_whiteborders),
+                painter = painterResource(
+                    if (!isSystemInDarkAdaptiveTheme()) {
+                        Res.drawable.ic_launcher_foreground
+                    } else {
+                        Res.drawable.ic_launcher_foreground_whiteborders
+                    }
+                ),
                 contentDescription = null
             )
 
@@ -326,16 +335,15 @@ class AuthScreen : Screen {
         isLoginButtonEnabled: Boolean,
         isLoading: Boolean
     ) {
-        Button(
+        AdaptiveButton(
             onClick = onAuthenticate,
             enabled = isLoginButtonEnabled && !isLoading
         ) {
             if (!isLoading) {
                 Text(stringResource(Res.string.log_in))
             } else {
-                CircularProgressIndicator(
+                AdaptiveCircularProgressIndicator(
                     modifier = Modifier.size(24.dp),
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
         }
@@ -354,16 +362,15 @@ class AuthScreen : Screen {
         isRegisterButtonEnabled: Boolean,
         isLoading: Boolean
     ) {
-        Button(
+        AdaptiveButton(
             onClick = onRegister,
             enabled = isRegisterButtonEnabled && !isLoading
         ) {
             if (!isLoading) {
                 Text(stringResource(Res.string.register))
             } else {
-                CircularProgressIndicator(
+                AdaptiveCircularProgressIndicator(
                     modifier = Modifier.size(24.dp),
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
         }

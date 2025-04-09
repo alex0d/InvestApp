@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalAdaptiveApi::class)
+
 package ru.alex0d.investapp.screens.profile
 
 import androidx.compose.foundation.background
@@ -8,9 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -28,6 +28,9 @@ import investapp.composeapp.generated.resources.Res
 import investapp.composeapp.generated.resources.account_circle
 import investapp.composeapp.generated.resources.error_occurred
 import investapp.composeapp.generated.resources.logout
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveButton
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveCircularProgressIndicator
+import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -74,7 +77,7 @@ class ProfileScreen : TabX {
 
                 is ProfileState.Loading -> {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator()
+                        AdaptiveCircularProgressIndicator()
                     }
                 }
 
@@ -99,16 +102,20 @@ class ProfileScreen : TabX {
                         style = MaterialTheme.typography.headlineMedium
                     )
                     Spacer(modifier = Modifier.weight(1f))
-                    Button(
+                    AdaptiveButton(
                         modifier = Modifier.padding(bottom = 32.dp),
                         onClick = {
                             viewModel.logout()
                             navigator.parent?.replaceAll(AuthScreen())
                         },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onTertiaryContainer
-                        )
+                        adaptation = {
+                            material {
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+                                )
+                            }
+                        },
                     ) {
                         Text(
                             text = stringResource(Res.string.logout),

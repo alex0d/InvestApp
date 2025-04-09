@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalAdaptiveApi::class)
+
 package ru.alex0d.investapp.screens.tarot
 
 import androidx.compose.animation.AnimatedVisibility
@@ -16,14 +18,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -88,6 +86,11 @@ import investapp.composeapp.generated.resources.the_tower
 import investapp.composeapp.generated.resources.updating_prediction_text
 import investapp.composeapp.generated.resources.updating_prediction_title
 import investapp.composeapp.generated.resources.wheel_of_fortune
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveCircularProgressIndicator
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveIconButton
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveScaffold
+import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveTopAppBar
+import io.github.alexzhirkevich.cupertino.adaptive.ExperimentalAdaptiveApi
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
@@ -120,13 +123,13 @@ data class TarotScreen(
 
         var openAlertDialog by remember { mutableStateOf(false) }
 
-        Scaffold(
+        AdaptiveScaffold(
             modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding()),
             topBar = {
                 if (state is TarotPredictionState.Success) {
-                    TopAppBar(
+                    AdaptiveTopAppBar(
                         navigationIcon = {
-                            IconButton(onClick = { navigator?.pop() }) {
+                            AdaptiveIconButton(onClick = { navigator?.pop() }) {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                     tint = MaterialTheme.colorScheme.primary,
@@ -140,19 +143,23 @@ data class TarotScreen(
                                 style = MaterialTheme.typography.titleLarge
                             )
                         },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            titleContentColor = MaterialTheme.colorScheme.primary,
-                        ),
                         actions = {
-                            IconButton(onClick = { openAlertDialog = true }) {
+                            AdaptiveIconButton(onClick = { openAlertDialog = true }) {
                                 Icon(
                                     painter = painterResource(Res.drawable.refresh),
                                     contentDescription = stringResource(Res.string.refresh),
                                     tint = MaterialTheme.colorScheme.primary
                                 )
                             }
-                        }
+                        },
+                        adaptation = {
+                            material {
+                                colors = TopAppBarDefaults.topAppBarColors(
+                                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                    titleContentColor = MaterialTheme.colorScheme.primary,
+                                )
+                            }
+                        },
                     )
                 }
             }
@@ -167,7 +174,7 @@ data class TarotScreen(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        CircularProgressIndicator()
+                        AdaptiveCircularProgressIndicator()
                     }
 
                     is TarotPredictionState.Error -> Box(
