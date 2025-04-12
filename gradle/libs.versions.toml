@@ -29,6 +29,7 @@ koinAndroid = "4.0.3"
 cupertino = "0.1.0-alpha04"
 coil = "3.1.0"
 vico = "2.1.2"
+aayChart = "1.1.0"
 napier = "2.7.1"
 
 junit = "4.13.2"
@@ -87,12 +88,14 @@ cupertino-adaptive = { group = "io.github.alexzhirkevich", name = "cupertino-ada
 
 # Coil
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
-coil-compose-core = { module = "io.coil-kt.coil3:coil-compose-core", version.ref = "coil" }
 coil-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
 coil-mp = { module = "io.coil-kt.coil3:coil", version.ref = "coil" }
 
 # Vico (charts)
 vico-multiplatform-m3 = { group = "com.patrykandpatrick.vico", name = "multiplatform-m3", version.ref = "vico" }
+
+#AAY-chart (simple chart with Web support)
+thechance-chart = { group = "io.github.thechance101", name = "chart", version.ref = "aayChart" }
 
 # Napier (logging)
 napier = { group = "io.github.aakira", name = "napier", version.ref = "napier" }

@@ -58,7 +58,7 @@ import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import com.patrykandpatrick.vico.multiplatform.cartesian.data.CartesianChartModelProducer
+//import com.patrykandpatrick.vico.multiplatform.cartesian.data.CartesianChartModelProducer
 import investapp.composeapp.generated.resources.Res
 import investapp.composeapp.generated.resources.buy
 import investapp.composeapp.generated.resources.candlestick_chart
@@ -93,7 +93,6 @@ import ru.alex0d.investapp.screens.main.MainTabs
 import ru.alex0d.investapp.screens.main.voyagerTabOptions
 import ru.alex0d.investapp.screens.order.OrderAction
 import ru.alex0d.investapp.screens.order.OrderScreen
-import ru.alex0d.investapp.screens.stock.chart.StockChart
 import ru.alex0d.investapp.screens.tarot.TarotScreen
 import ru.alex0d.investapp.ui.composables.ProfitText
 import ru.alex0d.investapp.ui.composables.TabX
@@ -121,7 +120,7 @@ data class StockDetailsScreen(
             parametersOf(stockUid)
         }
         val state = viewModel.state.collectAsState().value
-        val modelProducer = viewModel.modelProducer
+//        val modelProducer = viewModel.modelProducer
 
         val orderMessage = stringResource(Res.string.order_completed)
         val navResult = navigator.navigationResult.getLastResult<Boolean>().value
@@ -164,7 +163,7 @@ data class StockDetailsScreen(
                     is StockDetailsState.Success -> {
                         StockDetailsOnSuccess(
                             state = state,
-                            modelProducer = modelProducer,
+//                            modelProducer = modelProducer,
                             onSwitchChartType = viewModel::chartType::set,
                             onIntervalClick = viewModel::fetchCandles,
                         )
@@ -179,7 +178,7 @@ data class StockDetailsScreen(
     @Composable
     internal fun StockDetailsOnSuccess(
         state: StockDetailsState.Success,
-        modelProducer: CartesianChartModelProducer,
+//        modelProducer: CartesianChartModelProducer,
         onSwitchChartType: (ChartType) -> Unit = {},
         onIntervalClick: (CandleInterval) -> Unit = {},
     ) {
@@ -234,7 +233,7 @@ data class StockDetailsScreen(
                         .height(200.dp)
                         .fillMaxWidth()
                 ) {
-                    StockChart(modelProducer)
+//                    StockChart(modelProducer)
                 }
                 IntervalTabsSection(onIntervalClick = onIntervalClick)
                 state.stockInfo?.let { stockInfo ->
@@ -539,7 +538,7 @@ private fun StockDetailsOnSuccessNotInPortfolioPreview() {
                 ),
                 stockInfo = null,
             ),
-            modelProducer = CartesianChartModelProducer(),
+//            modelProducer = CartesianChartModelProducer(),
             onSwitchChartType = {},
             onIntervalClick = {},
         )
@@ -583,7 +582,7 @@ private fun StockDetailsOnSuccessInPortfolioPreview() {
                     textColor = "#ffffff"
                 ),
             ),
-            modelProducer = CartesianChartModelProducer(),
+//            modelProducer = CartesianChartModelProducer(),
             onSwitchChartType = {},
             onIntervalClick = {},
         )

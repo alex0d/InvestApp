@@ -2,7 +2,6 @@ package ru.alex0d.investapp.screens.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.concurrent.AtomicBoolean
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +11,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.alex0d.investapp.data.repositories.StockRepository
 import ru.alex0d.investapp.domain.models.Share
+import kotlin.concurrent.atomics.AtomicBoolean
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 
+@OptIn(ExperimentalAtomicApi::class)
 class SearchViewModel(
     private val stockRepository: StockRepository
 ) : ViewModel() {

@@ -1,5 +1,7 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
@@ -30,27 +32,40 @@ kotlin {
             isStatic = true
         }
     }
-    
-//    @OptIn(ExperimentalWasmDsl::class)
-//    wasmJs {
-//        moduleName = "composeApp"
-//        browser {
-//            val rootDirPath = project.rootDir.path
-//            val projectDirPath = project.projectDir.path
-//            commonWebpackConfig {
-//                outputFileName = "composeApp.js"
-//                devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
-//                    static = (static ?: mutableListOf()).apply {
-//                        // Serve sources to debug inside browser
-//                        add(rootDirPath)
-//                        add(projectDirPath)
-//                    }
-//                }
-//            }
-//        }
-//        binaries.executable()
-//    }
-    
+
+    @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    applyDefaultHierarchyTemplate {
+        common {
+            group("nonJs") {
+                withAndroidTarget()
+                withJvm()
+                group("apple") {
+                    withApple()
+                }
+            }
+        }
+    }
+
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
+        moduleName = "composeApp"
+        browser {
+            val rootDirPath = project.rootDir.path
+            val projectDirPath = project.projectDir.path
+            commonWebpackConfig {
+                outputFileName = "composeApp.js"
+                devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
+                    static = (static ?: mutableListOf()).apply {
+                        // Serve sources to debug inside browser
+                        add(rootDirPath)
+                        add(projectDirPath)
+                    }
+                }
+            }
+        }
+        binaries.executable()
+    }
+
     sourceSets {
         
         androidMain.dependencies {
@@ -66,6 +81,7 @@ kotlin {
 
             implementation(libs.koin.android)
         }
+
         commonMain.dependencies {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
@@ -91,13 +107,6 @@ kotlin {
             implementation(libs.ktor.client.logging)
             implementation(libs.ktor.serialization)
 
-            // DataStore
-            implementation(libs.androidx.datastore.preferences)
-
-            // Room
-            implementation(libs.androidx.room.runtime)
-            implementation(libs.androidx.sqlite)
-
             // Voyager
             implementation(libs.voyager.navigator)
             implementation(libs.voyager.transitions)
@@ -113,20 +122,36 @@ kotlin {
             implementation(libs.cupertino.adaptive)
 
             // Coil
-            implementation(libs.coil.compose.core)
             implementation(libs.coil.compose)
             implementation(libs.coil.mp)
             implementation(libs.coil.network.ktor3)
 
-            // Vico (charts)
-            implementation(libs.vico.multiplatform.m3)
-
             // Napier (logging)
             implementation(libs.napier)
         }
+
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
         }
+
+        val nonJsMain by getting {
+            dependencies {
+                // DataStore
+                implementation(libs.androidx.datastore.preferences)
+
+                // Room
+                implementation(libs.androidx.room.runtime)
+                implementation(libs.androidx.sqlite)
+
+                // Vico (charts)
+                implementation(libs.vico.multiplatform.m3)
+            }
+        }
+
+        wasmJsMain.dependencies {
+            implementation(libs.thechance.chart)
+        }
+
     }
 }
 

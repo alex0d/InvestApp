@@ -2,10 +2,9 @@ package ru.alex0d.investapp.screens.stock
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.patrykandpatrick.vico.multiplatform.cartesian.data.CandlestickCartesianLayerModel
-import com.patrykandpatrick.vico.multiplatform.cartesian.data.CartesianChartModelProducer
-import com.patrykandpatrick.vico.multiplatform.cartesian.data.LineCartesianLayerModel
-import kotlinx.coroutines.Dispatchers
+//import com.patrykandpatrick.vico.multiplatform.cartesian.data.CandlestickCartesianLayerModel
+//import com.patrykandpatrick.vico.multiplatform.cartesian.data.CartesianChartModelProducer
+//import com.patrykandpatrick.vico.multiplatform.cartesian.data.LineCartesianLayerModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -39,7 +38,7 @@ class StockDetailsViewModel(
             updateChartModel(candles)
         }
 
-    val modelProducer = CartesianChartModelProducer()
+//    val modelProducer = CartesianChartModelProducer()
     private val candles = mutableListOf<Candle>()
 
     init {
@@ -78,27 +77,27 @@ class StockDetailsViewModel(
     }
 
     private fun updateChartModel(candles: List<Candle>) {
-        val layerModel = if (chartType == ChartType.LINE) {
-            LineCartesianLayerModel.partial {
-                series(
-                    x = candles.map { it.timestamp },
-                    y = candles.map { it.close }
-                )
-            }
-        } else {
-            CandlestickCartesianLayerModel.partial(
-                x = candles.map { it.timestamp },
-                opening = candles.map { it.open },
-                closing = candles.map { it.close },
-                high = candles.map { it.high },
-                low = candles.map { it.low }
-            )
-        }
-        viewModelScope.launch(Dispatchers.Default) {
-            modelProducer.runTransaction {
-                add(layerModel)
-            }
-        }
+//        val layerModel = if (chartType == ChartType.LINE) {
+//            LineCartesianLayerModel.partial {
+//                series(
+//                    x = candles.map { it.timestamp },
+//                    y = candles.map { it.close }
+//                )
+//            }
+//        } else {
+//            CandlestickCartesianLayerModel.partial(
+//                x = candles.map { it.timestamp },
+//                opening = candles.map { it.open },
+//                closing = candles.map { it.close },
+//                high = candles.map { it.high },
+//                low = candles.map { it.low }
+//            )
+//        }
+//        viewModelScope.launch(Dispatchers.Default) {
+//            modelProducer.runTransaction {
+//                add(layerModel)
+//            }
+//        }
     }
 
     private fun getFirstTimestamp(interval: CandleInterval): Long {
