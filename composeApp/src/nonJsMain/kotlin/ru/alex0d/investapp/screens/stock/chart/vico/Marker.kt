@@ -1,4 +1,4 @@
-package ru.alex0d.investapp.screens.stock.chart
+package ru.alex0d.investapp.screens.stock.chart.vico
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable

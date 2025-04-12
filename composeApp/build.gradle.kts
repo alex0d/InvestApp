@@ -149,7 +149,8 @@ kotlin {
         }
 
         wasmJsMain.dependencies {
-            implementation(libs.thechance.chart)
+            // KoalaPlot (charts)
+            implementation(libs.koalaplot.core)
         }
 
     }

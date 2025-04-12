@@ -2,9 +2,7 @@ package ru.alex0d.investapp.screens.stock
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-//import com.patrykandpatrick.vico.multiplatform.cartesian.data.CandlestickCartesianLayerModel
-//import com.patrykandpatrick.vico.multiplatform.cartesian.data.CartesianChartModelProducer
-//import com.patrykandpatrick.vico.multiplatform.cartesian.data.LineCartesianLayerModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,13 +16,18 @@ import ru.alex0d.investapp.data.repositories.PortfolioRepository
 import ru.alex0d.investapp.data.repositories.StockRepository
 import ru.alex0d.investapp.domain.models.Candle
 import ru.alex0d.investapp.domain.models.CandleInterval
+import ru.alex0d.investapp.domain.models.ChartData
 import ru.alex0d.investapp.domain.models.PortfolioStockInfo
 import ru.alex0d.investapp.domain.models.Share
+import ru.alex0d.investapp.domain.models.fromCandles
+import ru.alex0d.investapp.screens.stock.chart.ChartAdapterFactory
+import ru.alex0d.investapp.screens.stock.chart.ChartModel
 
 class StockDetailsViewModel(
     private val stockRepository: StockRepository,
     private val marketRepository: MarketRepository,
     private val portfolioRepository: PortfolioRepository,
+    private val chartAdapterFactory: ChartAdapterFactory,
     private val stockUid: String = ""
 ) : ViewModel() {
     private val clock = Clock.System
@@ -32,13 +35,16 @@ class StockDetailsViewModel(
     private val _state = MutableStateFlow<StockDetailsState>(StockDetailsState.Loading)
     val state: StateFlow<StockDetailsState> = _state.asStateFlow()
 
+    private val chartAdapter = chartAdapterFactory.createAdapter<ChartModel>()
+    val chartModel
+        get() = chartAdapter.getChartModel()
+
     var chartType = ChartType.LINE
         set(value) {
             field = value
             updateChartModel(candles)
         }
 
-//    val modelProducer = CartesianChartModelProducer()
     private val candles = mutableListOf<Candle>()
 
     init {
@@ -77,27 +83,17 @@ class StockDetailsViewModel(
     }
 
     private fun updateChartModel(candles: List<Candle>) {
-//        val layerModel = if (chartType == ChartType.LINE) {
-//            LineCartesianLayerModel.partial {
-//                series(
-//                    x = candles.map { it.timestamp },
-//                    y = candles.map { it.close }
-//                )
-//            }
-//        } else {
-//            CandlestickCartesianLayerModel.partial(
-//                x = candles.map { it.timestamp },
-//                opening = candles.map { it.open },
-//                closing = candles.map { it.close },
-//                high = candles.map { it.high },
-//                low = candles.map { it.low }
-//            )
-//        }
-//        viewModelScope.launch(Dispatchers.Default) {
-//            modelProducer.runTransaction {
-//                add(layerModel)
-//            }
-//        }
+        if (candles.isEmpty()) return
+
+        val chartData = if (chartType == ChartType.LINE) {
+            ChartData.Line.fromCandles(candles)
+        } else {
+            ChartData.Candlestick.fromCandles(candles)
+        }
+
+        viewModelScope.launch(Dispatchers.Default) {
+            chartAdapter.processChartData(chartData)
+        }
     }
 
     private fun getFirstTimestamp(interval: CandleInterval): Long {

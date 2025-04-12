@@ -58,7 +58,6 @@ import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.TabOptions
-//import com.patrykandpatrick.vico.multiplatform.cartesian.data.CartesianChartModelProducer
 import investapp.composeapp.generated.resources.Res
 import investapp.composeapp.generated.resources.buy
 import investapp.composeapp.generated.resources.candlestick_chart
@@ -89,10 +88,14 @@ import ru.alex0d.investapp.domain.models.CandleInterval
 import ru.alex0d.investapp.domain.models.PortfolioStockInfo
 import ru.alex0d.investapp.domain.models.Share
 import ru.alex0d.investapp.domain.models.toStringRes
+import ru.alex0d.investapp.getPlatform
 import ru.alex0d.investapp.screens.main.MainTabs
 import ru.alex0d.investapp.screens.main.voyagerTabOptions
 import ru.alex0d.investapp.screens.order.OrderAction
 import ru.alex0d.investapp.screens.order.OrderScreen
+import ru.alex0d.investapp.screens.stock.chart.ChartModel
+import ru.alex0d.investapp.screens.stock.chart.EmptyChartModel
+import ru.alex0d.investapp.screens.stock.chart.StockChart
 import ru.alex0d.investapp.screens.tarot.TarotScreen
 import ru.alex0d.investapp.ui.composables.ProfitText
 import ru.alex0d.investapp.ui.composables.TabX
@@ -120,7 +123,6 @@ data class StockDetailsScreen(
             parametersOf(stockUid)
         }
         val state = viewModel.state.collectAsState().value
-//        val modelProducer = viewModel.modelProducer
 
         val orderMessage = stringResource(Res.string.order_completed)
         val navResult = navigator.navigationResult.getLastResult<Boolean>().value
@@ -163,7 +165,7 @@ data class StockDetailsScreen(
                     is StockDetailsState.Success -> {
                         StockDetailsOnSuccess(
                             state = state,
-//                            modelProducer = modelProducer,
+                            chartModel = viewModel.chartModel,
                             onSwitchChartType = viewModel::chartType::set,
                             onIntervalClick = viewModel::fetchCandles,
                         )
@@ -178,12 +180,10 @@ data class StockDetailsScreen(
     @Composable
     internal fun StockDetailsOnSuccess(
         state: StockDetailsState.Success,
-//        modelProducer: CartesianChartModelProducer,
+        chartModel: ChartModel,
         onSwitchChartType: (ChartType) -> Unit = {},
         onIntervalClick: (CandleInterval) -> Unit = {},
     ) {
-        var chartType by remember { mutableStateOf(ChartType.LINE) }
-
         Column {  // ColumnScope is needed for applying weight modifier
             Column(
                 modifier = Modifier
@@ -206,26 +206,8 @@ data class StockDetailsScreen(
                         ),
                     )
                     Spacer(modifier = Modifier.weight(1f))
-                    IconButton(
-                        onClick = {
-                            chartType =
-                                if (chartType == ChartType.LINE) ChartType.CANDLES else ChartType.LINE
-                            onSwitchChartType(chartType)
-                        },
-                        colors = IconButtonDefaults.iconButtonColors(
-                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-                        )
-                    ) {
-                        Icon(
-                            painter = painterResource(if (chartType == ChartType.LINE) Res.drawable.line_chart else Res.drawable.candlestick_chart),
-                            contentDescription = if (chartType == ChartType.LINE) {
-                                stringResource(Res.string.switch_to_candlestick_chart)
-                            } else {
-                                stringResource(Res.string.switch_to_line_chart)
-                            },
-                            tint = MaterialTheme.colorScheme.onSecondaryContainer
-                        )
+                    if ("Web" !in getPlatform().name) {
+                        ChartTypeSwitchButton(onSwitchChartType)
                     }
                 }
                 Box(
@@ -233,7 +215,7 @@ data class StockDetailsScreen(
                         .height(200.dp)
                         .fillMaxWidth()
                 ) {
-//                    StockChart(modelProducer)
+                    StockChart(chartModel)
                 }
                 IntervalTabsSection(onIntervalClick = onIntervalClick)
                 state.stockInfo?.let { stockInfo ->
@@ -244,6 +226,34 @@ data class StockDetailsScreen(
                 Spacer(modifier = Modifier.weight(1f))
                 ButtonsSection(state)
             }
+        }
+    }
+
+    @Composable
+    private fun ChartTypeSwitchButton(
+        onSwitchChartType: (ChartType) -> Unit
+    ) {
+        var chartType by remember { mutableStateOf(ChartType.LINE) }
+        IconButton(
+            onClick = {
+                chartType =
+                    if (chartType == ChartType.LINE) ChartType.CANDLES else ChartType.LINE
+                onSwitchChartType(chartType)
+            },
+            colors = IconButtonDefaults.iconButtonColors(
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+            )
+        ) {
+            Icon(
+                painter = painterResource(if (chartType == ChartType.LINE) Res.drawable.line_chart else Res.drawable.candlestick_chart),
+                contentDescription = if (chartType == ChartType.LINE) {
+                    stringResource(Res.string.switch_to_candlestick_chart)
+                } else {
+                    stringResource(Res.string.switch_to_line_chart)
+                },
+                tint = MaterialTheme.colorScheme.onSecondaryContainer
+            )
         }
     }
 
@@ -538,7 +548,7 @@ private fun StockDetailsOnSuccessNotInPortfolioPreview() {
                 ),
                 stockInfo = null,
             ),
-//            modelProducer = CartesianChartModelProducer(),
+            chartModel = EmptyChartModel,
             onSwitchChartType = {},
             onIntervalClick = {},
         )
@@ -582,7 +592,7 @@ private fun StockDetailsOnSuccessInPortfolioPreview() {
                     textColor = "#ffffff"
                 ),
             ),
-//            modelProducer = CartesianChartModelProducer(),
+            chartModel = EmptyChartModel,
             onSwitchChartType = {},
             onIntervalClick = {},
         )

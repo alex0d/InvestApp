@@ -25,6 +25,7 @@ val viewModelModule = module {
             stockRepository = get(),
             marketRepository = get(),
             portfolioRepository = get(),
+            chartAdapterFactory = get(),
             stockUid = parameters.get()
         )
     }
