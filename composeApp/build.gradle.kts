@@ -43,6 +43,8 @@ kotlin {
                     withApple()
                 }
             }
+            withWasmJs()
+            withJs()
         }
     }
 
@@ -64,6 +66,14 @@ kotlin {
             }
         }
         binaries.executable()
+    }
+
+    js(IR) {
+        moduleName = "composeApp"
+        binaries.executable()
+        browser()
+        binaries.library()
+        nodejs()
     }
 
     sourceSets {
