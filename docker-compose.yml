@@ -3,6 +3,33 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.app.rule=Host(`${DOMAIN:-localhost}`)"
+      - "traefik.http.services.app.loadbalancer.server.port=8080"
+      - "traefik.http.routers.app.entrypoints=web,websecure"
+      - "traefik.http.routers.app.tls=true"
+      - "traefik.http.routers.app.tls.certresolver=le"
+    expose:
+      - 8080
+    restart: unless-stopped
+
+  traefik:
+    image: traefik:v2.10
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.le.acme.email=${EMAIL:-your@email.com}"
+      - "--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json"
+      - "--certificatesresolvers.le.acme.tlschallenge=true"
     ports:
       - "80:80"
-    restart: unless-stopped
+      - "443:443"
+      - "8081:8080" # Traefik dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./letsencrypt:/letsencrypt
+      - /etc/letsencrypt/live/${DOMAIN:-localhost}:/certificates:ro

@@ -1,5 +1,5 @@
 FROM eclipse-temurin:21 AS build
 WORKDIR /app
 COPY . .
-EXPOSE 80
+EXPOSE 8080
 CMD ["./gradlew", ":composeApp:wasmJsBrowserDevelopmentRun"]
