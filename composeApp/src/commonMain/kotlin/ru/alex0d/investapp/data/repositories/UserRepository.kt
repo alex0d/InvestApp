@@ -107,6 +107,7 @@ class UserRepository(
 
     suspend fun logout() {
         userDataStore.clear()
+        apiService.logout()
     }
 
     suspend fun getUserFirstname(): String? {

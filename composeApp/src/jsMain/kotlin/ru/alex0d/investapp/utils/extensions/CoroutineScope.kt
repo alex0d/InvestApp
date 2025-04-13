@@ -11,22 +11,25 @@ import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
-fun <T : Any> CoroutineScope.promiseWithEvent(
-    enable: Boolean,
+fun <T : Any> CoroutineScope.promise(
     context: CoroutineContext = EmptyCoroutineContext,
     start: CoroutineStart = CoroutineStart.DEFAULT,
-    block: suspend CoroutineScope.() -> T
+    block: suspend CoroutineScope.() -> T?
 ): Any {
-    return if (enable) {
-        val caller = Uuid.random().toString()
-        async(context, start, block).asPromise().then({
-            sendEventResponse(caller = caller, response = it)
-        }, {
-            sendEventError(caller = caller, error = it.message ?: "Error query")
-        })
-        caller
-    } else {
-        async(context, start, block).asPromise()
-    }
+    return async(context, start, block).asPromise()
+}
+
+@OptIn(ExperimentalUuidApi::class)
+fun <T : Any> CoroutineScope.promiseWithEvent(
+    context: CoroutineContext = EmptyCoroutineContext,
+    start: CoroutineStart = CoroutineStart.DEFAULT,
+    block: suspend CoroutineScope.() -> T?
+): Any {
+    val caller = Uuid.random().toString()
+    async(context, start, block).asPromise().then({
+        sendEventResponse(caller = caller, response = it)
+    }, {
+        sendEventError(caller = caller, error = it.message ?: "Error query")
+    })
+    return caller
 }

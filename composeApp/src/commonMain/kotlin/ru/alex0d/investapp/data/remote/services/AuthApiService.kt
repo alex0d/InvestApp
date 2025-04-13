@@ -2,6 +2,8 @@ package ru.alex0d.investapp.data.remote.services
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.auth.authProvider
+import io.ktor.client.plugins.auth.providers.BearerAuthProvider
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
@@ -34,5 +36,9 @@ class AuthApiService(
             contentType(ContentType.Application.Json)
             setBody(request)
         }.body()
+    }
+
+    fun logout() {
+        httpClient.authProvider<BearerAuthProvider>()?.clearToken()
     }
 }
