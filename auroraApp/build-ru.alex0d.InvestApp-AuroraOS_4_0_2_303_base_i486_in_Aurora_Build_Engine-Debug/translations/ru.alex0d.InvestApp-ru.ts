@@ -40,11 +40,217 @@
     </message>
 </context>
 <context>
+    <name>DelegateStock</name>
+    <message>
+        <location filename="../qml/pages/DelegateStock.qml" line="46"/>
+        <source>pcs</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>LoginPage</name>
+    <message>
+        <location filename="../qml/pages/LoginPage.qml" line="19"/>
+        <location filename="../qml/pages/LoginPage.qml" line="49"/>
+        <source>Login</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/LoginPage.qml" line="27"/>
+        <location filename="../qml/pages/LoginPage.qml" line="29"/>
+        <source>Email</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/LoginPage.qml" line="39"/>
+        <location filename="../qml/pages/LoginPage.qml" line="40"/>
+        <source>Password</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/LoginPage.qml" line="58"/>
+        <source>Register</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/LoginPage.qml" line="85"/>
+        <source>Please fill in all fields</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/LoginPage.qml" line="106"/>
+        <source>User not found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/LoginPage.qml" line="109"/>
+        <source>Invalid credentials</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/LoginPage.qml" line="112"/>
+        <source>Unknown error occurred</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/LoginPage.qml" line="121"/>
+        <source>Network error. Check your connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>MainPage</name>
     <message>
-        <location filename="../qml/pages/MainPage.qml" line="65"/>
-        <source>Invest</source>
-        <translation>Инвестиции</translation>
+        <location filename="../qml/pages/MainPage.qml" line="54"/>
+        <source>Portfolio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/MainPage.qml" line="59"/>
+        <source>Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/MainPage.qml" line="64"/>
+        <source>Profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PortfolioPage</name>
+    <message>
+        <location filename="../qml/pages/PortfolioPage.qml" line="44"/>
+        <source>Reload</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/PortfolioPage.qml" line="55"/>
+        <source>Portfolio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/PortfolioPage.qml" line="108"/>
+        <source>Your portfolio is empty</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/PortfolioPage.qml" line="109"/>
+        <source>Add some stocks to see them here</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/PortfolioPage.qml" line="127"/>
+        <source>An error occurred while loading your portfolio</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ProfilePage</name>
+    <message>
+        <location filename="../qml/pages/ProfilePage.qml" line="23"/>
+        <source>Profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/ProfilePage.qml" line="47"/>
+        <source>Logout</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>RegisterPage</name>
+    <message>
+        <location filename="../qml/pages/RegisterPage.qml" line="19"/>
+        <location filename="../qml/pages/RegisterPage.qml" line="78"/>
+        <source>Register</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/RegisterPage.qml" line="27"/>
+        <location filename="../qml/pages/RegisterPage.qml" line="28"/>
+        <source>First name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/RegisterPage.qml" line="37"/>
+        <source>Last name (optional)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/RegisterPage.qml" line="38"/>
+        <source>Last name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/RegisterPage.qml" line="47"/>
+        <location filename="../qml/pages/RegisterPage.qml" line="48"/>
+        <source>Email</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/RegisterPage.qml" line="58"/>
+        <location filename="../qml/pages/RegisterPage.qml" line="59"/>
+        <source>Password</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/RegisterPage.qml" line="68"/>
+        <location filename="../qml/pages/RegisterPage.qml" line="69"/>
+        <source>Confirm password</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/RegisterPage.qml" line="109"/>
+        <source>Please fill in all required fields</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/RegisterPage.qml" line="115"/>
+        <source>Passwords do not match</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/RegisterPage.qml" line="139"/>
+        <source>Email already registered</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/RegisterPage.qml" line="142"/>
+        <source>Unknown error occurred</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/RegisterPage.qml" line="151"/>
+        <source>Network error. Check your connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SearchStocksPage</name>
+    <message>
+        <location filename="../qml/pages/SearchStocksPage.qml" line="25"/>
+        <source>Search Stocks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/SearchStocksPage.qml" line="31"/>
+        <source>Enter ticker symbol (e.g. AAPL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/SearchStocksPage.qml" line="45"/>
+        <source>Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/SearchStocksPage.qml" line="140"/>
+        <source>No results found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/SearchStocksPage.qml" line="158"/>
+        <source>An error occurred while searching</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

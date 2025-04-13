@@ -50,7 +50,18 @@ OBJECTS_DIR   = ./
 
 SOURCES       = ../InvestApp/src/main.cpp 
 OBJECTS       = main.o
-DIST          = ../InvestApp/rpm/ru.alex0d.InvestApp.spec \
+DIST          = ../InvestApp/qml/pages/DelegateStock.qml \
+		../InvestApp/qml/pages/LoginPage.qml \
+		../InvestApp/qml/pages/PortfolioPage.qml \
+		../InvestApp/qml/pages/ProfilePage.qml \
+		../InvestApp/qml/pages/RegisterPage.qml \
+		../InvestApp/qml/pages/SearchStocksPage.qml \
+		../InvestApp/qml/tabview/TabBar.qml \
+		../InvestApp/qml/tabview/TabButton.qml \
+		../InvestApp/qml/tabview/TabItem.qml \
+		../InvestApp/qml/tabview/TabView.qml \
+		../InvestApp/qml/tabview/Util.js \
+		../InvestApp/rpm/ru.alex0d.InvestApp.spec \
 		../InvestApp/AUTHORS.md \
 		../InvestApp/CODE_OF_CONDUCT.md \
 		../InvestApp/CONTRIBUTING.md \

@@ -1,90 +1,90 @@
-/*******************************************************************************
-**
-** Copyright (C) 2022 ru.alex0d
-**
-** This file is part of the Инвестиционное приложение для ОС Аврора project.
-**
-** Redistribution and use in source and binary forms,
-** with or without modification, are permitted provided
-** that the following conditions are met:
-**
-** * Redistributions of source code must retain the above copyright notice,
-**   this list of conditions and the following disclaimer.
-** * Redistributions in binary form must reproduce the above copyright notice,
-**   this list of conditions and the following disclaimer
-**   in the documentation and/or other materials provided with the distribution.
-** * Neither the name of the copyright holder nor the names of its contributors
-**   may be used to endorse or promote products derived from this software
-**   without specific prior written permission.
-**
-** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-** AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-** THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-** FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-** IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-** FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
-** OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-** PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-** LOSS OF USE, DATA, OR PROFITS;
-** OR BUSINESS INTERRUPTION)
-** HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-** WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-** (INCLUDING NEGLIGENCE OR OTHERWISE)
-** ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-** EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-**
-*******************************************************************************/
-
-import QtQuick 2.0
+import QtQuick 2.6
 import Sailfish.Silica 1.0
+import "../tabview" as Tabs
 
 Page {
     id: root
-    objectName: "mainPage"
-    allowedOrientations: Orientation.All
 
-    property string userInfo: "Test string"
+    property bool footerPosition: true
+    backNavigation: false
 
-    function getUserInfo() {
+    Tabs.TabView {
+        id: tabs
+
+        property var _viewModel: [portfolioView, searchView, profileView]
+        width: parent.width
+        height: root.height
+
+        header: footerPosition ? null : tabBar
+        footer: footerPosition ? tabBar : null
+
+        model: _viewModel
+
+        Component {
+            id: tabBar
+
+            Tabs.TabBar {
+                model: tabModel
+            }
+        }
+
+        Component {
+            id: portfolioView
+
+            PortfolioPage {}
+        }
+
+        Component {
+            id: searchView
+
+            SearchStocksPage {}
+        }
+
+        Component {
+            id: profileView
+
+            ProfilePage {}
+        }
+    }
+
+    ListModel {
+        id: tabModel
+
+        ListElement {
+            title: qsTr("Portfolio")
+            icon: "image://theme/icon-m-home"
+            count: 0
+        }
+        ListElement {
+            title: qsTr("Search")
+            icon: "image://theme/icon-m-search"
+            count: 0
+        }
+        ListElement {
+            title: qsTr("Profile")
+            icon: "image://theme/icon-m-person"
+            count: 0
+        }
+    }
+
+    Component.onCompleted: {
+        checkAuthentication()
+    }
+
+    function checkAuthentication() {
         libKMPShared.run(
-            "composeApp.ru.alex0d.investapp.aurora.userRepository.authenticate('someEmail', 'somePassword')",
+            "composeApp.ru.alex0d.investapp.aurora.userRepository.authenticateByTokensInDataBase()",
             function(response) {
-                console.log(response)
-                console.log(response.name_1)
-                console.log(JSON.parse(response))
-//                userInfo = response
+                if (response.name_1 !== "SUCCESS") {
+                    // Redirect to login page if not authenticated
+                    pageStack.replaceAbove(null, Qt.resolvedUrl("LoginPage.qml"))
+                }
             },
             function(error) {
                 console.log(error)
+                // Redirect to login page on error
+                pageStack.replaceAbove(null, Qt.resolvedUrl("LoginPage.qml"))
             }
         )
-    }
-
-    PageHeader {
-        objectName: "pageHeader"
-        title: qsTr("Invest")
-        extraContent.children: [
-            IconButton {
-                objectName: "aboutButton"
-                icon.source: "image://theme/icon-m-about"
-                anchors.verticalCenter: parent.verticalCenter
-
-                onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"))
-            }
-        ]
-    }
-
-    Column {
-        Label {
-            width: parent.width
-            text: userInfo
-            font.pixelSize: Theme.fontSizeExtraLarge
-            color: Theme.highlightColor
-        }
-
-        Button {
-            text: "Click"
-            onClicked: getUserInfo()
-        }
     }
 }

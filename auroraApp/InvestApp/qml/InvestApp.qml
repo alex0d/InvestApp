@@ -41,14 +41,14 @@ import "kmp" as KMP
 
 ApplicationWindow {
     objectName: "applicationWindow"
-    initialPage: Qt.resolvedUrl("pages/MainPage.qml")
+    initialPage: Qt.resolvedUrl("pages/LoginPage.qml")
     cover: Qt.resolvedUrl("cover/DefaultCoverPage.qml")
     allowedOrientations: defaultAllowedOrientations
 
     KMP.Shared {
         id: libKMPShared
         onCompleted: {
-            pageStack.animatorReplace(Qt.resolvedUrl("pages/MainPage.qml"), {}, PageStackAction.Replace)
+            pageStack.animatorReplace(Qt.resolvedUrl("pages/LoginPage.qml"), {}, PageStackAction.Replace)
         }
     }
 }

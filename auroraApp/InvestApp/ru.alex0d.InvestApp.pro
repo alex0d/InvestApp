@@ -48,6 +48,17 @@ SOURCES += \
 HEADERS += \
 
 DISTFILES += \
+    qml/pages/DelegateStock.qml \
+    qml/pages/LoginPage.qml \
+    qml/pages/PortfolioPage.qml \
+    qml/pages/ProfilePage.qml \
+    qml/pages/RegisterPage.qml \
+    qml/pages/SearchStocksPage.qml \
+    qml/tabview/TabBar.qml \
+    qml/tabview/TabButton.qml \
+    qml/tabview/TabItem.qml \
+    qml/tabview/TabView.qml \
+    qml/tabview/Util.js \
     rpm/ru.alex0d.InvestApp.spec \
     AUTHORS.md \
     CODE_OF_CONDUCT.md \
