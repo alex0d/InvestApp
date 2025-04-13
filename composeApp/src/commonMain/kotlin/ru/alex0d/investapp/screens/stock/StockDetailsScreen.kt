@@ -333,8 +333,10 @@ data class StockDetailsScreen(
                     color = MaterialTheme.colorScheme.onSecondaryContainer
                 )
                 Spacer(modifier = Modifier.height(4.dp))
+
+                val symbol = if ("Web" in getPlatform().name) "->" else "→"
                 Text(
-                    text = "${stockInfo.averagePrice.toCurrencyFormat("RUB")} → ${
+                    text = "${stockInfo.averagePrice.toCurrencyFormat("RUB")} $symbol ${
                         stockInfo.lastPrice.toCurrencyFormat(
                             "RUB"
                         )
