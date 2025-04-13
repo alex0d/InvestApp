@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+X-Nemo-Application-Type=silica-qt5
+Icon=ru.alex0d.InvestApp
+Exec=/usr/bin/ru.alex0d.InvestApp
+Name=Invest
+Name[ru]=Инвестиции
+
+[X-Application]
+Permissions=Internet;UserDirs;WebView
+OrganizationName=ru.alex0d
+ApplicationName=InvestApp
+ExecDBus=/usr/bin/ru.alex0d.InvestApp
