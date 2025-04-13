@@ -1,10 +1,14 @@
 package ru.alex0d.investapp.domain.models
 
+import ru.alex0d.investapp.utils.AuroraExport
+
+@AuroraExport
 data class TarotPrediction(
     val card: TarotCard,
     val prediction: String
 )
 
+@AuroraExport
 enum class TarotCard {
     THE_FOOL,
     THE_MAGICIAN,

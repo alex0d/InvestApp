@@ -15,7 +15,9 @@ import investapp.composeapp.generated.resources.interval_hour
 import investapp.composeapp.generated.resources.interval_month
 import investapp.composeapp.generated.resources.interval_week
 import org.jetbrains.compose.resources.StringResource
+import ru.alex0d.investapp.utils.AuroraExport
 
+@AuroraExport
 enum class CandleInterval {
     INTERVAL_1_MIN,
     INTERVAL_2_MIN,

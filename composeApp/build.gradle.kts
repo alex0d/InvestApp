@@ -202,6 +202,16 @@ dependencies {
     add("kspIosArm64", libs.androidx.room.compiler)
 }
 
+tasks.register("jsBuildForAurora") {
+    dependsOn("jsBrowserDevelopmentWebpack")
+    doLast {
+        copy {
+            from(layout.buildDirectory.dir("kotlin-webpack/js/developmentExecutable"))
+            into("${rootProject.rootDir}/auroraApp/InvestApp/qml/kmp")
+        }
+    }
+}
+
 room {
     schemaDirectory("$projectDir/schemas")
 }

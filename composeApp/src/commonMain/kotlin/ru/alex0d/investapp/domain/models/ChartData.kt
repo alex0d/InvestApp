@@ -1,5 +1,8 @@
 package ru.alex0d.investapp.domain.models
 
+import ru.alex0d.investapp.utils.AuroraExport
+
+@AuroraExport
 sealed class ChartData {
     abstract val timestamps: List<Long>
     abstract val close: List<Double>

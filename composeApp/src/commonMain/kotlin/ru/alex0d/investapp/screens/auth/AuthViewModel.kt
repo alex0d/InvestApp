@@ -11,9 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.alex0d.investapp.data.repositories.UserRepository
 import ru.alex0d.investapp.domain.models.AuthResult
-import ru.alex0d.investapp.utils.AuroraExport
 
-@AuroraExport
 class AuthViewModel(
     private val userRepository: UserRepository
 ) : ViewModel() {

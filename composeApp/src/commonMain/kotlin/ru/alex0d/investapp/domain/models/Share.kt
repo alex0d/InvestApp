@@ -1,5 +1,8 @@
 package ru.alex0d.investapp.domain.models
 
+import ru.alex0d.investapp.utils.AuroraExport
+
+@AuroraExport
 data class Share(
     val uid: String,
     val figi: String,
